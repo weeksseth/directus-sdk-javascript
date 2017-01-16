@@ -51,7 +51,7 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(4), a = i.buildPath, o = i.performRequest, s = r(8), n = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, v = h.getTable, g = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, E = r(13), y = E.createPrivilege, F = E.getGroupPrivilege, B = E.getTablePrivilege, G = E.updatePrivilege, U = r(14), P = U.getPreference, S = U.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, L = r(16), w = L.getActivity, _ = r(17), V = _.getBookmarks, D = _.getUserBookmarks, A = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), Y = H.getSettings, K = H.getSettingsByCollection, Q = H.updateSettings;
+    var i = r(4), a = i.buildPath, o = i.performRequest, s = r(8), n = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, v = h.getTable, g = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, E = r(13), y = E.createPrivilege, F = E.getGroupPrivilege, B = E.getTablePrivilege, U = E.updatePrivilege, G = r(14), P = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, L = r(16), w = L.getActivity, _ = r(17), V = _.getBookmarks, D = _.getUserBookmarks, A = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), Y = H.getSettings, K = H.getSettingsByCollection, Q = H.updateSettings;
     e.exports = {
         buildPath: a,
         performRequest: o,
@@ -75,7 +75,7 @@ module.exports = function(e) {
         createPrivilege: y,
         getGroupPrivilege: F,
         getTablePrivilege: B,
-        updatePrivilege: G,
+        updatePrivilege: U,
         getPreference: P,
         updatePreference: S,
         getMessages: x,
@@ -140,6 +140,19 @@ module.exports = function(e) {
 
               case "PATCH":
                 a.patch({
+                    auth: {
+                        bearer: this.accessToken
+                    },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(e.paramsOrBody),
+                    url: t
+                }, r);
+                break;
+
+              case "PUT":
+                a.put({
                     auth: {
                         bearer: this.accessToken
                     },
