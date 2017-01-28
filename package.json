@@ -28,6 +28,8 @@
   "homepage": "https://github.com/directus/directus-sdk-javascript#readme",
   "dependencies": {
     "args-js": "^0.10.12",
+    "knex": "^0.12.6",
+    "mysql": "^2.13.0",
     "q": "^1.4.1",
     "request": "^2.76.0",
     "sprintf-js": "^1.0.3"

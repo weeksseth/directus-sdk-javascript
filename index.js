@@ -14,12 +14,23 @@ module.exports = function(e) {
     e.exports = r(1);
 }, function(e, t, r) {
     "use strict";
-    function i(e, t) {
-        var i = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 1.1;
-        if (!e) throw new Error("No access token provided");
-        if (!t) throw new Error("No Directus URL provided");
-        this.accessToken = e, this.url = t, this.apiVersion = i, this.baseEndpoint = this.url + "/" + this.apiVersion + "/", 
-        this.endpoints = r(2), Object.assign(this, r(3));
+    function i() {
+        var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+        arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 1.1;
+        if (e.accessToken && e.url) {
+            var t = e.accessToken, i = e.url;
+            Object.assign(this, {
+                accessToken: t,
+                url: i
+            }), this.endpoints = r(2), this.baseEndpoint = this.url + "/" + e.apiVersion || "1.1/", 
+            Object.assign(this, r(3));
+        } else if (e.database) {
+            if (!e.database.user || !e.database.password || !e.database.database) throw Error("Not all required database config options given");
+            this.knex = r(19)({
+                client: "mysql",
+                connection: Object.assign({}, e.database)
+            }), Object.assign(this, r(20));
+        }
     }
     e.exports = i;
 }, function(e, t) {
@@ -51,10 +62,10 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(4), a = i.buildPath, o = i.performRequest, s = r(8), n = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, v = h.getTable, g = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, E = r(13), y = E.createPrivilege, F = E.getGroupPrivilege, B = E.getTablePrivilege, U = E.updatePrivilege, G = r(14), P = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, L = r(16), w = L.getActivity, _ = r(17), V = _.getBookmarks, D = _.getUserBookmarks, A = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), Y = H.getSettings, K = H.getSettingsByCollection, Q = H.updateSettings;
+    var i = r(4), a = i.buildPath, s = i.performRequest, o = r(8), n = o.createItem, l = o.getItems, c = o.getItem, u = o.updateItem, d = o.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, g = h.getTable, v = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, B = y.getTablePrivilege, P = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, w = r(16), L = w.getActivity, _ = r(17), A = _.getBookmarks, V = _.getUserBookmarks, D = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
     e.exports = {
         buildPath: a,
-        performRequest: o,
+        performRequest: s,
         createItem: n,
         getItems: l,
         getItem: c,
@@ -65,55 +76,54 @@ module.exports = function(e) {
         getFile: b,
         updateFile: T,
         getTables: k,
-        getTable: v,
-        createTable: g,
+        getTable: g,
+        createTable: v,
         createColumn: N,
         getColumns: R,
         getColumn: I,
         updateColumn: q,
         deleteColumn: C,
-        createPrivilege: y,
+        createPrivilege: E,
         getGroupPrivilege: F,
         getTablePrivilege: B,
-        updatePrivilege: U,
-        getPreference: P,
+        updatePrivilege: P,
+        getPreference: U,
         updatePreference: S,
         getMessages: x,
         getMessage: J,
-        getActivity: w,
-        getBookmarks: V,
-        getUserBookmarks: D,
-        getBookmark: A,
+        getActivity: L,
+        getBookmarks: A,
+        getUserBookmarks: V,
+        getBookmark: D,
         createBookmark: M,
         deleteBookmark: z,
-        getSettings: Y,
-        getSettingsByCollection: K,
-        updateSettings: Q
+        getSettings: W,
+        getSettingsByCollection: Y,
+        updateSettings: K
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(5).vsprintf, a = r(6), o = r(7);
+    var i = r(5).vsprintf, a = r(6), s = r(7);
     e.exports = {
         buildPath: function(e, t) {
             return i(e, t);
         },
         performRequest: function() {
-            var e = o([ {
-                method: o.STRING | o.Required
+            var e = s([ {
+                method: s.STRING | s.Required
             }, {
-                pathFormat: o.STRING | o.Required
+                pathFormat: s.STRING | s.Required
             }, {
-                variables: o.ARRAY | o.Optional,
+                variables: s.ARRAY | s.Optional,
                 _default: []
             }, {
-                paramsOrBody: o.OBJECT | o.Optional,
+                paramsOrBody: s.OBJECT | s.Optional,
                 _default: {}
             }, {
-                callback: o.FUNCTION | o.Required
+                callback: s.FUNCTION | s.Required
             } ], arguments), t = e.pathFormat.indexOf("%s") === -1 ? this.baseEndpoint + e.pathFormat : this.baseEndpoint + this.buildPath(e.pathFormat, e.variables), r = function(r, i, a) {
                 if (r) throw new Error(r);
-                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode && e.callback(t + " returned not authorized (403)") : (console.log(r, i, a), 
-                e.callback(null, JSON.parse(a)));
+                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode ? e.callback(t + " returned not authorized (403)") : 401 == i.statusCode && e.callback(t + " returned not logged in (401)") : e.callback(null, JSON.parse(a));
             };
             switch (e.method) {
               case "GET":
@@ -623,6 +633,39 @@ module.exports = function(e) {
             return this.performRequest("PUT", this.endpoints.settingsType, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
+        }
+    };
+}, function(e, t) {
+    e.exports = require("knex");
+}, function(e, t, r) {
+    "use strict";
+    var i = r(21), a = i.getItems;
+    e.exports = {
+        getItems: a
+    };
+}, function(e, t) {
+    "use strict";
+    function r(e) {
+        if (Array.isArray(e)) {
+            for (var t = 0, r = Array(e.length); t < e.length; t++) r[t] = e[t];
+            return r;
+        }
+        return Array.from(e);
+    }
+    e.exports = {
+        getItems: function(e) {
+            var t = this, i = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+            return new Promise(function(a, s) {
+                var o = t.knex(e);
+                o.select().limit(i.limit || 200).offset(i.offset || 0).orderBy(i.orderBy || "id", i.order || "asc"), 
+                "number" == typeof i.status ? o.where("active", i.status) : Array.isArray(i.status) && i.status.forEach(function(e) {
+                    return o.orWhere("active", e);
+                }), i.columns && o.columns.apply(o, r(i.columns)), o.then(function(e) {
+                    return s(e);
+                }).catch(function(e) {
+                    return a(e);
+                });
+            });
         }
     };
 } ]);

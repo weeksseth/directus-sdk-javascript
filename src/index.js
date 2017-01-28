@@ -4,23 +4,41 @@
  * Constructor function
  */
 
-function SDK(accessToken, url, apiVersion = 1.1) {
-  // Throw errors if required params are missing
-  if(!accessToken) throw new Error('No access token provided');
-  if(!url) throw new Error('No Directus URL provided');
+function SDK(config = {}, apiVersion = 1.1) {
+  if(config.accessToken && config.url) { // use remote connection
 
-  // Save params for later use
-  this.accessToken = accessToken;
-  this.url = url;
-  this.apiVersion = apiVersion;
+    const { accessToken, url } = config;
 
-  this.baseEndpoint = this.url + '/' + this.apiVersion + '/';
+    // Add config options to this
+    Object.assign(this, { accessToken, url });
 
-  // Define endpoints
-  this.endpoints = require('./endpoints');
+    // Add remote endpoints to thiss
+    this.endpoints = require('./endpoints');
 
-  // Assign all methods defined in methods.js to this object
-  Object.assign(this, require('./remote-methods/index'));
+    // Set base url
+    this.baseEndpoint = this.url + '/' + config.apiVersion || 1.1 + '/';
+
+    // Add methods to this
+    Object.assign(this, require('./remote-methods/index'));
+
+  } else if(config.database) { // use local connection
+
+    // Check if all the required config options are given
+    if(
+      !config.database.user ||
+      !config.database.password ||
+      !config.database.database
+    ) throw Error('Not all required database config options given');
+
+    // Setup knex
+    this.knex = require('knex')({
+      client: 'mysql',
+      connection: Object.assign({}, config.database)
+    });
+
+    // Add methods
+    Object.assign(this, require('./local-methods/'));
+  }
 }
 
 module.exports = SDK;
