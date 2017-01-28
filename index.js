@@ -112,7 +112,8 @@ module.exports = function(e) {
                 callback: o.FUNCTION | o.Required
             } ], arguments), t = e.pathFormat.indexOf("%s") === -1 ? this.baseEndpoint + e.pathFormat : this.baseEndpoint + this.buildPath(e.pathFormat, e.variables), r = function(r, i, a) {
                 if (r) throw new Error(r);
-                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode && e.callback(t + " returned not authorized (403)") : e.callback(null, JSON.parse(a));
+                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode && e.callback(t + " returned not authorized (403)") : (console.log(r, i, a), 
+                e.callback(null, JSON.parse(a)));
             };
             switch (e.method) {
               case "GET":

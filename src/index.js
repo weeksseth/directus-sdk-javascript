@@ -20,7 +20,7 @@ function SDK(accessToken, url, apiVersion = 1.1) {
   this.endpoints = require('./endpoints');
 
   // Assign all methods defined in methods.js to this object
-  Object.assign(this, require('./methods'));
+  Object.assign(this, require('./remote-methods/index'));
 }
 
 module.exports = SDK;
