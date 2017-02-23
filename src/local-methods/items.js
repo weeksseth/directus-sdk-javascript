@@ -25,5 +25,15 @@ module.exports = {
         .then(rows => resolve(rows))
         .catch(err => reject(err));
     });
+  },
+
+  getItem(tableName, id) {
+    return new Promise((reject, resolve) => {
+      this.knex(tableName)
+        .where({ id })
+        .select()
+        .then(rows => resolve(rows))
+        .catch(err => reject(err));
+    });
   }
 };

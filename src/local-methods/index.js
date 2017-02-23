@@ -1,5 +1,6 @@
-const { getItems } = require('./items');
+const { getItems, getItem } = require('./items');
 
 module.exports = {
-  getItems
+  getItems,
+  getItem
 }

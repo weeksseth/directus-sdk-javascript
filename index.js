@@ -62,16 +62,16 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(4), a = i.buildPath, s = i.performRequest, o = r(8), n = o.createItem, l = o.getItems, c = o.getItem, u = o.updateItem, d = o.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, g = h.getTable, v = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, B = y.getTablePrivilege, P = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, w = r(16), L = w.getActivity, _ = r(17), A = _.getBookmarks, V = _.getUserBookmarks, D = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
+    var i = r(4), a = i.buildPath, n = i.performRequest, s = r(8), o = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, f = r(10), p = f.createFile, m = f.getFiles, b = f.getFile, T = f.updateFile, h = r(11), k = h.getTables, g = h.getTable, v = h.createTable, O = r(12), N = O.createColumn, I = O.getColumns, R = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, B = y.getTablePrivilege, P = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, w = j.getMessage, J = r(16), L = J.getActivity, _ = r(17), A = _.getBookmarks, V = _.getUserBookmarks, D = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
     e.exports = {
         buildPath: a,
-        performRequest: s,
-        createItem: n,
+        performRequest: n,
+        createItem: o,
         getItems: l,
         getItem: c,
         updateItem: u,
         deleteItem: d,
-        createFile: f,
+        createFile: p,
         getFiles: m,
         getFile: b,
         updateFile: T,
@@ -79,8 +79,8 @@ module.exports = function(e) {
         getTable: g,
         createTable: v,
         createColumn: N,
-        getColumns: R,
-        getColumn: I,
+        getColumns: I,
+        getColumn: R,
         updateColumn: q,
         deleteColumn: C,
         createPrivilege: E,
@@ -90,7 +90,7 @@ module.exports = function(e) {
         getPreference: U,
         updatePreference: S,
         getMessages: x,
-        getMessage: J,
+        getMessage: w,
         getActivity: L,
         getBookmarks: A,
         getUserBookmarks: V,
@@ -103,24 +103,24 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(5).vsprintf, a = r(6), s = r(7);
+    var i = r(5).vsprintf, a = r(6), n = r(7);
     e.exports = {
         buildPath: function(e, t) {
             return i(e, t);
         },
         performRequest: function() {
-            var e = s([ {
-                method: s.STRING | s.Required
+            var e = n([ {
+                method: n.STRING | n.Required
             }, {
-                pathFormat: s.STRING | s.Required
+                pathFormat: n.STRING | n.Required
             }, {
-                variables: s.ARRAY | s.Optional,
+                variables: n.ARRAY | n.Optional,
                 _default: []
             }, {
-                paramsOrBody: s.OBJECT | s.Optional,
+                paramsOrBody: n.OBJECT | n.Optional,
                 _default: {}
             }, {
-                callback: s.FUNCTION | s.Required
+                callback: n.FUNCTION | n.Required
             } ], arguments), t = e.pathFormat.indexOf("%s") === -1 ? this.baseEndpoint + e.pathFormat : this.baseEndpoint + this.buildPath(e.pathFormat, e.variables), r = function(r, i, a) {
                 if (r) throw new Error(r);
                 r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode ? e.callback(t + " returned not authorized (403)") : 401 == i.statusCode && e.callback(t + " returned not logged in (401)") : e.callback(null, JSON.parse(a));
@@ -639,9 +639,10 @@ module.exports = function(e) {
     e.exports = require("knex");
 }, function(e, t, r) {
     "use strict";
-    var i = r(21), a = i.getItems;
+    var i = r(21), a = i.getItems, n = i.getItem;
     e.exports = {
-        getItems: a
+        getItems: a,
+        getItem: n
     };
 }, function(e, t) {
     "use strict";
@@ -655,15 +656,27 @@ module.exports = function(e) {
     e.exports = {
         getItems: function(e) {
             var t = this, i = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-            return new Promise(function(a, s) {
-                var o = t.knex(e);
-                o.select().limit(i.limit || 200).offset(i.offset || 0).orderBy(i.orderBy || "id", i.order || "asc"), 
-                "number" == typeof i.status ? o.where("active", i.status) : Array.isArray(i.status) && i.status.forEach(function(e) {
-                    return o.orWhere("active", e);
-                }), i.columns && o.columns.apply(o, r(i.columns)), o.then(function(e) {
-                    return s(e);
+            return new Promise(function(a, n) {
+                var s = t.knex(e);
+                s.select().limit(i.limit || 200).offset(i.offset || 0).orderBy(i.orderBy || "id", i.order || "asc"), 
+                "number" == typeof i.status ? s.where("active", i.status) : Array.isArray(i.status) && i.status.forEach(function(e) {
+                    return s.orWhere("active", e);
+                }), i.columns && s.columns.apply(s, r(i.columns)), s.then(function(e) {
+                    return n(e);
                 }).catch(function(e) {
                     return a(e);
+                });
+            });
+        },
+        getItem: function(e, t) {
+            var r = this;
+            return new Promise(function(i, a) {
+                r.knex(e).where({
+                    id: t
+                }).select().then(function(e) {
+                    return a(e);
+                }).catch(function(e) {
+                    return i(e);
                 });
             });
         }
