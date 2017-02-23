@@ -79,5 +79,30 @@ module.exports = {
         .then(() => resolve(true))
         .catch(err => reject(err));
     });
+  },
+
+  /**
+   * Delete item based on id
+   * @param {String} tableName
+   * @param {Number} id
+   * @param {Boolean} deleteFromDB Delete from DB || set active to 0
+   * @return {Promise} resolves true
+   */
+  deleteItem(tableName, id, deleteFromDB = false) {
+    return new Promise((reject, resolve) => {
+      if(deleteFromDB) {
+        this.knex(tableName)
+          .where({ id })
+          .delete()
+          .then(() => resolve(true))
+          .catch(err => reject(err));
+      } else {
+        this.knex(tableName)
+          .where({ id })
+          .update({ active: 0 })
+          .then(() => resolve(true))
+          .catch(err => reject(err));
+      }
+    });
   }
 };

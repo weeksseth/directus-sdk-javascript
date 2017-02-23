@@ -1,8 +1,9 @@
-const { createItem, getItems, getItem, updateItem } = require('./items');
+const { createItem, getItems, getItem, updateItem, deleteItem } = require('./items');
 
 module.exports = {
   createItem,
   getItems,
   getItem,
-  updateItem
+  updateItem,
+  deleteItem
 }
