@@ -3,7 +3,7 @@ module.exports = {
    * Creates item in given table
    * @param {String} tableName
    * @param {Object} data data to be inserted. Must match mysql field names
-   * @returns {Promise} resolves ID of inserted item
+   * @return {Promise} resolves ID of inserted item
    */
   createItem(tableName, data) {
      return new Promise((reject, resolve) => {
@@ -14,6 +14,12 @@ module.exports = {
      });
   },
 
+  /**
+   * Get items from given table
+   * @param {String} tableName
+   * @param {Object} params Select options
+   * @return {Promise} resolves Array of found items
+   */
   getItems(tableName, params = {}) {
     return new Promise((reject, resolve) => {
       const query = this.knex(tableName);
@@ -42,12 +48,18 @@ module.exports = {
     });
   },
 
+  /**
+   * Get single item based by ID
+   * @param {String} tableName
+   * @param {Number} id
+   * @return {Promise} resolves requested item
+   */
   getItem(tableName, id) {
     return new Promise((reject, resolve) => {
       this.knex(tableName)
         .where({ id })
         .select()
-        .then(rows => resolve(rows))
+        .then(rows => resolve(rows[0]))
         .catch(err => reject(err));
     });
   }
