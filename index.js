@@ -51,7 +51,7 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(4), a = i.buildPath, o = i.performRequest, s = r(8), n = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, v = h.getTable, g = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, E = r(13), y = E.createPrivilege, F = E.getGroupPrivilege, B = E.getTablePrivilege, U = E.updatePrivilege, G = r(14), P = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, L = r(16), w = L.getActivity, _ = r(17), V = _.getBookmarks, D = _.getUserBookmarks, A = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), Y = H.getSettings, K = H.getSettingsByCollection, Q = H.updateSettings;
+    var i = r(4), a = i.buildPath, o = i.performRequest, s = r(8), n = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, p = r(10), f = p.createFile, m = p.getFiles, b = p.getFile, T = p.updateFile, h = r(11), k = h.getTables, v = h.getTable, g = h.createTable, O = r(12), N = O.createColumn, R = O.getColumns, I = O.getColumn, q = O.updateColumn, C = O.deleteColumn, E = r(13), y = E.createPrivilege, F = E.getGroupPrivilege, B = E.getTablePrivilege, P = E.updatePrivilege, U = r(14), G = U.getPreference, S = U.updatePreference, j = r(15), x = j.getMessages, J = j.getMessage, L = r(16), w = L.getActivity, V = r(17), _ = V.getBookmarks, D = V.getUserBookmarks, A = V.getBookmark, M = V.createBookmark, z = V.deleteBookmark, H = r(18), Y = H.getSettings, K = H.getSettingsByCollection, Q = H.updateSettings;
     e.exports = {
         buildPath: a,
         performRequest: o,
@@ -75,13 +75,13 @@ module.exports = function(e) {
         createPrivilege: y,
         getGroupPrivilege: F,
         getTablePrivilege: B,
-        updatePrivilege: U,
-        getPreference: P,
+        updatePrivilege: P,
+        getPreference: G,
         updatePreference: S,
         getMessages: x,
         getMessage: J,
         getActivity: w,
-        getBookmarks: V,
+        getBookmarks: _,
         getUserBookmarks: D,
         getBookmark: A,
         createBookmark: M,
@@ -112,7 +112,7 @@ module.exports = function(e) {
                 callback: o.FUNCTION | o.Required
             } ], arguments), t = e.pathFormat.indexOf("%s") === -1 ? this.baseEndpoint + e.pathFormat : this.baseEndpoint + this.buildPath(e.pathFormat, e.variables), r = function(r, i, a) {
                 if (r) throw new Error(r);
-                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode && e.callback(t + " returned not authorized (403)") : e.callback(null, JSON.parse(a));
+                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode ? e.callback(t + " returned not authorized (403)") : 401 == i.statusCode && e.callback(t + " returned not authorized (401)") : e.callback(null, JSON.parse(a));
             };
             switch (e.method) {
               case "GET":
@@ -269,8 +269,10 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments);
-            this.createItem("directus_files", e.data, e.callback);
+            } ], arguments), t = a.defer();
+            return this.performRequest("POST", this.endpoints.fileList, e.data, function(e, r) {
+                e && t.reject(e), t.resolve(r);
+            }), t.promise.nodeify(e.callback);
         },
         getFiles: function() {
             var e = i([ {

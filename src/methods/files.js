@@ -8,7 +8,14 @@ module.exports = {
       {callback: Args.FUNCTION | Args.Optional}
     ], arguments);
 
-    this.createItem('directus_files', args.data, args.callback);
+    const deferred = q.defer();
+
+    this.performRequest('POST', this.endpoints.fileList, args.data, (err, res) => {
+      if(err) deferred.reject(err);
+      deferred.resolve(res);
+    });
+
+    return deferred.promise.nodeify(args.callback);
   },
 
   getFiles: function() {

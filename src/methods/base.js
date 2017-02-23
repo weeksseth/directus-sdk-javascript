@@ -31,6 +31,8 @@ module.exports = {
         args.callback(url + ' returned not found (404)');
       } else if(res.statusCode == 403) {
         args.callback(url + ' returned not authorized (403)');
+      } else if(res.statusCode == 401){
+        args.callback(url + ' returned not authorized (401)');
       }
     };
 
