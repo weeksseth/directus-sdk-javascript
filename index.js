@@ -62,11 +62,11 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(4), a = i.buildPath, n = i.performRequest, s = r(8), o = s.createItem, l = s.getItems, c = s.getItem, u = s.updateItem, d = s.deleteItem, f = r(10), p = f.createFile, m = f.getFiles, b = f.getFile, T = f.updateFile, h = r(11), k = h.getTables, g = h.getTable, v = h.createTable, O = r(12), N = O.createColumn, I = O.getColumns, R = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, B = y.getTablePrivilege, P = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, w = j.getMessage, J = r(16), L = J.getActivity, _ = r(17), A = _.getBookmarks, V = _.getUserBookmarks, D = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
+    var i = r(4), a = i.buildPath, n = i.performRequest, o = r(8), s = o.createItem, l = o.getItems, c = o.getItem, u = o.updateItem, d = o.deleteItem, f = r(10), p = f.createFile, m = f.getFiles, b = f.getFile, h = f.updateFile, T = r(11), k = T.getTables, v = T.getTable, g = T.createTable, O = r(12), I = O.createColumn, N = O.getColumns, R = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, P = y.getTablePrivilege, B = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, w = j.getMessage, J = r(16), L = J.getActivity, _ = r(17), A = _.getBookmarks, V = _.getUserBookmarks, D = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
     e.exports = {
         buildPath: a,
         performRequest: n,
-        createItem: o,
+        createItem: s,
         getItems: l,
         getItem: c,
         updateItem: u,
@@ -74,19 +74,19 @@ module.exports = function(e) {
         createFile: p,
         getFiles: m,
         getFile: b,
-        updateFile: T,
+        updateFile: h,
         getTables: k,
-        getTable: g,
-        createTable: v,
-        createColumn: N,
-        getColumns: I,
+        getTable: v,
+        createTable: g,
+        createColumn: I,
+        getColumns: N,
         getColumn: R,
         updateColumn: q,
         deleteColumn: C,
         createPrivilege: E,
         getGroupPrivilege: F,
-        getTablePrivilege: B,
-        updatePrivilege: P,
+        getTablePrivilege: P,
+        updatePrivilege: B,
         getPreference: U,
         updatePreference: S,
         getMessages: x,
@@ -639,10 +639,13 @@ module.exports = function(e) {
     e.exports = require("knex");
 }, function(e, t, r) {
     "use strict";
-    var i = r(21), a = i.getItems, n = i.getItem;
+    var i = r(21), a = i.createItem, n = i.getItems, o = i.getItem, s = i.updateItem, l = i.deleteItem;
     e.exports = {
-        getItems: a,
-        getItem: n
+        createItem: a,
+        getItems: n,
+        getItem: o,
+        updateItem: s,
+        deleteItem: l
     };
 }, function(e, t) {
     "use strict";
@@ -654,14 +657,24 @@ module.exports = function(e) {
         return Array.from(e);
     }
     e.exports = {
+        createItem: function(e, t) {
+            var r = this;
+            return new Promise(function(i, a) {
+                r.knex(e).insert(t).then(function(e) {
+                    return a(e);
+                }).catch(function(e) {
+                    return i(e);
+                });
+            });
+        },
         getItems: function(e) {
             var t = this, i = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
             return new Promise(function(a, n) {
-                var s = t.knex(e);
-                s.select().limit(i.limit || 200).offset(i.offset || 0).orderBy(i.orderBy || "id", i.order || "asc"), 
-                "number" == typeof i.status ? s.where("active", i.status) : Array.isArray(i.status) && i.status.forEach(function(e) {
-                    return s.orWhere("active", e);
-                }), i.columns && s.columns.apply(s, r(i.columns)), s.then(function(e) {
+                var o = t.knex(e);
+                o.select().limit(i.limit || 200).offset(i.offset || 0).orderBy(i.orderBy || "id", i.order || "asc"), 
+                "number" == typeof i.status ? o.where("active", i.status) : Array.isArray(i.status) && i.status.forEach(function(e) {
+                    return o.orWhere("active", e);
+                }), i.columns && o.columns.apply(o, r(i.columns)), o.then(function(e) {
                     return n(e);
                 }).catch(function(e) {
                     return a(e);
@@ -674,9 +687,41 @@ module.exports = function(e) {
                 r.knex(e).where({
                     id: t
                 }).select().then(function(e) {
-                    return a(e);
+                    return a(e[0]);
                 }).catch(function(e) {
                     return i(e);
+                });
+            });
+        },
+        updateItem: function(e, t, r) {
+            var i = this;
+            return new Promise(function(a, n) {
+                i.knex(e).where({
+                    id: t
+                }).update(r).then(function() {
+                    return n(!0);
+                }).catch(function(e) {
+                    return a(e);
+                });
+            });
+        },
+        deleteItem: function(e, t) {
+            var r = this, i = arguments.length > 2 && void 0 !== arguments[2] && arguments[2];
+            return new Promise(function(a, n) {
+                i ? r.knex(e).where({
+                    id: t
+                }).delete().then(function(e) {
+                    return n(e);
+                }).catch(function(e) {
+                    return a(e);
+                }) : r.knex(e).where({
+                    id: t
+                }).update({
+                    active: 0
+                }).then(function() {
+                    return n(!0);
+                }).catch(function(e) {
+                    return a(e);
                 });
             });
         }
