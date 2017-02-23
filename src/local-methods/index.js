@@ -4,7 +4,7 @@
  */
 
 const { createItem, getItems, getItem, updateItem, deleteItem } = require('./items');
-const { createTable, getTables } = require('./tables');
+const { createTable, getTables, getTable } = require('./tables');
 
 module.exports = {
   createItem,
@@ -14,5 +14,6 @@ module.exports = {
   deleteItem,
 
   createTable,
-  getTables
+  getTables,
+  getTable
 }

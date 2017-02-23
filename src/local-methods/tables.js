@@ -53,10 +53,17 @@ module.exports = {
 
   /**
    * Get table info
+   * (just returns columns for now)
+   * TODO: improve when information_schema can be accessed
+   * @param {String} tableName
+   * @return {Promise} resolves info object
    */
-  getTable(tableName, params = {}) {
+  getTable(tableName) {
     return new Promise((reject, resolve) => {
-
+      this.knex(tableName)
+        .columnInfo()
+        .then(info => resolve(info))
+        .catch(err => reject(err));
     });
   }
 };
