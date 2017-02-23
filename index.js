@@ -1,12 +1,12 @@
 module.exports = function(e) {
     function t(i) {
         if (r[i]) return r[i].exports;
-        var a = r[i] = {
+        var n = r[i] = {
             exports: {},
             id: i,
             loaded: !1
         };
-        return e[i].call(a.exports, a, a.exports, t), a.loaded = !0, a.exports;
+        return e[i].call(n.exports, n, n.exports, t), n.loaded = !0, n.exports;
     }
     var r = {};
     return t.m = e, t.c = r, t.p = "", t(0);
@@ -62,10 +62,10 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(4), a = i.buildPath, n = i.performRequest, o = r(8), s = o.createItem, l = o.getItems, c = o.getItem, u = o.updateItem, d = o.deleteItem, f = r(10), p = f.createFile, m = f.getFiles, b = f.getFile, h = f.updateFile, T = r(11), k = T.getTables, v = T.getTable, g = T.createTable, O = r(12), I = O.createColumn, N = O.getColumns, R = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, P = y.getTablePrivilege, B = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, w = j.getMessage, J = r(16), L = J.getActivity, _ = r(17), A = _.getBookmarks, V = _.getUserBookmarks, D = _.getBookmark, M = _.createBookmark, z = _.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
+    var i = r(4), n = i.buildPath, a = i.performRequest, o = r(8), s = o.createItem, l = o.getItems, c = o.getItem, u = o.updateItem, d = o.deleteItem, f = r(10), p = f.createFile, m = f.getFiles, b = f.getFile, h = f.updateFile, T = r(11), k = T.getTables, v = T.getTable, g = T.createTable, O = r(12), I = O.createColumn, N = O.getColumns, R = O.getColumn, q = O.updateColumn, C = O.deleteColumn, y = r(13), E = y.createPrivilege, F = y.getGroupPrivilege, P = y.getTablePrivilege, B = y.updatePrivilege, G = r(14), U = G.getPreference, S = G.updatePreference, j = r(15), x = j.getMessages, w = j.getMessage, _ = r(16), J = _.getActivity, L = r(17), A = L.getBookmarks, V = L.getUserBookmarks, D = L.getBookmark, M = L.createBookmark, z = L.deleteBookmark, H = r(18), W = H.getSettings, Y = H.getSettingsByCollection, K = H.updateSettings;
     e.exports = {
-        buildPath: a,
-        performRequest: n,
+        buildPath: n,
+        performRequest: a,
         createItem: s,
         getItems: l,
         getItem: c,
@@ -91,7 +91,7 @@ module.exports = function(e) {
         updatePreference: S,
         getMessages: x,
         getMessage: w,
-        getActivity: L,
+        getActivity: J,
         getBookmarks: A,
         getUserBookmarks: V,
         getBookmark: D,
@@ -103,31 +103,31 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(5).vsprintf, a = r(6), n = r(7);
+    var i = r(5).vsprintf, n = r(6), a = r(7);
     e.exports = {
         buildPath: function(e, t) {
             return i(e, t);
         },
         performRequest: function() {
-            var e = n([ {
-                method: n.STRING | n.Required
+            var e = a([ {
+                method: a.STRING | a.Required
             }, {
-                pathFormat: n.STRING | n.Required
+                pathFormat: a.STRING | a.Required
             }, {
-                variables: n.ARRAY | n.Optional,
+                variables: a.ARRAY | a.Optional,
                 _default: []
             }, {
-                paramsOrBody: n.OBJECT | n.Optional,
+                paramsOrBody: a.OBJECT | a.Optional,
                 _default: {}
             }, {
-                callback: n.FUNCTION | n.Required
-            } ], arguments), t = e.pathFormat.indexOf("%s") === -1 ? this.baseEndpoint + e.pathFormat : this.baseEndpoint + this.buildPath(e.pathFormat, e.variables), r = function(r, i, a) {
+                callback: a.FUNCTION | a.Required
+            } ], arguments), t = e.pathFormat.indexOf("%s") === -1 ? this.baseEndpoint + e.pathFormat : this.baseEndpoint + this.buildPath(e.pathFormat, e.variables), r = function(r, i, n) {
                 if (r) throw new Error(r);
-                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode ? e.callback(t + " returned not authorized (403)") : 401 == i.statusCode && e.callback(t + " returned not logged in (401)") : e.callback(null, JSON.parse(a));
+                r || 200 != i.statusCode ? 500 == i.statusCode ? e.callback(t + " returned internal server error (500)") : 404 == i.statusCode ? e.callback(t + " returned not found (404)") : 403 == i.statusCode ? e.callback(t + " returned not authorized (403)") : 401 == i.statusCode && e.callback(t + " returned not logged in (401)") : e.callback(null, JSON.parse(n));
             };
             switch (e.method) {
               case "GET":
-                a.get({
+                n.get({
                     auth: {
                         bearer: this.accessToken
                     },
@@ -137,7 +137,7 @@ module.exports = function(e) {
                 break;
 
               case "POST":
-                a.post({
+                n.post({
                     auth: {
                         bearer: this.accessToken
                     },
@@ -150,7 +150,7 @@ module.exports = function(e) {
                 break;
 
               case "PATCH":
-                a.patch({
+                n.patch({
                     auth: {
                         bearer: this.accessToken
                     },
@@ -163,7 +163,7 @@ module.exports = function(e) {
                 break;
 
               case "PUT":
-                a.put({
+                n.put({
                     auth: {
                         bearer: this.accessToken
                     },
@@ -176,7 +176,7 @@ module.exports = function(e) {
                 break;
 
               case "DELETE":
-                a.delete({
+                n.delete({
                     auth: {
                         bearer: this.accessToken
                     },
@@ -193,7 +193,7 @@ module.exports = function(e) {
     e.exports = require("args-js");
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         createItem: function() {
             var e = i([ {
@@ -202,7 +202,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("POST", this.endpoints.tableEntries, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -215,7 +215,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("GET", this.endpoints.tableEntries, r, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -230,7 +230,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table, e.id ];
+            } ], arguments), t = n.defer(), r = [ e.table, e.id ];
             return this.performRequest("GET", this.endpoints.tableEntry, r, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -244,7 +244,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table, e.id ];
+            } ], arguments), t = n.defer(), r = [ e.table, e.id ];
             return this.performRequest("PUT", this.endpoints.tableEntry, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -259,7 +259,7 @@ module.exports = function(e) {
                 _default: !1
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table, e.id ];
+            } ], arguments), t = n.defer(), r = [ e.table, e.id ];
             return e.deleteFromDB ? this.performRequest("DELETE", this.endpoints.tableEntry, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }) : this.performRequest("PUT", this.endpoints.tableEntry, r, {
@@ -273,7 +273,7 @@ module.exports = function(e) {
     e.exports = require("q");
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         createFile: function() {
             var e = i([ {
@@ -289,7 +289,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.fileList, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -302,7 +302,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id ];
+            } ], arguments), t = n.defer(), r = [ e.id ];
             return this.performRequest("GET", this.endpoints.fileInformation, r, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -320,7 +320,7 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         createTable: function() {
             if (this.apiVersion < 1.1) throw Error("This method can't be used with api version " + this.apiVersion + " use version ^1.1 instead");
@@ -328,7 +328,7 @@ module.exports = function(e) {
                 table: i.STRING | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("POST", this.endpoints.tableList, {
                 name: e.table
             }, function(e, r) {
@@ -338,7 +338,7 @@ module.exports = function(e) {
         getTables: function() {
             var e = i([ {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.tableList, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -348,7 +348,7 @@ module.exports = function(e) {
                 table: i.STRING | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("GET", this.endpoints.tableInformation, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -356,7 +356,7 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         createColumn: function() {
             var e = i([ {
@@ -365,7 +365,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("POST", this.endpoints.columnList, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -378,7 +378,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("GET", this.endpoints.columnList, r, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -390,7 +390,7 @@ module.exports = function(e) {
                 column: i.STRING | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table, e.column ];
+            } ], arguments), t = n.defer(), r = [ e.table, e.column ];
             return this.performRequest("GET", this.endpoints.columnInformation, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -404,7 +404,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table, e.column ];
+            } ], arguments), t = n.defer(), r = [ e.table, e.column ];
             return this.performRequest("PUT", this.endpoints.columnInformation, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -419,7 +419,7 @@ module.exports = function(e) {
                 _default: !1
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table, e.column ];
+            } ], arguments), t = n.defer(), r = [ e.table, e.column ];
             return this.performRequest("DELETE", this.endpoints.columnInformation, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -427,14 +427,14 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         createPrivileges: function() {
             var e = i([ {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id ];
+            } ], arguments), t = n.defer(), r = [ e.id ];
             return this.performRequest("POST", this.endpoints.groupPrivileges, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -444,7 +444,7 @@ module.exports = function(e) {
                 id: i.INT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id ];
+            } ], arguments), t = n.defer(), r = [ e.id ];
             return this.performRequest("GET", this.endpoints.groupPrivileges, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -456,7 +456,7 @@ module.exports = function(e) {
                 table: i.STRING | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id, e.table ];
+            } ], arguments), t = n.defer(), r = [ e.id, e.table ];
             return this.performRequest("GET", this.endpoints.tablePrivileges, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -470,7 +470,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id, e.privId ];
+            } ], arguments), t = n.defer(), r = [ e.id, e.privId ];
             return this.performRequest("PUT", this.endpoints.tablePrivileges, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -478,14 +478,14 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         getPreferences: function() {
             var e = i([ {
                 table: i.STRING | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("GET", this.endpoints.tablePreferences, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -497,7 +497,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.table ];
+            } ], arguments), t = n.defer(), r = [ e.table ];
             return this.performRequest("PUT", this.endpoints.tablePreferences, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -505,7 +505,7 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         getMessages: function() {
             var e = i([ {
@@ -513,7 +513,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.messageList, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -523,7 +523,7 @@ module.exports = function(e) {
                 id: i.INT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id ];
+            } ], arguments), t = n.defer(), r = [ e.id ];
             return this.performRequest("GET", this.endpoints.messageInformation, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -531,7 +531,7 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         getActivity: function() {
             if (this.apiVersion < 1.1) throw Error("This method can't be used with api version " + this.apiVersion + " use version ^1.1 instead");
@@ -540,7 +540,7 @@ module.exports = function(e) {
                 _default: {}
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.activity, e.params, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -548,12 +548,12 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         getBookmarks: function() {
             var e = i([ {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.bookmarkList, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -562,7 +562,7 @@ module.exports = function(e) {
             if (this.apiVersion < 1.1) throw Error("This method can't be used with api version " + this.apiVersion + " use version ^1.1 instead");
             var e = i([ {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.bookmarkSelf, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -572,7 +572,7 @@ module.exports = function(e) {
                 id: i.INT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id ];
+            } ], arguments), t = n.defer(), r = [ e.id ];
             return this.performRequest("GET", this.endpoints.bookmarkInformation, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -583,7 +583,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("POST", this.endpoints.bookmarkList, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -594,7 +594,7 @@ module.exports = function(e) {
                 id: i.INT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.id ];
+            } ], arguments), t = n.defer(), r = [ e.id ];
             return this.performRequest("DELETE", this.endpoints.bookmarkInformation, r, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -602,12 +602,12 @@ module.exports = function(e) {
     };
 }, function(e, t, r) {
     "use strict";
-    var i = r(7), a = r(9);
+    var i = r(7), n = r(9);
     e.exports = {
         getSettings: function() {
             var e = i([ {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer();
+            } ], arguments), t = n.defer();
             return this.performRequest("GET", this.endpoints.settings, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -617,7 +617,7 @@ module.exports = function(e) {
                 collection: i.STRING | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.collection ];
+            } ], arguments), t = n.defer(), r = [ e.collection ];
             return this.performRequest("GET", this.endpoints.settingsType, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -629,7 +629,7 @@ module.exports = function(e) {
                 data: i.OBJECT | i.Required
             }, {
                 callback: i.FUNCTION | i.Optional
-            } ], arguments), t = a.defer(), r = [ e.collection ];
+            } ], arguments), t = n.defer(), r = [ e.collection ];
             return this.performRequest("PUT", this.endpoints.settingsType, r, e.data, function(e, r) {
                 e && t.reject(e), t.resolve(r);
             }), t.promise.nodeify(e.callback);
@@ -639,13 +639,15 @@ module.exports = function(e) {
     e.exports = require("knex");
 }, function(e, t, r) {
     "use strict";
-    var i = r(21), a = i.createItem, n = i.getItems, o = i.getItem, s = i.updateItem, l = i.deleteItem;
+    var i = r(21), n = i.createItem, a = i.getItems, o = i.getItem, s = i.updateItem, l = i.deleteItem, c = r(22), u = c.createTable, d = c.getTables;
     e.exports = {
-        createItem: a,
-        getItems: n,
+        createItem: n,
+        getItems: a,
         getItem: o,
         updateItem: s,
-        deleteItem: l
+        deleteItem: l,
+        createTable: u,
+        getTables: d
     };
 }, function(e, t) {
     "use strict";
@@ -659,9 +661,9 @@ module.exports = function(e) {
     e.exports = {
         createItem: function(e, t) {
             var r = this;
-            return new Promise(function(i, a) {
+            return new Promise(function(i, n) {
                 r.knex(e).insert(t).then(function(e) {
-                    return a(e);
+                    return n(e);
                 }).catch(function(e) {
                     return i(e);
                 });
@@ -669,25 +671,25 @@ module.exports = function(e) {
         },
         getItems: function(e) {
             var t = this, i = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-            return new Promise(function(a, n) {
+            return new Promise(function(n, a) {
                 var o = t.knex(e);
                 o.select().limit(i.limit || 200).offset(i.offset || 0).orderBy(i.orderBy || "id", i.order || "asc"), 
                 "number" == typeof i.status ? o.where("active", i.status) : Array.isArray(i.status) && i.status.forEach(function(e) {
                     return o.orWhere("active", e);
                 }), i.columns && o.columns.apply(o, r(i.columns)), o.then(function(e) {
-                    return n(e);
-                }).catch(function(e) {
                     return a(e);
+                }).catch(function(e) {
+                    return n(e);
                 });
             });
         },
         getItem: function(e, t) {
             var r = this;
-            return new Promise(function(i, a) {
+            return new Promise(function(i, n) {
                 r.knex(e).where({
                     id: t
                 }).select().then(function(e) {
-                    return a(e[0]);
+                    return n(e[0]);
                 }).catch(function(e) {
                     return i(e);
                 });
@@ -695,33 +697,69 @@ module.exports = function(e) {
         },
         updateItem: function(e, t, r) {
             var i = this;
-            return new Promise(function(a, n) {
+            return new Promise(function(n, a) {
                 i.knex(e).where({
                     id: t
                 }).update(r).then(function() {
-                    return n(!0);
+                    return a(!0);
                 }).catch(function(e) {
-                    return a(e);
+                    return n(e);
                 });
             });
         },
         deleteItem: function(e, t) {
             var r = this, i = arguments.length > 2 && void 0 !== arguments[2] && arguments[2];
-            return new Promise(function(a, n) {
+            return new Promise(function(n, a) {
                 i ? r.knex(e).where({
                     id: t
-                }).delete().then(function(e) {
-                    return n(e);
+                }).delete().then(function() {
+                    return a(!0);
                 }).catch(function(e) {
-                    return a(e);
+                    return n(e);
                 }) : r.knex(e).where({
                     id: t
                 }).update({
                     active: 0
                 }).then(function() {
-                    return n(!0);
+                    return a(!0);
                 }).catch(function(e) {
-                    return a(e);
+                    return n(e);
+                });
+            });
+        }
+    };
+}, function(e, t) {
+    "use strict";
+    e.exports = {
+        createTable: function(e) {
+            var t = this;
+            return new Promise(function(r, i) {
+                t.knex.schema.createTable(e, function(e) {
+                    e.increments(), e.integer("active");
+                }).then(function(e) {
+                    return i(e);
+                }).catch(function(e) {
+                    return r(e);
+                }), t.knex("directus_privileges").insert({
+                    table_name: e,
+                    allow_view: 2,
+                    allow_add: 1,
+                    allow_edit: 2,
+                    allow_delete: 2,
+                    allow_alter: 1,
+                    group_id: 1,
+                    nav_listed: 1,
+                    status_id: null
+                });
+            });
+        },
+        getTables: function() {
+            var e = this;
+            return new Promise(function(t, r) {
+                e.knex.raw("SELECT * FROM information_schema").then(function(e) {
+                    return r(e);
+                }).catch(function(e) {
+                    return t(e);
                 });
             });
         }
