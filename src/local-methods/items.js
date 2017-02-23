@@ -1,4 +1,19 @@
 module.exports = {
+  /**
+   * Creates item in given table
+   * @param {String} tableName
+   * @param {Object} data data to be inserted. Must match mysql field names
+   * @returns {Promise} resolves ID of inserted item
+   */
+  createItem(tableName, data) {
+     return new Promise((reject, resolve) => {
+       this.knex(tableName)
+        .insert(data)
+        .then(id => resolve(id))
+        .catch(err => reject(err));
+     });
+  },
+
   getItems(tableName, params = {}) {
     return new Promise((reject, resolve) => {
       const query = this.knex(tableName);
