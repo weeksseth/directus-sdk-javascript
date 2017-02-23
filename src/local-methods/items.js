@@ -62,5 +62,22 @@ module.exports = {
         .then(rows => resolve(rows[0]))
         .catch(err => reject(err));
     });
+  },
+
+  /**
+   * Update single item by id
+   * @param {String} tableName
+   * @param {Number} id
+   * @param {Object} data data to be updated. Must match mysql field names
+   * @return {Promise} resolves true
+   */
+  updateItem(tableName, id, data) {
+    return new Promise((reject, resolve) => {
+      this.knex(tableName)
+        .where({ id })
+        .update(data)
+        .then(() => resolve(true))
+        .catch(err => reject(err));
+    });
   }
 };
