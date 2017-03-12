@@ -16,7 +16,7 @@ function SDK(config = {}, apiVersion = 1.1) {
     this.endpoints = require('./endpoints');
 
     // Set base url
-    this.baseEndpoint = this.url + '/' + config.apiVersion || 1.1 + '/';
+    this.baseEndpoint = `${this.url}/${config.apiVersion ? config.apiVersion : 1.1}/`;
 
     // Add methods to this
     Object.assign(this, require('./remote-methods/index'));
