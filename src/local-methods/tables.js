@@ -36,16 +36,19 @@ module.exports = {
    */
   getTables(params = {}) {
     return new Promise((reject, resolve) => {
-      /**
-       * Knex can't access information_schema since it's bound to the
-       *   directus table
-       */
       this.knex('directus_privileges')
         .select('table_name')
         .then(res => res.map(row => row.table_name))
         .then(res => {
-          return params.include_system ? res : res.filter(row => !row.startsWith('directus_'));
+          return params.includeSystem ? res : res.filter(row => !row.startsWith('directus_'));
         })
+        .then(res => ({
+          meta: {
+            type: 'collection',
+            table: 'directus_tables'
+          },
+          data: res.map(name => ({ name }))
+        }))
         .then(res => resolve(res))
         .catch(err => reject(err));
     });
