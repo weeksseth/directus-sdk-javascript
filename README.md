@@ -27,14 +27,14 @@ const client = new SDK(
 All methods can be used with either callbacks or promises.
 
 ```javascript
-client.getEntries('projects', (err, res) => {
+client.getItems('projects', (err, res) => {
   if(err) throw err;
   console.log(res);
 });
 ```
 
 ```javascript
-client.getEntries('projects')
+client.getItems('projects')
   .then(res => {
     console.log(res);
   })
@@ -43,4 +43,4 @@ client.getEntries('projects')
   });
 ```
 
-Check [the official API docs for a complete overview of all endpoints and available methods](http://api.getdirectus.com/1.1/)
+Check [the official API docs for a complete overview of all endpoints and available methods](https://api.getdirectus.com/1.1/#Getting_Data)
