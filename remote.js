@@ -13,12 +13,19 @@ class RemoteInstance {
     this.url = url;
   }
 
-  _get(endpoint, params = {}) {
+  get _requestHeaders() {
     const headers = {};
 
     if (this.accessToken) {
       headers.Authorization = 'Bearer ' + this.accessToken;
     }
+
+    return headers;
+  }
+
+
+  _get(endpoint, params = {}) {
+    const headers = this._requestHeaders;
 
     return new Promise((resolve, reject) => {
       axios.get(this.url + endpoint, {params, headers})
@@ -31,6 +38,30 @@ class RemoteInstance {
           return reject(err);
         });
     });
+  }
+
+  _post(endpoint, data = {}) {
+    const headers = this._requestHeaders;
+
+    return new Promise((resolve, reject) => {
+      axios.post(this.url + endpoint, data, {headers})
+        .then(res => resolve(res.data))
+        .catch(err => {
+          if (err.response && err.response.data) {
+            return reject(err.response.data);
+          }
+
+          return reject(err);
+        });
+    });
+  }
+
+  createItem(table, data) {
+    if (!table) {
+      throw new Error('Missing parameter [table]');
+    }
+
+    return this._post(`tables/${table}/rows`, data);
   }
 
   getActivity(params = {}) {
