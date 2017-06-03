@@ -127,6 +127,21 @@ class RemoteInstance {
     return this._put(`files/${id}`, data);
   }
 
+  // Tables
+  // ----------------------------------------------------------------------------------
+  createTable(name = requiredParam('name')) {
+    return this._post('tables', {name});
+  }
+
+  getTables(params = {}) {
+    return this._get('tables', params);
+  }
+
+  getTable(table = requiredParam('table'), params = {}) {
+    return this._get(`tables/${table}`, params);
+  }
+
+
   getActivity(params = {}) {
     return this._get('activity', params);
   }
