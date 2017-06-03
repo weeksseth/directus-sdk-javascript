@@ -71,6 +71,24 @@ class RemoteInstance {
     });
   }
 
+  _delete(endpoint) {
+    const headers = this._requestHeaders;
+
+    return new Promise((resolve, reject) => {
+      axios.delete(this.url + endpoint, {headers})
+        .then(res => resolve(res.data))
+        .catch(err => {
+          if (err.response && err.response.data) {
+            return reject(err.response.data);
+          }
+
+          return reject(err);
+        });
+    });
+  }
+
+  // Items
+  // ----------------------------------------------------------------------------------
   createItem(table = requiredParam('table'), data = {}) {
     return this._post(`tables/${table}/rows`, data);
   }
@@ -85,6 +103,28 @@ class RemoteInstance {
 
   updateItem(table = requiredParam('table'), id = requiredParam('id'), data = requiredParam('data')) {
     return this._put(`tables/${table}/rows/${id}`, data);
+  }
+
+  deleteItem( table = requiredParam('table'), id = requiredParam('id')) {
+    return this._delete(`tables/${table}/rows/${id}`);
+  }
+
+  // Files
+  // ----------------------------------------------------------------------------------
+  createFile(data = {}) {
+    return this._post('files', data);
+  }
+
+  getFiles(params = {}) {
+    return this._get('files', params);
+  }
+
+  getFile(id = requiredParam('id')) {
+    return this._get(`files/${id}`);
+  }
+
+  updateFile(id = requiredParam('id'), data = requiredParam('data')) {
+    return this._put(`files/${id}`, data);
   }
 
   getActivity(params = {}) {
