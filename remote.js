@@ -163,6 +163,21 @@ class RemoteInstance {
     return this._delete(`tables/${table}/columns/${column}`);
   }
 
+  // Groups
+  // ----------------------------------------------------------------------------------
+  createGroup(name = requiredParam('name')) {
+    return this._post('groups', {name});
+  }
+
+  getGroups() {
+    return this._get('groups');
+  }
+
+  getGroup(id = requiredParam('id')) {
+    return this._get(`groups/${id}`);
+  }
+
+
   getActivity(params = {}) {
     return this._get('activity', params);
   }
