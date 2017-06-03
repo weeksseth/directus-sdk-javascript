@@ -177,6 +177,23 @@ class RemoteInstance {
     return this._get(`groups/${id}`);
   }
 
+  // Privileges
+  // ----------------------------------------------------------------------------------
+  createPrivileges(id = requiredParam('id'), data = {}) {
+    return this._post(`privileges/${id}`, data);
+  }
+
+  getPrivileges(id = requiredParam('id')) {
+    return this._get(`privileges/${id}`);
+  }
+
+  getTablePrivileges(id = requiredParam('id'), table = requiredParam('table')) {
+    return this._get(`privileges/${id}/${table}`);
+  }
+
+  updatePrivileges(id = requiredParam('id'), table = requiredParam('table'), data = {}) {
+    return this._get(`privileges/${id}/${table}`);
+  }
 
   getActivity(params = {}) {
     return this._get('activity', params);
