@@ -195,6 +195,28 @@ class RemoteInstance {
     return this._get(`privileges/${id}/${table}`);
   }
 
+  // Preferences
+  // ----------------------------------------------------------------------------------
+  getPreferences(table = requiredParam('table')) {
+    return this._get(`tables/${table}/preferences`);
+  }
+
+  updatePreference(table = requiredParam('table'), data = {}) {
+    return this._update(`tables/${table}/preferences`, data);
+  }
+
+  // Messages
+  // ----------------------------------------------------------------------------------
+  getMessages(params = {}) {
+    return this._get('messages/rows', params);
+  }
+
+  getMessage(id = requiredParam('id')) {
+    return this._get(`messages/rows/${id}`);
+  }
+
+  // Activity
+  // ----------------------------------------------------------------------------------
   getActivity(params = {}) {
     return this._get('activity', params);
   }
