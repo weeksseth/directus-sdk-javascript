@@ -23,7 +23,6 @@ class RemoteInstance {
     return headers;
   }
 
-
   _get(endpoint, params = {}) {
     const headers = this._requestHeaders;
 
@@ -56,12 +55,36 @@ class RemoteInstance {
     });
   }
 
+  _put(endpoint, data = {}) {
+    const headers = this._requestHeaders;
+
+    return new Promise((resolve, reject) => {
+      axios.put(this.url + endpoint, data, {headers})
+        .then(res => resolve(res.data))
+        .catch(err => {
+          if (err.response && err.response.data) {
+            return reject(err.response.data);
+          }
+
+          return reject(err);
+        });
+    });
+  }
+
   createItem(table = requiredParam('table'), data = {}) {
     return this._post(`tables/${table}/rows`, data);
   }
 
   getItems(table = requiredParam('table'), params = {}) {
     return this._get(`tables/${table}/rows`, params);
+  }
+
+  getItem(table = requiredParam('table'), id = requiredParam('id')) {
+    return this._get(`tables/${table}/rows/${id}`);
+  }
+
+  updateItem(table = requiredParam('table'), id = requiredParam('id'), data = requiredParam('data')) {
+    return this._put(`tables/${table}/rows/${id}`, data);
   }
 
   getActivity(params = {}) {
