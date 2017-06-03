@@ -105,7 +105,7 @@ class RemoteInstance {
     return this._put(`tables/${table}/rows/${id}`, data);
   }
 
-  deleteItem( table = requiredParam('table'), id = requiredParam('id')) {
+  deleteItem(table = requiredParam('table'), id = requiredParam('id')) {
     return this._delete(`tables/${table}/rows/${id}`);
   }
 
@@ -191,7 +191,7 @@ class RemoteInstance {
     return this._get(`privileges/${id}/${table}`);
   }
 
-  updatePrivileges(id = requiredParam('id'), table = requiredParam('table'), data = {}) {
+  updatePrivileges(id = requiredParam('id'), table = requiredParam('table')) {
     return this._get(`privileges/${id}/${table}`);
   }
 
@@ -219,6 +219,42 @@ class RemoteInstance {
   // ----------------------------------------------------------------------------------
   getActivity(params = {}) {
     return this._get('activity', params);
+  }
+
+  // Bookmarks
+  // ----------------------------------------------------------------------------------
+  getBookmarks() {
+    return this._get('bookmarks');
+  }
+
+  getUserBookmarks() {
+    return this._get('bookmarks/self');
+  }
+
+  getBookmark(id = requiredParam('id')) {
+    return this._get(`bookmarks/${id}`);
+  }
+
+  createBookmark(data = requiredParam('data')) {
+    return this._post('bookmarks', data);
+  }
+
+  deleteBookmark(id = requiredParam('id')) {
+    return this._delete(`bookmarks/${id}`);
+  }
+
+  // Settings
+  // ----------------------------------------------------------------------------------
+  getSettings() {
+    return this._get('settings');
+  }
+
+  getSettingsByCollection(name = requiredParam('name')) {
+    return this._get(`settings/${name}`);
+  }
+
+  updateSettings(name = requiredParam('name'), data = {}) {
+    return this._put(`settings/${name}`, data);
   }
 }
 
