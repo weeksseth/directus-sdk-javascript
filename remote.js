@@ -141,6 +141,27 @@ class RemoteInstance {
     return this._get(`tables/${table}`, params);
   }
 
+  // Columns
+  // ----------------------------------------------------------------------------------
+  createColumn(table = requiredParam('table'), data = {}) {
+    return this._post(`tables/${table}/columns`, data);
+  }
+
+  getColumns(table = requiredParam('table'), params = {}) {
+    return this._get(`tables/${table}/columns`, params);
+  }
+
+  getColumn(table = requiredParam('table'), column = requiredParam('column')) {
+    return this._get(`tables/${table}/columns/${column}`);
+  }
+
+  updateColumn(table = requiredParam('table'), column = requiredParam('column'), data = {}) {
+    return this._put(`tables/${table}/columns/${column}`, data);
+  }
+
+  deleteColumn(table = requiredParam('table'), column = requiredParam('column')) {
+    return this._delete(`tables/${table}/columns/${column}`);
+  }
 
   getActivity(params = {}) {
     return this._get('activity', params);
