@@ -26,5 +26,10 @@
   "dependencies": {
     "axios": "^0.16.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "xo": "^0.18.2"
+  },
+  "xo": {
+    "space": true
+  }
 }
