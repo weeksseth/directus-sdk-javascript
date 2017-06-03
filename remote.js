@@ -56,17 +56,21 @@ class RemoteInstance {
     });
   }
 
-  createItem(table, data) {
-    if (!table) {
-      throw new Error('Missing parameter [table]');
-    }
-
+  createItem(table = requiredParam('table'), data = {}) {
     return this._post(`tables/${table}/rows`, data);
+  }
+
+  getItems(table = requiredParam('table'), params = {}) {
+    return this._get(`tables/${table}/rows`, params);
   }
 
   getActivity(params = {}) {
     return this._get('activity', params);
   }
+}
+
+function requiredParam(name) {
+  throw new Error(`Missing parameter [${name}]`);
 }
 
 module.exports = RemoteInstance;
