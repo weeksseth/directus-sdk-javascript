@@ -1,7 +1,3 @@
-class Remote {
-  constructor(options) {
-  }
-}
-
-module.exports = Remote;
-
+module.exports = {
+  RemoteInstance: require('./remote')
+};
