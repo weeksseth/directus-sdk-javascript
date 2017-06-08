@@ -256,6 +256,16 @@ class RemoteInstance {
   updateSettings(name = requiredParam('name'), data = {}) {
     return this._put(`settings/${name}`, data);
   }
+
+  // Users
+  // ----------------------------------------------------------------------------------
+  getUsers(params = {}) {
+    return this._get('users', params);
+  }
+
+  getUser(id = requiredParam('id')) {
+    return this._get(`users/${id}`);
+  }
 }
 
 function requiredParam(name) {
