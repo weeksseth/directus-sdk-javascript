@@ -263,7 +263,7 @@ class RemoteInstance {
     return this._get('users', params);
   }
 
-  getItem(id = requiredParam('id')) {
+  getUser(id = requiredParam('id')) {
     return this._get(`users/${id}`);
   }
 }
