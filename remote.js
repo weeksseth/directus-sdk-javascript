@@ -270,13 +270,7 @@ class RemoteInstance {
   // Hash
   // ----------------------------------------------------------------------------------
   getHash(string = requiredParam('string'), data = {}) {
-    if (!data.hasher) {
-      requiredParam('params.hasher');
-    }
-
-    data.string = string;
-
-    return this._post(`hash`, data);
+    return this._post('hash', data);
   }
 
   // Random
