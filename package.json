@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/directus/directus-sdk-javascript#readme",
   "dependencies": {
-    "axios": "^0.16.1"
+    "axios": "^0.16.2"
   },
   "devDependencies": {
     "xo": "^0.18.2"
