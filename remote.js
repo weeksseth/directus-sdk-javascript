@@ -266,6 +266,19 @@ class RemoteInstance {
   getUser(id = requiredParam('id')) {
     return this._get(`users/${id}`);
   }
+
+  // Hash
+  // ----------------------------------------------------------------------------------
+
+  getHash(string = requiredParam('string'), data = {}) {
+    if (!data.hasher) {
+      requiredParam('params.hasher');
+    }
+
+    data.string = string;
+
+    return this._post(`hash`, data);
+  }
 }
 
 function requiredParam(name) {
@@ -273,4 +286,3 @@ function requiredParam(name) {
 }
 
 module.exports = RemoteInstance;
-
