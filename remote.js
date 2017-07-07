@@ -269,7 +269,6 @@ class RemoteInstance {
 
   // Hash
   // ----------------------------------------------------------------------------------
-
   getHash(string = requiredParam('string'), data = {}) {
     if (!data.hasher) {
       requiredParam('params.hasher');
@@ -278,6 +277,12 @@ class RemoteInstance {
     data.string = string;
 
     return this._post(`hash`, data);
+  }
+
+  // Random
+  // ----------------------------------------------------------------------------------
+  getRandom(params = {}) {
+    return this._get('random', params);
   }
 }
 
