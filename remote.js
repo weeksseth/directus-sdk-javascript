@@ -112,19 +112,28 @@ class RemoteInstance {
   createBulk(table = requiredParam('table'), data = requiredParam('data')) {
     if (Array.isArray(data) === false)
       throw new Error(`Parameter data should be an array of objects`);
-    return this._post(`tables/${table}/bulk`, data);
+
+    return this._post(`tables/${table}/bulk`, {
+      rows: data
+    });
   }
 
   updateBulk(table = requiredParam('table'), data = requiredParam('data')) {
     if (Array.isArray(data) === false)
       throw new Error(`Parameter data should be an array of objects`);
-    return this._put(`tables/${table}/bulk`, data);
+
+    return this._put(`tables/${table}/bulk`, {
+      rows: data
+    });
   }
 
-  updateBulk(table = requiredParam('table'), data = requiredParam('data')) {
+  deleteBulk(table = requiredParam('table'), data = requiredParam('data')) {
     if (Array.isArray(data) === false)
       throw new Error(`Parameter data should be an array of objects`);
-    return this._delete(`tables/${table}/bulk`, data);
+
+    return this._delete(`tables/${table}/bulk`, {
+      rows: data
+    });
   }
 
   // Files
