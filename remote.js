@@ -113,7 +113,7 @@ class RemoteInstance {
     if (Array.isArray(data) === false)
       throw new Error(`Parameter data should be an array of objects`);
 
-    return this._post(`tables/${table}/bulk`, {
+    return this._post(`tables/${table}/rows/bulk`, {
       rows: data
     });
   }
@@ -122,7 +122,7 @@ class RemoteInstance {
     if (Array.isArray(data) === false)
       throw new Error(`Parameter data should be an array of objects`);
 
-    return this._put(`tables/${table}/bulk`, {
+    return this._put(`tables/${table}/rows/bulk`, {
       rows: data
     });
   }
@@ -131,7 +131,7 @@ class RemoteInstance {
     if (Array.isArray(data) === false)
       throw new Error(`Parameter data should be an array of objects`);
 
-    return this._delete(`tables/${table}/bulk`, {
+    return this._delete(`tables/${table}/rows/bulk`, {
       rows: data
     });
   }
