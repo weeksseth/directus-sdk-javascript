@@ -97,8 +97,8 @@ class RemoteInstance {
     return this._get(`tables/${table}/rows`, params);
   }
 
-  getItem(table = requiredParam('table'), id = requiredParam('id')) {
-    return this._get(`tables/${table}/rows/${id}`);
+  getItem(table = requiredParam('table'), id = requiredParam('id'), params = {}) {
+    return this._get(`tables/${table}/rows/${id}`, params);
   }
 
   updateItem(table = requiredParam('table'), id = requiredParam('id'), data = requiredParam('data')) {
