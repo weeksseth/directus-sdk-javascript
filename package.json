@@ -1,6 +1,6 @@
 {
   "name": "directus-sdk-javascript",
-  "version": "2.2.0",
+  "version": "2.2.0-1",
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
   "main": "index.js",
   "scripts": {},
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/directus/directus-sdk-javascript#readme",
   "dependencies": {
-    "axios": "^0.16.2"
+    "axios": "^0.16.2",
+    "qs": "^6.5.1"
   },
   "devDependencies": {
     "xo": "^0.18.2"

@@ -1,10 +1,12 @@
 const axios = require('axios');
+const qs = require('qs');
 
 class RemoteInstance {
   constructor(options) {
-    const {accessToken, url} = options;
+    const {accessToken, url, headers} = options;
 
     this.accessToken = accessToken;
+    this.headers = headers;
 
     if (!url) {
       throw new Error('No Directus URL provided');
@@ -14,7 +16,7 @@ class RemoteInstance {
   }
 
   get _requestHeaders() {
-    const headers = {};
+    const headers = this.headers;
 
     if (this.accessToken) {
       headers.Authorization = 'Bearer ' + this.accessToken;
@@ -27,7 +29,11 @@ class RemoteInstance {
     const headers = this._requestHeaders;
 
     return new Promise((resolve, reject) => {
-      axios.get(this.url + endpoint, {params, headers})
+      axios.get(this.url + endpoint, {
+        params,
+        headers,
+        paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets'})
+      })
         .then(res => resolve(res.data))
         .catch(err => {
           if (err.response && err.response.data) {
@@ -87,6 +93,22 @@ class RemoteInstance {
     });
   }
 
+  // Authentication
+  // -------------------------------------------
+  authenticate(email = requiredParam('email'), password = requiredParam('password')) {
+    return new Promise((resolve, reject) => {
+      this._post('auth/request-token', {email, password})
+        .then(res => {
+          if (res.success) {
+            this.accessToken = res.data.token;
+            return resolve(res);
+          }
+          return reject(res);
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   // Items
   // ----------------------------------------------------------------------------------
   createItem(table = requiredParam('table'), data = {}) {
@@ -107,6 +129,36 @@ class RemoteInstance {
 
   deleteItem(table = requiredParam('table'), id = requiredParam('id')) {
     return this._delete(`tables/${table}/rows/${id}`);
+  }
+
+  createBulk(table = requiredParam('table'), data = requiredParam('data')) {
+    if (Array.isArray(data) === false) {
+      throw new TypeError(`Parameter data should be an array of objects`);
+    }
+
+    return this._post(`tables/${table}/rows/bulk`, {
+      rows: data
+    });
+  }
+
+  updateBulk(table = requiredParam('table'), data = requiredParam('data')) {
+    if (Array.isArray(data) === false) {
+      throw new TypeError(`Parameter data should be an array of objects`);
+    }
+
+    return this._put(`tables/${table}/rows/bulk`, {
+      rows: data
+    });
+  }
+
+  deleteBulk(table = requiredParam('table'), data = requiredParam('data')) {
+    if (Array.isArray(data) === false) {
+      throw new TypeError(`Parameter data should be an array of objects`);
+    }
+
+    return this._delete(`tables/${table}/rows/bulk`, {
+      rows: data
+    });
   }
 
   // Files
