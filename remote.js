@@ -16,7 +16,7 @@ class RemoteInstance {
   }
 
   get _requestHeaders() {
-    const headers = this.headers;
+    const headers = this.headers || {};
 
     if (this.accessToken) {
       headers.Authorization = 'Bearer ' + this.accessToken;
