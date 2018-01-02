@@ -2,7 +2,7 @@ const axios = require('axios');
 const qs = require('qs');
 
 class RemoteInstance {
-  constructor(options) {
+  constructor(options = {}) {
     const {accessToken, url, headers} = options;
 
     this.accessToken = accessToken;
