@@ -7,11 +7,6 @@ class RemoteInstance {
 
     this.accessToken = accessToken;
     this.headers = headers;
-
-    if (!url) {
-      throw new Error('No Directus URL provided');
-    }
-
     this.url = url;
   }
 
@@ -91,6 +86,22 @@ class RemoteInstance {
           return reject(err);
         });
     });
+  }
+
+  // Items
+  // ---------------------------------------------------------------------------
+  getItems(table = requiredParam('table'), params = {}) {
+    return this._get(`items/${table}/`, params);
+  }
+
+  getItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), params = {}) {
+    return this._get(`items/${table}/${primaryKey}`, params);
+  }
+
+  // Tables
+  // ---------------------------------------------------------------------------
+  getTables(params = {}) {
+    return this._post('tables', params);
   }
 }
 
