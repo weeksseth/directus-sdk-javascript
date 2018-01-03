@@ -122,6 +122,10 @@ class RemoteInstance {
     return this._patch(`items/${table}/${primaryKey}`, data);
   }
 
+  createItem(table = requiredParam('table'), data = {}) {
+    return this._post(`items/${table}`, data);
+  }
+
   // Tables
   // ---------------------------------------------------------------------------
   getTables(params = {}) {
