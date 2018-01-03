@@ -72,6 +72,22 @@ class RemoteInstance {
     });
   }
 
+  _patch(endpoint, data = {}) {
+    const headers = this._requestHeaders;
+
+    return new Promise((resolve, reject) => {
+      axios.patch(this.url + endpoint, data, {headers})
+        .then(res => resolve(res.data))
+        .catch(err => {
+          if (err.response && err.response.data) {
+            return reject(err.response.data);
+          }
+
+          return reject(err);
+        });
+    });
+  }
+
   _delete(endpoint) {
     const headers = this._requestHeaders;
 
@@ -100,6 +116,10 @@ class RemoteInstance {
 
   getItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), params = {}) {
     return this._get(`items/${table}/${primaryKey}`, params);
+  }
+
+  updateItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), data = {}) {
+    return this._patch(`items/${table}/${primaryKey}`, data);
   }
 
   // Tables
