@@ -88,10 +88,14 @@ class RemoteInstance {
     });
   }
 
+  _getInterface(uiName) {
+    return this._get(`interfaces/${uiName}.js`);
+  }
+
   // Items
   // ---------------------------------------------------------------------------
   getItems(table = requiredParam('table'), params = {}) {
-    return this._get(`items/${table}/`, params);
+    return this._get(`items/${table}`, params);
   }
 
   getItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), params = {}) {
@@ -101,7 +105,11 @@ class RemoteInstance {
   // Tables
   // ---------------------------------------------------------------------------
   getTables(params = {}) {
-    return this._post('tables', params);
+    return this._get('tables', params);
+  }
+
+  getTable(table = requiredParam('table'), params = {}) {
+    return this._get(`tables/${table}`, params);
   }
 }
 
