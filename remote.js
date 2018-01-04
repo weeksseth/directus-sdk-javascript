@@ -126,6 +126,10 @@ class RemoteInstance {
     return this._post(`items/${table}`, data);
   }
 
+  deleteItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey')) {
+    return this._delete(`items/${table}/${primaryKey}`);
+  }
+
   // Tables
   // ---------------------------------------------------------------------------
   getTables(params = {}) {
