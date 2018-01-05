@@ -6,7 +6,7 @@ class RemoteInstance {
     const {accessToken, url, headers} = options;
 
     this.accessToken = accessToken;
-    this.headers = headers;
+    this.headers = headers || {};
 
     if (!url) {
       throw new Error('No Directus URL provided');
