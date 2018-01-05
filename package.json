@@ -1,11 +1,10 @@
 {
   "name": "directus-sdk-javascript",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rollup -c",
-    "version": "npm run build"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
