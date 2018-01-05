@@ -4,7 +4,8 @@
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "version": "npm run build"
   },
   "repository": {
     "type": "git",
