@@ -328,7 +328,7 @@ class RemoteInstance {
   // Random
   // ----------------------------------------------------------------------------------
   getRandom(params = {}) {
-    return this._get('random', params);
+    return this._post('random', params);
   }
 }
 
