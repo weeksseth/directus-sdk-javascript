@@ -30,6 +30,9 @@ class RemoteInstance {
     this._logoutTimer = null;
   }
 
+  // Private methods
+  // ---------------------------------------------------------------------------
+
   /**
    * Takes whatever headers have been set and adds the Authorization header
    *  if the access token exists
@@ -46,7 +49,6 @@ class RemoteInstance {
     return headers;
   }
 
-  // Request methods
   // ---------------------------------------------------------------------------
 
   /**
@@ -146,6 +148,8 @@ class RemoteInstance {
     //   current token
   }
 
+  // ---------------------------------------------------------------------------
+
   // Items
   // ---------------------------------------------------------------------------
   getItems(table = requiredParam('table'), params = {}) {
@@ -176,12 +180,6 @@ class RemoteInstance {
 
   getTable(table = requiredParam('table'), params = {}) {
     return this.request('get', `tables/${table}`, params);
-  }
-
-  // Interfaces
-  // ---------------------------------------------------------------------------
-  getInterface(name) {
-    return this.request('get', `interfaces/${name}.js`);
   }
 }
 
