@@ -1,4 +1,5 @@
 const axios = require('axios');
+const base64 = require('base-64');
 const qs = require('qs');
 
 /**
@@ -16,18 +17,19 @@ class RemoteInstance {
     this._headers = {};
 
     // The currently in use full unparsed access token
-    this._accessToken = null
+    this._accessToken;
 
     // The currently in use api url
-    this._url = null;
+    this._url;
 
-    // The instance of the timer which requests a new token
-    //  if the current one is about to expire
-    this._refreshTimer = null;
+    // The expiry date of the token
+    this._exp;
 
-    // The timer which fires when the access token is
-    //  expiring
-    this._logoutTimer = null;
+    // The interval which checks token expiry each minute
+    this._refreshInterval;
+
+    // Flag to prevent the SDK to sendout refresh requests when it's already fired one
+    this._isRefreshing = false;
   }
 
   // Private methods
@@ -49,6 +51,16 @@ class RemoteInstance {
     return headers;
   }
 
+  /**
+   * Get the payload out of a JWT
+   * @param {String} token - The JWT to parse
+   * @returns {Object} The payload of the JWT
+   */
+  _extractPayload(token) {
+    const payloadBase64 = token.split('.')[1].replace('-', '+').replace('_', '/');
+    return JSON.parse(base64.decode(payloadBase64));
+  }
+
   // ---------------------------------------------------------------------------
 
   /**
@@ -66,11 +78,7 @@ class RemoteInstance {
    * @reject {Error} - API error
    */
   request(method, url, requestData = {}) {
-    if (Boolean(this._url) === false) reject({
-      error: {
-        message: 'No API URL set'
-      }
-    });
+    if (Boolean(this._url) === false) throw 'No API URL set';
 
     const requestConfig = {
       url,
@@ -80,14 +88,11 @@ class RemoteInstance {
       headers: this._createHeaders(),
       baseURL: this._url,
 
-      // Only return API response, ignore request meta
-      transformResponse: data => data.data,
-
       // Use QS to format params
       paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets'})
     };
 
-    return axios.request(requestconfig);
+    return axios.request(requestConfig).then(response => response.data);
   }
 
   // Authentication flow
@@ -108,7 +113,7 @@ class RemoteInstance {
   login(credentials) {
     return new Promise((resolve, reject) => {
       if (credentials.url && credentials.url.length > 0) {
-        this.url = credentials.url;
+        this._url = credentials.url;
       }
 
       if (
@@ -126,8 +131,10 @@ class RemoteInstance {
         email: credentials.email,
         password: credentials.password
       })
-        .then(response => {
-          this._accessToken = response.data.data;
+        .then(response => response.data.token)
+        .then(token => this._saveToken(token))
+        .then(() => {
+          this._refreshInterval = setInterval(() => this._refreshIfNeeded(), 5000);
         })
         .catch(reject);
     });
@@ -142,10 +149,56 @@ class RemoteInstance {
     if (this.onLogOut) this.onLogOut();
 
     this._accessToken = null;
-    this._clearTimers();
+    this._exp = null;
 
-    // TODO: This should send a request to the API to invalidate the
-    //   current token
+    if (this._refreshInterval) clearInterval(this._refreshInterval);
+  }
+
+  /**
+   * Checks the difference between the expiry date of the token and the
+   *   current date. Fetches a new token when the expiry date of the token
+   *   is within 60 seconds of the current time, so the SDK stays logged in
+   *
+   * @private
+   */
+  _refreshIfNeeded() {
+    const now = Date.now();
+    const exp = this._exp.getTime();
+    const diffInSeconds = (exp - now) / 1000;
+    const refreshOffset = 30;
+
+    if (diffInSeconds <= refreshOffset && this._isRefreshing === false) {
+      this._isRefreshing = true;
+
+      this.request('post', '/auth/refresh', {
+        token: this._accessToken
+      })
+        .then(response => response.data.token)
+        .then(token => this._saveToken(token))
+        .then(() => {
+          this._isRefreshing = false;
+        })
+        .catch((err) => {
+          console.error('Logging out due to error in refreshing the access token: ');
+          console.error(err.response.data);
+          this.logout();
+        });
+    }
+  }
+
+  /**
+   * Extract the expiry date from the token and save the token to
+   *   this._accessToken
+   * @private
+   * @param {String} token - The access token to save.
+   * @returns {String} The token that was passed.
+   */
+  _saveToken(token) {
+    this._accessToken = token;
+    const payload = this._extractPayload(token);
+    this._exp = new Date(payload.exp * 1000);
+
+    return token;
   }
 
   // ---------------------------------------------------------------------------
