@@ -135,8 +135,9 @@ class RemoteInstance {
         .then(token => this._saveToken(token))
         .then(() => {
           this._refreshInterval = setInterval(() => this._refreshIfNeeded(), 5000);
+          resolve(this._url);
         })
-        .catch(reject);
+        .catch(err => reject(err.response.data));
     });
   }
 
@@ -178,10 +179,15 @@ class RemoteInstance {
         .then(() => {
           this._isRefreshing = false;
         })
+
+        // This error is most likely fired when the SDK tries to refresh an access token
+        //   that already has expired, but could also be a network error.
         .catch((err) => {
           console.error('Logging out due to error in refreshing the access token: ');
           console.error(err.response.data);
-          this.logout();
+
+          // Fire optional unexpected-logout handler
+          if (this.onUnexpectedLogout) this.onUnexpectedLogout(err.response.data);
         });
     }
   }
