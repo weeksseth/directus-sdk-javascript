@@ -146,7 +146,7 @@ class RemoteInstance {
    *  in which the SDK is used
    */
   logout() {
-    if (this.onLogOut) this.onLogOut();
+    if (this.onLogout) this.onLogout();
 
     this._accessToken = null;
     this._exp = null;
