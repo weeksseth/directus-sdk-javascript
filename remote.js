@@ -12,24 +12,15 @@ const qs = require('qs');
  */
 
 class RemoteInstance {
-  constructor() {
+  constructor(options = {}) {
     // Headers to be send with every request
-    this._headers = {};
+    this._headers = options.headers || {};
 
     // The currently in use full unparsed access token
-    this._accessToken;
+    this._accessToken = options.accessToken || {};
 
     // The currently in use api url
-    this._url;
-
-    // The expiry date of the token
-    this._exp;
-
-    // The interval which checks token expiry each minute
-    this._refreshInterval;
-
-    // Flag to prevent the SDK to sendout refresh requests when it's already fired one
-    this._isRefreshing = false;
+    this._url = options.url || {};
   }
 
   // Private methods
@@ -51,14 +42,20 @@ class RemoteInstance {
     return headers;
   }
 
-  /**
-   * Get the payload out of a JWT
-   * @param {String} token - The JWT to parse
-   * @returns {Object} The payload of the JWT
-   */
-  _extractPayload(token) {
-    const payloadBase64 = token.split('.')[1].replace('-', '+').replace('_', '/');
-    return JSON.parse(base64.decode(payloadBase64));
+  get url() {
+    return this._url;
+  }
+
+  set url() {
+    return this._url;
+  }
+
+  get accessToken() {
+    return this._accessToken;
+  }
+
+  set accessToken() {
+    return this._accessToken;
   }
 
   // ---------------------------------------------------------------------------
@@ -95,119 +92,17 @@ class RemoteInstance {
     return axios.request(requestConfig).then(response => response.data);
   }
 
-  // Authentication flow
   // ---------------------------------------------------------------------------
 
-  /**
-   * Authenticate the user with the provided credentials
-   *
-   * If the user has provided an URL, change the internal saved URL
-   * @param {Object} credentials - The user credentials to get the access token for.
-   * @param {String} credentials.email - The user's email address.
-   * @param {String} credentials.password - The user's password.
-   * @param {String} credentials.url - The API url to authenticate to.
-   * @promise
-   * @fulfill {Boolean} - Returns true if successful
-   * @reject {Error} - API error
-   */
-  login(credentials) {
-    return new Promise((resolve, reject) => {
-      if (credentials.url && credentials.url.length > 0) {
-        this._url = credentials.url;
-      }
-
-      if (
-        Boolean(credentials.email) === false ||
-        Boolean(credentials.password) === false
-      ) {
-        reject({
-          error: {
-            message: 'Provide credentials'
-          }
-        });
-      }
-
-      this.request('post', '/auth/authenticate', {
-        email: credentials.email,
-        password: credentials.password
-      })
-        .then(response => response.data.token)
-        .then(token => this._saveToken(token))
-        .then(() => {
-          this._refreshInterval = setInterval(() => this._refreshIfNeeded(), 5000);
-          resolve(this._url);
-        })
-        .catch(err => reject(err.response.data));
-    });
-  }
-
-  /**
-   * The logout function calls an optionally set callback function
-   *  in order to allow the user to act accordingly in the app
-   *  in which the SDK is used
-   */
-  logout() {
-    if (this.onLogout) this.onLogout();
-
-    this._accessToken = null;
-    this._exp = null;
-
-    if (this._refreshInterval) clearInterval(this._refreshInterval);
-  }
-
-  /**
-   * Checks the difference between the expiry date of the token and the
-   *   current date. Fetches a new token when the expiry date of the token
-   *   is within 60 seconds of the current time, so the SDK stays logged in
-   *
-   * @private
-   */
-  _refreshIfNeeded() {
-    const now = Date.now();
-    const exp = this._exp.getTime();
-    const diffInSeconds = (exp - now) / 1000;
-    const refreshOffset = 30;
-
-    if (diffInSeconds <= refreshOffset && this._isRefreshing === false) {
-      this._isRefreshing = true;
-
-      this.request('post', '/auth/refresh', {
-        token: this._accessToken
-      })
-        .then(response => response.data.token)
-        .then(token => this._saveToken(token))
-        .then(() => {
-          this._isRefreshing = false;
-        })
-
-        // This error is most likely fired when the SDK tries to refresh an access token
-        //   that already has expired, but could also be a network error.
-        .catch((err) => {
-          console.error('Logging out due to error in refreshing the access token: ');
-          console.error(err.response.data);
-
-          // Fire optional unexpected-logout handler
-          if (this.onUnexpectedLogout) this.onUnexpectedLogout(err.response.data);
-        });
-    }
-  }
-
-  /**
-   * Extract the expiry date from the token and save the token to
-   *   this._accessToken
-   * @private
-   * @param {String} token - The access token to save.
-   * @returns {String} The token that was passed.
-   */
-  _saveToken(token) {
-    this._accessToken = token;
-    const payload = this._extractPayload(token);
-    this._exp = new Date(payload.exp * 1000);
-
-    return token;
-  }
-
+  // Auth
   // ---------------------------------------------------------------------------
+  getToken(userCredentials = {}) {
+    return this.request('post', '/auth/authenticate', userCredentials);
+  }
+
+  refreshToken(token) {
+    return this.request('post', '/auth/refresh', { token });
+  }
 
   // Items
   // ---------------------------------------------------------------------------
