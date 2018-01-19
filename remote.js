@@ -46,16 +46,16 @@ class RemoteInstance {
     return this._url;
   }
 
-  set url() {
-    return this._url;
+  set url(val) {
+    this._url = val;
   }
 
   get accessToken() {
     return this._accessToken;
   }
 
-  set accessToken() {
-    return this._accessToken;
+  set accessToken(val) {
+    this._accessToken = val;
   }
 
   // ---------------------------------------------------------------------------
