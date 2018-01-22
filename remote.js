@@ -1,5 +1,4 @@
 const axios = require('axios');
-const base64 = require('base-64');
 const qs = require('qs');
 
 /**
@@ -11,17 +10,15 @@ const qs = require('qs');
  *  we don't have to check for auth validity every request
  */
 
-class RemoteInstance {
-  constructor(options = {}) {
-    // Headers to be send with every request
-    this._headers = options.headers || {};
+const RemoteInstance = {
+  // Headers to be send with every request
+  headers: {},
 
-    // The currently in use full unparsed access token
-    this._accessToken = options.accessToken || {};
+  // The currently in use full unparsed access token
+  accessToken: null,
 
-    // The currently in use api url
-    this._url = options.url || {};
-  }
+  // The currently in use api url
+  url: null,
 
   // Private methods
   // ---------------------------------------------------------------------------
@@ -33,30 +30,14 @@ class RemoteInstance {
    * @returns {Object} the headers ready for use
    */
   _createHeaders() {
-    const headers = this._headers || {};
+    const headers = this.headers || {};
 
-    if (this._accessToken) {
-      headers.Authorization = 'Bearer ' + this._accessToken;
+    if (this.accessToken) {
+      headers.Authorization = 'Bearer ' + this.accessToken;
     }
 
     return headers;
-  }
-
-  get url() {
-    return this._url;
-  }
-
-  set url(val) {
-    this._url = val;
-  }
-
-  get accessToken() {
-    return this._accessToken;
-  }
-
-  set accessToken(val) {
-    this._accessToken = val;
-  }
+  },
 
   // ---------------------------------------------------------------------------
 
@@ -75,7 +56,7 @@ class RemoteInstance {
    * @reject {Error} - API error
    */
   request(method, url, requestData = {}) {
-    if (Boolean(this._url) === false) throw 'No API URL set';
+    if (Boolean(this.url) === false) throw 'No API URL set';
 
     const requestConfig = {
       url,
@@ -83,14 +64,14 @@ class RemoteInstance {
       params: method === 'get' ? requestData : {},
       data: method !== 'get' ? requestData : {},
       headers: this._createHeaders(),
-      baseURL: this._url,
+      baseURL: this.url,
 
       // Use QS to format params
       paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets'})
     };
 
     return axios.request(requestConfig).then(response => response.data);
-  }
+  },
 
   // ---------------------------------------------------------------------------
 
@@ -98,44 +79,44 @@ class RemoteInstance {
   // ---------------------------------------------------------------------------
   getToken(userCredentials = {}) {
     return this.request('post', '/auth/authenticate', userCredentials);
-  }
+  },
 
   refreshToken(token) {
     return this.request('post', '/auth/refresh', { token });
-  }
+  },
 
   // Items
   // ---------------------------------------------------------------------------
   getItems(table = requiredParam('table'), params = {}) {
     return this.request('get', `items/${table}`, params);
-  }
+  },
 
   getItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), params = {}) {
     return this.request('get', `items/${table}/${primaryKey}`, params);
-  }
+  },
 
   updateItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), data = {}) {
     return this.request('patch', `items/${table}/${primaryKey}`, data);
-  }
+  },
 
   createItem(table = requiredParam('table'), data = {}) {
     return this.request('post', `items/${table}`, data);
-  }
+  },
 
   deleteItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey')) {
     return this.request('delete', `items/${table}/${primaryKey}`);
-  }
+  },
 
   // Tables
   // ---------------------------------------------------------------------------
   getTables(params = {}) {
     return this.request('get', 'tables', params);
-  }
+  },
 
   getTable(table = requiredParam('table'), params = {}) {
     return this.request('get', `tables/${table}`, params);
-  }
-}
+  },
+};
 
 function requiredParam(name) {
   throw new Error(`Missing parameter [${name}]`);
