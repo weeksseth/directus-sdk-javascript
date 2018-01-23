@@ -110,11 +110,11 @@ const RemoteInstance = {
   // Collections
   // ---------------------------------------------------------------------------
   getCollections(params = {}) {
-    return this.request('get', 'tables', params);
+    return this.request('get', 'collections', params);
   },
 
   getCollection(collection = requiredParam('collection'), params = {}) {
-    return this.request('get', `tables/${collection}`, params);
+    return this.request('get', `collections/${collection}`, params);
   },
 };
 
