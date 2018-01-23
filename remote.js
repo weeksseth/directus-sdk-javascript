@@ -87,34 +87,34 @@ const RemoteInstance = {
 
   // Items
   // ---------------------------------------------------------------------------
-  getItems(table = requiredParam('table'), params = {}) {
-    return this.request('get', `items/${table}`, params);
+  getItems(collection = requiredParam('collection'), params = {}) {
+    return this.request('get', `items/${collection}`, params);
   },
 
-  getItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), params = {}) {
-    return this.request('get', `items/${table}/${primaryKey}`, params);
+  getItem(collection = requiredParam('collection'), primaryKey = requiredParam('primaryKey'), params = {}) {
+    return this.request('get', `items/${collection}/${primaryKey}`, params);
   },
 
-  updateItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey'), data = {}) {
-    return this.request('patch', `items/${table}/${primaryKey}`, data);
+  updateItem(collection = requiredParam('collection'), primaryKey = requiredParam('primaryKey'), data = {}) {
+    return this.request('patch', `items/${collection}/${primaryKey}`, data);
   },
 
-  createItem(table = requiredParam('table'), data = {}) {
-    return this.request('post', `items/${table}`, data);
+  createItem(collection = requiredParam('collection'), data = {}) {
+    return this.request('post', `items/${collection}`, data);
   },
 
-  deleteItem(table = requiredParam('table'), primaryKey = requiredParam('primaryKey')) {
-    return this.request('delete', `items/${table}/${primaryKey}`);
+  deleteItem(collection = requiredParam('collection'), primaryKey = requiredParam('primaryKey')) {
+    return this.request('delete', `items/${collection}/${primaryKey}`);
   },
 
-  // Tables
+  // Collections
   // ---------------------------------------------------------------------------
-  getTables(params = {}) {
-    return this.request('get', 'tables', params);
+  getCollections(params = {}) {
+    return this.request('get', 'collections', params);
   },
 
-  getTable(table = requiredParam('table'), params = {}) {
-    return this.request('get', `tables/${table}`, params);
+  getCollection(collection = requiredParam('collection'), params = {}) {
+    return this.request('get', `collections/${collection}`, params);
   },
 };
 
