@@ -77,11 +77,11 @@ class RemoteInstance {
     });
   }
 
-  _delete(endpoint) {
+  _delete(endpoint, data = {}) {
     const headers = this._requestHeaders;
 
     return new Promise((resolve, reject) => {
-      axios.delete(this.url + endpoint, {headers})
+      axios.delete(this.url + endpoint, {headers, data})
         .then(res => resolve(res.data))
         .catch(err => {
           if (err.response && err.response.data) {
@@ -318,7 +318,7 @@ class RemoteInstance {
   getUser(id = requiredParam('id')) {
     return this._get(`users/${id}`);
   }
-  
+
   createUser(user = requiredParam('user')) {
     return this._post('users', user);
   }
