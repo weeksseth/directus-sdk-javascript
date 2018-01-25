@@ -179,6 +179,10 @@ class RemoteInstance {
     return this._put(`files/${id}`, data);
   }
 
+  deleteFile(id = requiredParam('id')) {
+    return this._delete(`files/${id}`);
+  }
+
   // Tables
   // ----------------------------------------------------------------------------------
   createTable(name = requiredParam('name')) {
