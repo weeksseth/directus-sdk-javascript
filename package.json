@@ -1,6 +1,6 @@
 {
   "name": "directus-sdk-javascript",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
   "main": "dist/index.js",
   "scripts": {
