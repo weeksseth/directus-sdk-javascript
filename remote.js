@@ -116,6 +116,12 @@ const RemoteInstance = {
   getCollection(collection = requiredParam('collection'), params = {}) {
     return this.request('get', `collections/${collection}`, params);
   },
+
+  // Utils
+  // ---------------------------------------------------------------------------
+  hash(string = requiredParam('string'), hasher = requiredParam('hasher')) {
+    return this.request('post', 'utils/hash', { string, hasher });
+  }
 };
 
 function requiredParam(name) {
