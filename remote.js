@@ -70,7 +70,15 @@ const RemoteInstance = {
       paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets'})
     };
 
-    return axios.request(requestConfig).then(response => response.data);
+    return axios.request(requestConfig)
+      .then(response => response.data)
+      .catch(err => {
+        if (err.response) {
+          throw err.response.data.error;
+        } else {
+          throw err;
+        }
+      });
   },
 
   // ---------------------------------------------------------------------------
