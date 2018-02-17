@@ -1,14 +1,18 @@
 const axios = require('axios');
 const qs = require('qs');
 const base64 = require('base-64');
-const emittery = require('emittery');
+const Emittery = require('emittery');
 
-const SDK = {
-  accessToken: null,
-  url: null,
-  database: '_',
-  _headers: {},
-  _refreshInterval: null,
+class SDK extends Emittery {
+  constructor({ accessToken, url, database }) {
+    super();
+
+    this.accessToken = accessToken || null;
+    this.url = url || null;
+    this.database = database || '_';
+    this._headers = {};
+    this._refreshInterval = null;
+  }
 
   get headers() {
     const headers = this._headers || {};
@@ -18,16 +22,16 @@ const SDK = {
     }
 
     return headers;
-  },
+  }
 
   set headers(value) {
     this._headers = value;
-  },
+  }
 
   get payload() {
     if (this.accessToken === null) return null;
 
-    const accessToken = state.data.accessToken;
+    const accessToken = this.accessToken;
 
     if (accessToken && accessToken.length > 0) {
       const payloadBase64 = accessToken.split('.')[1].replace('-', '+').replace('_', '/');
@@ -39,7 +43,7 @@ const SDK = {
     }
 
     return null;
-  },
+  }
 
   get loggedIn() {
     if (this.payload === null) return false;
@@ -52,7 +56,7 @@ const SDK = {
     }
 
     return true;
-  },
+  }
 
   request(method, path, requestData = {}) {
     if (this.url === null) throw 'No API URL set';
@@ -64,7 +68,7 @@ const SDK = {
       method,
       params: method === 'get' ? requestData : {},
       data: method !== 'get' ? requestData : {},
-      headers: this._createHeaders(),
+      headers: this.headers,
       baseURL: this.url + this.database,
 
       paramsSerializer: params => qs.stringify(params)
@@ -81,12 +85,8 @@ const SDK = {
           throw err;
         }
       });
-  },
+  }
 
-  // ---------------------------------------------------------------------------
-
-  // Auth
-  // ---------------------------------------------------------------------------
   login({ email, password, url, database }) {
     this.emit('login');
 
@@ -108,12 +108,12 @@ const SDK = {
           if (timeDiff < 30000 && state.loading === false) {
             this.refresh(this.accessToken);
           }
-        })
+        }, 10000)
 
         this.emit('login:success');
       })
       .catch(error => this.emit('login:failed', error));
-  },
+  }
 
   logout() {
     this.emit('logout');
@@ -123,7 +123,7 @@ const SDK = {
     this.database = '_';
 
     clearInterval(this._refreshInterval);
-  },
+  }
 
   refresh(token) {
     this.accessToken = token;
@@ -140,57 +140,51 @@ const SDK = {
         this.emit('refresh:failed', error);
         this.logout();
       })
-  },
+  }
 
   getToken(userCredentials = {}) {
     return this.request('post', '/auth/authenticate', userCredentials);
-  },
+  }
 
   refreshToken(token) {
     return this.request('post', '/auth/refresh', { token });
-  },
+  }
 
-  // Items
-  // ---------------------------------------------------------------------------
   getItems(collection, params = {}) {
     return this.request('get', `items/${collection}`, params);
-  },
+  }
 
   getItem(collection, primaryKey, params = {}) {
     return this.request('get', `items/${collection}/${primaryKey}`, params);
-  },
+  }
 
   updateItem(collection, primaryKey, data = {}) {
     return this.request('patch', `items/${collection}/${primaryKey}`, data);
-  },
+  }
 
   createItem(collection, data = {}) {
     return this.request('post', `items/${collection}`, data);
-  },
+  }
 
   deleteItem(collection, primaryKey) {
     return this.request('delete', `items/${collection}/${primaryKey}`);
-  },
+  }
 
-  // Users
-  // ---------------------------------------------------------------------------
   getMe(params = {}) {
     return this.request('get', 'users/me', params);
-  },
+  }
 
   getUser(primaryKey, params = {}) {
     return this.request('get', `users/${primaryKey}`, params);
-  },
+  }
 
-  // Collections
-  // ---------------------------------------------------------------------------
   getCollections(params = {}) {
     return this.request('get', 'collections', params);
-  },
+  }
 
   getCollection(collection, params = {}) {
     return this.request('get', `collections/${collection}`, params);
-  },
+  }
 
   getPreferences(collection, user, params = {}) {
     params = Object.assign(params, {
@@ -200,16 +194,11 @@ const SDK = {
     });
 
     return this.request('get', `collection_presets/${collection}`);
-  },
+  }
 
-  // Utils
-  // ---------------------------------------------------------------------------
   hash(string, hasher) {
     return this.request('post', 'utils/hash', { string, hasher });
   }
-};
-
-// Add emitter into object
-Object.assign(SDK, emittery);
+}
 
 module.exports = SDK;
