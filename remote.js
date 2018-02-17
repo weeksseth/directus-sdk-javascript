@@ -91,7 +91,7 @@ class SDK extends Emittery {
     this.emit('login');
 
     if (this.loggedIn) {
-      this.emit('login:success');
+      return this.emit('login:success');
     }
 
     if (url) this.url = url;
