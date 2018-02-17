@@ -33,16 +33,12 @@ class SDK extends Emittery {
 
     const accessToken = this.accessToken;
 
-    if (accessToken && accessToken.length > 0) {
-      const payloadBase64 = accessToken.split('.')[1].replace('-', '+').replace('_', '/');
-      const pd = JSON.parse(base64.decode(payloadBase64));
+    const payloadBase64 = accessToken.split('.')[1].replace('-', '+').replace('_', '/');
+    const pd = JSON.parse(base64.decode(payloadBase64));
 
-      const exp = new Date(pd.exp * 1000);
+    const exp = new Date(pd.exp * 1000);
 
-      return Object.assign({}, pd, { exp });
-    }
-
-    return null;
+    return Object.assign({}, pd, { exp });
   }
 
   get loggedIn() {
