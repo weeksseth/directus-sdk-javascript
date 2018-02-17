@@ -88,16 +88,17 @@ class SDK extends Emittery {
   }
 
   login({ email, password, url, database }) {
-    this.emit('login');
+    return new Promise((resolve, reject) => {
+      this.emit('login');
 
-    if (this.loggedIn) {
-      return this.emit('login:success');
-    }
+      if (this.loggedIn) {
+        return this.emit('login:success');
+      }
 
-    if (url) this.url = url;
-    if (database) this.database = database;
+      if (url) this.url = url;
+      if (database) this.database = database;
 
-    this.getToken({ email, password })
+      this.getToken({ email, password })
       .then(res => res.data)
       .then(data => {
         this.accessToken = data.token;
@@ -111,8 +112,13 @@ class SDK extends Emittery {
         }, 10000)
 
         this.emit('login:success');
+        resolve();
       })
-      .catch(error => this.emit('login:failed', error));
+      .catch((error) => {
+        this.emit('login:failed', error);
+        reject(error);
+      });
+    });
   }
 
   logout() {
