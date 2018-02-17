@@ -1,36 +1,17 @@
 const axios = require('axios');
 const qs = require('qs');
+const base64 = require('base-64');
+const emittery = require('emittery');
 
-/**
- * TODO: Add static api access token support
- *  I imagine the remote instance keeps a flag if
- *  it's using a generated vs a static access token
- *  if the access token is set through a setter / on
- *  construction, it should set this flag to true, so
- *  we don't have to check for auth validity every request
- */
-
-const RemoteInstance = {
-  // Headers to be send with every request
-  headers: {},
-
-  // The currently in use full unparsed access token
+const SDK = {
   accessToken: null,
-
-  // The currently in use api url
   url: null,
+  database: '_',
+  _headers: {},
+  _refreshInterval: null,
 
-  // Private methods
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Takes whatever headers have been set and adds the Authorization header
-   *  if the access token exists
-   * @private
-   * @returns {Object} the headers ready for use
-   */
-  _createHeaders() {
-    const headers = this.headers || {};
+  get headers() {
+    const headers = this._headers || {};
 
     if (this.accessToken) {
       headers.Authorization = 'Bearer ' + this.accessToken;
@@ -39,36 +20,57 @@ const RemoteInstance = {
     return headers;
   },
 
-  // ---------------------------------------------------------------------------
+  set headers(value) {
+    this._headers = value;
+  },
 
-  /**
-   * Generic request method to be used by all methods
-   *
-   * Can also be used publicly in order to access custom API endpoints
-   *
-   * @public
-   * @async
-   * @param {String} method - <get|post|put|patch|delete>
-   * @param {String} url - Endpoint to send the request to
-   * @param {Object} data - Query params (GET) or body (POST|PUT|PATCH|DELETE)
-   * @promise
-   * @fulfill {Object} - API response
-   * @reject {Error} - API error
-   */
-  request(method, url, requestData = {}) {
-    if (Boolean(this.url) === false) throw 'No API URL set';
+  get payload() {
+    if (this.accessToken === null) return null;
+
+    const accessToken = state.data.accessToken;
+
+    if (accessToken && accessToken.length > 0) {
+      const payloadBase64 = accessToken.split('.')[1].replace('-', '+').replace('_', '/');
+      const pd = JSON.parse(base64.decode(payloadBase64));
+
+      const exp = new Date(pd.exp * 1000);
+
+      return Object.assign({}, pd, { exp });
+    }
+
+    return null;
+  },
+
+  get loggedIn() {
+    if (this.payload === null) return false;
+    if (this.url === null) return false;
+
+    if (this.accessToken && this.accessToken.length) {
+      const accessTokenExpired = Date.now() > this.payload.exp.getTime();
+
+      if (accessTokenExpired) return false;
+    }
+
+    return true;
+  },
+
+  request(method, path, requestData = {}) {
+    if (this.url === null) throw 'No API URL set';
+
+    if (path.startsWith('/') === false) path = '/' + path;
 
     const requestConfig = {
-      url,
+      url: path,
       method,
       params: method === 'get' ? requestData : {},
       data: method !== 'get' ? requestData : {},
       headers: this._createHeaders(),
-      baseURL: this.url,
+      baseURL: this.url + this.database,
 
-      // Use QS to format params
-      paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets'})
+      paramsSerializer: params => qs.stringify(params)
     };
+
+    this.emit('request', { method, path, requestData });
 
     return axios.request(requestConfig)
       .then(response => response.data)
@@ -85,6 +87,61 @@ const RemoteInstance = {
 
   // Auth
   // ---------------------------------------------------------------------------
+  login({ email, password, url, database }) {
+    this.emit('login');
+
+    if (this.loggedIn) {
+      this.emit('login:success');
+    }
+
+    if (url) this.url = url;
+    if (database) this.database = database;
+
+    this.getToken({ email, password })
+      .then(res => res.data)
+      .then(data => {
+        this.accessToken = data.token;
+
+        this.refreshInterval = setInterval(() => {
+          const timeDiff = this.payload.exp.getTime() - Date.now();
+
+          if (timeDiff < 30000 && state.loading === false) {
+            this.refresh(this.accessToken);
+          }
+        })
+
+        this.emit('login:success');
+      })
+      .catch(error => this.emit('login:failed', error));
+  },
+
+  logout() {
+    this.emit('logout');
+
+    this.accessToken = null;
+    this.url = null;
+    this.database = '_';
+
+    clearInterval(this._refreshInterval);
+  },
+
+  refresh(token) {
+    this.accessToken = token;
+
+    this.emit('refresh');
+
+    this.refreshToken(token)
+      .then(res => res.data.token)
+      .then(token => {
+        this.accessToken = token;
+        this.emit('refresh:success');
+      })
+      .catch(error => {
+        this.emit('refresh:failed', error);
+        this.logout();
+      })
+  },
+
   getToken(userCredentials = {}) {
     return this.request('post', '/auth/authenticate', userCredentials);
   },
@@ -95,24 +152,34 @@ const RemoteInstance = {
 
   // Items
   // ---------------------------------------------------------------------------
-  getItems(collection = requiredParam('collection'), params = {}) {
+  getItems(collection, params = {}) {
     return this.request('get', `items/${collection}`, params);
   },
 
-  getItem(collection = requiredParam('collection'), primaryKey = requiredParam('primaryKey'), params = {}) {
+  getItem(collection, primaryKey, params = {}) {
     return this.request('get', `items/${collection}/${primaryKey}`, params);
   },
 
-  updateItem(collection = requiredParam('collection'), primaryKey = requiredParam('primaryKey'), data = {}) {
+  updateItem(collection, primaryKey, data = {}) {
     return this.request('patch', `items/${collection}/${primaryKey}`, data);
   },
 
-  createItem(collection = requiredParam('collection'), data = {}) {
+  createItem(collection, data = {}) {
     return this.request('post', `items/${collection}`, data);
   },
 
-  deleteItem(collection = requiredParam('collection'), primaryKey = requiredParam('primaryKey')) {
+  deleteItem(collection, primaryKey) {
     return this.request('delete', `items/${collection}/${primaryKey}`);
+  },
+
+  // Users
+  // ---------------------------------------------------------------------------
+  getMe(params = {}) {
+    return this.request('get', 'users/me', params);
+  },
+
+  getUser(primaryKey, params = {}) {
+    return this.request('get', `users/${primaryKey}`, params);
   },
 
   // Collections
@@ -121,19 +188,28 @@ const RemoteInstance = {
     return this.request('get', 'collections', params);
   },
 
-  getCollection(collection = requiredParam('collection'), params = {}) {
+  getCollection(collection, params = {}) {
     return this.request('get', `collections/${collection}`, params);
+  },
+
+  getPreferences(collection, user, params = {}) {
+    params = Object.assign(params, {
+      'filter[title][null]': null,
+      'filter[collection][eq]': collection,
+      'filter[user][eq]': user,
+    });
+
+    return this.request('get', `collection_presets/${collection}`);
   },
 
   // Utils
   // ---------------------------------------------------------------------------
-  hash(string = requiredParam('string'), hasher = requiredParam('hasher')) {
+  hash(string, hasher) {
     return this.request('post', 'utils/hash', { string, hasher });
   }
 };
 
-function requiredParam(name) {
-  throw new Error(`Missing parameter [${name}]`);
-}
+// Add emitter into object
+Object.assign(SDK, emittery);
 
-module.exports = RemoteInstance;
+module.exports = SDK;
