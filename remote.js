@@ -4,7 +4,7 @@ const base64 = require('base-64');
 const Emittery = require('emittery');
 
 class SDK extends Emittery {
-  constructor({ accessToken, url, database }) {
+  constructor({ accessToken, url, database } = {}) {
     super();
 
     this.accessToken = accessToken || null;
