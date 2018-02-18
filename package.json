@@ -2,16 +2,7 @@
   "name": "directus-sdk-javascript",
   "version": "3.0.0-15",
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
-  "main": "dist/index.js",
-  "files": [
-    "dist",
-    "remote.js",
-    "index.js"
-  ],
-  "scripts": {
-    "build": "babel src --out-dir dist",
-    "prepublish": "npm run build"
-  },
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/directus/directus-sdk-javascript.git"
@@ -36,11 +27,5 @@
     "base-64": "^0.1.0",
     "emittery": "^0.3.0",
     "qs": "^6.5.1"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-2": "^6.24.1"
   }
 }
