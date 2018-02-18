@@ -99,7 +99,7 @@ class SDK extends Emittery {
       .then(data => {
         this.accessToken = data.token;
 
-        this.refreshInterval = setInterval(() => {
+        this._refreshInterval = setInterval(() => {
           const timeDiff = this.payload.exp.getTime() - Date.now();
 
           if (timeDiff < 30000) {
