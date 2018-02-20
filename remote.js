@@ -48,10 +48,10 @@ class SDK extends Emittery {
     if (this.accessToken && this.accessToken.length) {
       const accessTokenExpired = Date.now() > this.payload.exp.getTime();
 
-      if (accessTokenExpired) return false;
+      if (accessTokenExpired === false) return true;
     }
 
-    return true;
+    return false;
   }
 
   request(method, path, requestData = {}) {
