@@ -11,7 +11,14 @@ class SDK extends Emittery {
     this.url = url || null;
     this.database = database || '_';
     this._headers = {};
-    this._refreshInterval = null;
+    this._refreshInterval = setInterval(() => {
+      if (!this.accessToken || !this.url) return;
+      const timeDiff = this.payload.exp.getTime() - Date.now();
+
+      if (timeDiff < 30000) {
+        this.refresh(this.accessToken);
+      }
+    }, 10000);
   }
 
   get headers() {
@@ -99,13 +106,6 @@ class SDK extends Emittery {
       .then(data => {
         this.accessToken = data.token;
 
-        this._refreshInterval = setInterval(() => {
-          const timeDiff = this.payload.exp.getTime() - Date.now();
-
-          if (timeDiff < 30000) {
-            this.refresh(this.accessToken);
-          }
-        }, 10000)
 
         this.emit('login:success');
         resolve();
@@ -123,8 +123,6 @@ class SDK extends Emittery {
     this.accessToken = null;
     this.url = null;
     this.database = '_';
-
-    clearInterval(this._refreshInterval);
   }
 
   refresh(token) {
@@ -141,7 +139,7 @@ class SDK extends Emittery {
       .catch(error => {
         this.emit('refresh:failed', error);
         this.logout();
-      })
+      });
   }
 
   getToken(userCredentials = {}) {
