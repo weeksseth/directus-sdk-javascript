@@ -85,7 +85,10 @@ class SDK extends Emittery {
         if (err.response) {
           throw err.response.data.error;
         } else {
-          throw err;
+          throw {
+            message: 'network_error',
+            code: -1,
+          };
         }
       });
   }
@@ -105,7 +108,6 @@ class SDK extends Emittery {
       .then(res => res.data)
       .then(data => {
         this.accessToken = data.token;
-
 
         this.emit('login:success');
         resolve();
