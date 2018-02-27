@@ -104,18 +104,21 @@ class SDK extends Emittery {
       if (url) this.url = url;
       if (database) this.database = database;
 
-      this.getToken({ email, password })
-      .then(res => res.data)
-      .then(data => {
-        this.accessToken = data.token;
+      // Delete access token in case it still contained an expired one
+      this.accessToken = null;
 
-        this.emit('login:success');
-        resolve();
-      })
-      .catch((error) => {
-        this.emit('login:failed', error);
-        reject(error);
-      });
+      this.getToken({ email, password })
+        .then(res => res.data)
+        .then(data => {
+          this.accessToken = data.token;
+
+          this.emit('login:success');
+          resolve();
+        })
+        .catch((error) => {
+          this.emit('login:failed', error);
+          reject(error);
+        });
     });
   }
 
@@ -127,7 +130,7 @@ class SDK extends Emittery {
     this.database = '_';
   }
 
-  refresh(token) {
+  refresh(token = null) {
     this.accessToken = token;
 
     this.emit('refresh');
@@ -188,14 +191,12 @@ class SDK extends Emittery {
     return this.request('get', `collections/${collection}`, params);
   }
 
-  getPreferences(collection, user, params = {}) {
-    params = Object.assign(params, {
-      'filter[title][null]': null,
-      'filter[collection][eq]': collection,
-      'filter[user][eq]': user,
-    });
+  getFields(collection, params = {}) {
+    return this.request('get', `fields/${collection}`, params);
+  }
 
-    return this.request('get', `collection_presets/${collection}`);
+  getSettings(params = {}) {
+    return this.request('get', 'settings', params);
   }
 
   hash(string, hasher) {
