@@ -1,14 +1,16 @@
 {
   "name": "directus-sdk-javascript",
   "version": "3.0.0-19",
-  "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
+  "description": "Directus SDK for JavaScript (Node and Browser)",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/directus/directus-sdk-javascript.git"
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha"
   },
+  "repository": "directus/directus-sdk-javascript.git",
   "keywords": [
     "node",
+    "javascript",
     "directus",
     "headless",
     "cms",
@@ -23,9 +25,14 @@
   },
   "homepage": "https://github.com/directus/directus-sdk-javascript#readme",
   "dependencies": {
-    "axios": "^0.16.2",
-    "base-64": "^0.1.0",
-    "emittery": "^0.3.0",
-    "qs": "^6.5.1"
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.18.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "mocha": "^5.0.1",
+    "nock": "^9.2.3"
   }
 }
