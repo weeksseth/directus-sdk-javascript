@@ -1,6 +1,14 @@
 const axios = require('axios');
 const base64 = require('base-64');
 
+/**
+ * Create a new SDK instance
+ * @param       {object} [options]
+ * @param       {string} [options.url]   The API url to connect to
+ * @param       {string} [options.env]   The API environment to connect to
+ * @param       {string} [options.token] The access token to use for requests
+ * @constructor
+ */
 module.exports = function SDK(options) {
   options = options || {};
 
