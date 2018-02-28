@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const SDK = require('../remote');
 
-describe('SDK', function() {
+describe('General', function() {
   it('Creates a new instance without errors', function() {
     expect(() => new SDK()).not.to.throw();
   });
