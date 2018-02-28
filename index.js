@@ -1,3 +1,3 @@
 module.exports = {
-  RemoteInstance: require('./remote')
+  remote: require('./remote')
 };
