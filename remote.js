@@ -45,6 +45,22 @@ module.exports = function SDK(options = {}) {
       return payloadObject;
     },
 
+    /**
+     * Directus API request promise
+     * @promise RequestPromise
+     * @fulfill {object} Directus data
+     * @reject {Error} Network error (if no connection to API)
+     * @reject {Error} Directus error (eg not logged in or 404)
+     */
+
+    /**
+     * Perform an API request to the Directus API
+     * @param  {string} method      The HTTP method to use
+     * @param  {string} endpoint    The API endpoint to request
+     * @param  {Object} [params={}] The HTTP query parameters (GET only)
+     * @param  {Object} [data={}]   The HTTP request body (non-GET only)
+     * @return {RequestPromise}
+     */
     request(method, endpoint, params = {}, data = {}) {
       if (!method || typeof method !== 'string' || method.length === 0) {
         throw new Error('request(): Parameter `method` is required');
