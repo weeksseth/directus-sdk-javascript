@@ -202,4 +202,28 @@ describe('Request', function() {
       expect(client.request).to.have.been.calledWith('get', '/items/projects', { limit: 20 });
     });
   });
+
+  describe('#post()', function() {
+    beforeEach(function() {
+      sinon.stub(client, 'request');
+    });
+
+    afterEach(function() {
+      client.request.restore();
+    });
+
+    it('Errors on missing parameter method', function() {
+      expect(client.post).to.throw(Error, 'post(): Parameter `endpoint` is required');
+    });
+
+    it('Calls request() with the right parameters', function() {
+      client.post('/items/projects', {
+        title: 'New Project'
+      });
+
+      expect(client.request).to.have.been.calledWith('post', '/items/projects', {}, {
+        title: 'New Project'
+      });
+    });
+  });
 });
