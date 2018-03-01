@@ -226,4 +226,72 @@ describe('Request', function() {
       });
     });
   });
+
+  describe('#patch()', function() {
+    beforeEach(function() {
+      sinon.stub(client, 'request');
+    });
+
+    afterEach(function() {
+      client.request.restore();
+    });
+
+    it('Errors on missing parameter method', function() {
+      expect(client.patch).to.throw(Error, 'patch(): Parameter `endpoint` is required');
+    });
+
+    it('Calls request() with the right parameters', function() {
+      client.patch('/items/projects/1', {
+        title: 'New Project'
+      });
+
+      expect(client.request).to.have.been.calledWith('patch', '/items/projects/1', {}, {
+        title: 'New Project'
+      });
+    });
+  });
+
+  describe('#put()', function() {
+    beforeEach(function() {
+      sinon.stub(client, 'request');
+    });
+
+    afterEach(function() {
+      client.request.restore();
+    });
+
+    it('Errors on missing parameter method', function() {
+      expect(client.put).to.throw(Error, 'put(): Parameter `endpoint` is required');
+    });
+
+    it('Calls request() with the right parameters', function() {
+      client.put('/items/projects/1', {
+        title: 'New Project'
+      });
+
+      expect(client.request).to.have.been.calledWith('put', '/items/projects/1', {}, {
+        title: 'New Project'
+      });
+    });
+  });
+
+  describe('#delete()', function() {
+    beforeEach(function() {
+      sinon.stub(client, 'request');
+    });
+
+    afterEach(function() {
+      client.request.restore();
+    });
+
+    it('Errors on missing parameter method', function() {
+      expect(client.delete).to.throw(Error, 'delete(): Parameter `endpoint` is required');
+    });
+
+    it('Calls request() with the right parameters', function() {
+      client.delete('/items/projects/1');
+
+      expect(client.request).to.have.been.calledWith('delete', '/items/projects/1');
+    });
+  });
 });

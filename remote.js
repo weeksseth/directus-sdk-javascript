@@ -125,5 +125,46 @@ module.exports = function SDK(options = {}) {
 
       return this.request('post', endpoint, {}, body);
     },
+
+    /**
+     * PATCH convenience method. Calls the request method for you
+     * @param  {string} endpoint  The endpoint to get
+     * @param  {Object} [body={}] The HTTP request body
+     * @return {RequestPromise}
+     */
+    patch(endpoint, body = {}) {
+      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
+        throw new Error('patch(): Parameter `endpoint` is required');
+      }
+
+      return this.request('patch', endpoint, {}, body);
+    },
+
+    /**
+     * PATCH convenience method. Calls the request method for you
+     * @param  {string} endpoint  The endpoint to get
+     * @param  {Object} [body={}] The HTTP request body
+     * @return {RequestPromise}
+     */
+    put(endpoint, body = {}) {
+      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
+        throw new Error('put(): Parameter `endpoint` is required');
+      }
+
+      return this.request('put', endpoint, {}, body);
+    },
+
+    /**
+     * PATCH convenience method. Calls the request method for you
+     * @param  {string} endpoint  The endpoint to get
+     * @return {RequestPromise}
+     */
+    delete(endpoint) {
+      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
+        throw new Error('delete(): Parameter `endpoint` is required');
+      }
+
+      return this.request('delete', endpoint);
+    },
   };
 };
