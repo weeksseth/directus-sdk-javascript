@@ -226,5 +226,14 @@ module.exports = function SDK(options = {}) {
           .catch(reject);
       });
     },
+
+    /**
+     * Logs the user out by "forgetting" the URL, ENV, and token
+     */
+    logout() {
+      this.token = null;
+      this.env = null;
+      this.url = null;
+    },
   };
 };

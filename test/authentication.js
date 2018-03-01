@@ -6,27 +6,27 @@ chai.use(require('sinon-chai'));
 const SDK = require('../remote');
 
 describe('Authentication', function() {
-  describe('#login()', function() {
-    let client;
+  let client;
 
-    beforeEach(function() {
-      client = new SDK({
-        url: 'https://demo-api.getdirectus.com'
-      });
+  beforeEach(function() {
+    client = new SDK({
+      url: 'https://demo-api.getdirectus.com'
+    });
 
-      sinon.stub(client.axios, 'request').resolves({
+    sinon.stub(client.axios, 'request').resolves({
+      data: {
         data: {
-          data: {
-            token: 'abcdef',
-          },
+          token: 'abcdef',
         },
-      });
+      },
     });
+  });
 
-    afterEach(function() {
-      client.axios.request.restore();
-    });
+  afterEach(function() {
+    client.axios.request.restore();
+  });
 
+  describe('#login()', function() {
     it('Errors on missing parameter credentials', function() {
       expect(client.login).to.throw(Error, 'login(): Parameter `credentials` is required');
     });
@@ -101,6 +101,15 @@ describe('Authentication', function() {
         env: 'testEnv',
         token: 'abcdef',
       });
+    });
+  });
+
+  describe('#logout()', function() {
+    it('Nullifies the token, url, and env', function() {
+      client.logout();
+      expect(client.token).to.be.null;
+      expect(client.url).to.be.null;
+      expect(client.env).to.be.null;
     });
   });
 });
