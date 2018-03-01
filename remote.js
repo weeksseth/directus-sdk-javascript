@@ -97,5 +97,19 @@ module.exports = function SDK(options = {}) {
           }
         });
     },
+
+    /**
+     * GET convenience method. Calls the request method for you
+     * @param  {string} endpoint    The endpoint to get
+     * @param  {Object} [params={}] The HTTP query parameters (GET only)
+     * @return {RequestPromise}
+     */
+    get(endpoint, params = {}) {
+      if (!endpoint || typeof endpoint !== 'string' || params.length === 0) {
+        throw new Error('get(): Parameter `endpoint` is required');
+      }
+
+      return this.request('get', endpoint, params);
+    },
   };
 };

@@ -9,15 +9,20 @@ describe('Request', function() {
   let client;
 
   beforeEach(function() {
-    client = new SDK();
-    sinon.stub(client.axios, 'request');
-  });
-
-  afterEach(function() {
-    client.axios.request.restore();
+    client = new SDK({
+      url: 'https://demo-api.getdirectus.com'
+    });
   });
 
   describe('#request()', function() {
+    beforeEach(function() {
+      sinon.stub(client.axios, 'request');
+    });
+
+    afterEach(function() {
+      client.axios.request.restore();
+    });
+
     it('Errors on missing parameter method', function() {
       expect(client.request).to.throw(Error, 'request(): Parameter `method` is required');
     });
@@ -35,6 +40,7 @@ describe('Request', function() {
     });
 
     it('Errors when there is no API URL set', function() {
+      client.url = null;
       expect(() => client.request('get', '/items')).to.throw(Error, 'request(): No API URL set');
     });
 
@@ -50,7 +56,6 @@ describe('Request', function() {
         }
       }));
 
-      client.url = 'https://demo-api.getdirectus.com';
       client.request('get', '/ping');
 
       expect(client.axios.request).to.have.been.calledWith({
@@ -62,9 +67,60 @@ describe('Request', function() {
       });
     });
 
+    it('Calls Axios with the right config (body)', function() {
+      client.axios.request.returns(Promise.resolve({
+        response: {
+          data: {
+            "error": {
+              "code": 1,
+              "message": "Not Found"
+            }
+          }
+        }
+      }));
+
+      client.request('post', '/utils/random_string', {}, {
+        testing: true
+      });
+
+      expect(client.axios.request).to.have.been.calledWith({
+        url: '/utils/random_string',
+        method: 'post',
+        baseURL: 'https://demo-api.getdirectus.com/_/',
+        params: {},
+        data: {
+          testing: true
+        },
+      });
+    });
+
+    it('Calls Axios with the right config (params)', function() {
+      client.axios.request.returns(Promise.resolve({
+        response: {
+          data: {
+            "error": {
+              "code": 1,
+              "message": "Not Found"
+            }
+          }
+        }
+      }));
+
+      client.request('get', '/utils/random_string', { queryParam: true });
+
+      expect(client.axios.request).to.have.been.calledWith({
+        url: '/utils/random_string',
+        method: 'get',
+        baseURL: 'https://demo-api.getdirectus.com/_/',
+        params: {
+          queryParam: true
+        },
+        data: {}
+      });
+    });
+
     it('Returns network error if the API didn\'t respond', async function() {
       client.axios.request.returns(Promise.reject({ request: {} }));
-      client.url = 'https://demo-api.getdirectus.com';
 
       let error;
 
@@ -92,8 +148,6 @@ describe('Request', function() {
         }
       }));
 
-      client.url = 'https://demo-api.getdirectus.com';
-
       let error;
 
       try {
@@ -118,14 +172,34 @@ describe('Request', function() {
         }
       });
 
-      client.url = 'https://demo-api.getdirectus.com';
-
       const result = await client.request('get', '/ping');
 
       expect(result).to.deep.equal({
         meta: {},
         data: {}
       });
+    });
+  });
+
+  describe('#get()', function() {
+    beforeEach(function() {
+      sinon.stub(client, 'request');
+    });
+
+    afterEach(function() {
+      client.request.restore();
+    });
+
+    it('Errors on missing parameter method', function() {
+      expect(client.get).to.throw(Error, 'get(): Parameter `endpoint` is required');
+    });
+
+    it('Calls request() with the right parameters', function() {
+      client.get('/items/projects', {
+        limit: 20
+      });
+
+      expect(client.request).to.have.been.calledWith('get', '/items/projects', { limit: 20 });
     });
   });
 });
