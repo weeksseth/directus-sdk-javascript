@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha",
-    "coverage": "nyc mocha"
+    "test": "mocha --exit",
+    "coverage": "nyc mocha --exit"
   },
   "repository": "directus/directus-sdk-javascript.git",
   "keywords": [

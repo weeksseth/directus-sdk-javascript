@@ -19,6 +19,7 @@ module.exports = function SDK(options = {}) {
       paramsSerializer: qs.stringify,
       timeout: 1500,
     }),
+    refreshInterval: null,
 
     get payload() {
       if (!this.token || typeof this.token !== 'string' || this.token.length === 0) {
@@ -209,6 +210,10 @@ module.exports = function SDK(options = {}) {
         this.env = credentials.env;
       }
 
+      if (credentials.persist) {
+        this.startInterval();
+      }
+
       return new Promise((resolve, reject) => {
         this.post('/auth/authenticate', {
           email: credentials.email,
@@ -228,12 +233,50 @@ module.exports = function SDK(options = {}) {
     },
 
     /**
-     * Logs the user out by "forgetting" the URL, ENV, and token
+     * Logs the user out by "forgetting" the URL, ENV, and token, and clearing the refresh interval
      */
     logout() {
       this.token = null;
       this.env = null;
       this.url = null;
+
+      if (this.refreshInterval) {
+        this.stopInterval();
+      }
+    },
+
+    startInterval() {
+      this.refreshInterval = setInterval(this.refreshIfNeeded.bind(this), 10000);
+    },
+
+    stopInterval() {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    },
+
+    refreshIfNeeded() {
+      if (!this.token || typeof this.token !== 'string' || this.token.length === 0) return;
+      if (!this.url || typeof this.url !== 'string' || this.url.length === 0) return;
+      if (!this.env || typeof this.env !== 'string' || this.env.length === 0) return;
+      if (!this.payload || !this.payload.exp) return;
+
+      const timeDiff = this.payload.exp.getTime() - Date.now();
+
+      if (timeDiff < 30000) {
+        this.refresh(this.token);
+      }
+    },
+
+    refresh(token) {
+      if (!token || typeof token !== 'string' || token.length === 0) {
+        throw new Error('refresh(): Parameter `token` is required');
+      }
+
+      return this.post('/auth/refresh', { token })
+        .then((res) => {
+          this.token = res.data.token;
+          return res;
+        });
     },
   };
 };

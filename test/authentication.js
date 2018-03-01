@@ -1,4 +1,5 @@
 const chai = require('chai');
+const jwt = require('jsonwebtoken');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
@@ -110,6 +111,142 @@ describe('Authentication', function() {
       expect(client.token).to.be.null;
       expect(client.url).to.be.null;
       expect(client.env).to.be.null;
+    });
+  });
+
+  describe('#refresh()', function() {
+    it('Errors on missing parameter token', function() {
+      expect(client.refresh).to.throw(Error, 'refresh(): Parameter `token` is required');
+    });
+
+    it('Overwrites the saved token with the new one', async function() {
+      await client.refresh('oldToken');
+      expect(client.token).to.equal('abcdef');
+    });
+
+    it('Resolves with the new token', async function() {
+      const result = await client.refresh('oldToken');
+      expect(result).to.deep.equal({
+        data: {
+          token: 'abcdef'
+        }
+      });
+    });
+  });
+
+  describe('#refreshIfNeeded()', function() {
+    it('Does nothing when token, url, env, or payload.exp is missing', function() {
+      // Nothing
+      client.url = null;
+      client.env = null;
+      expect(client.refreshIfNeeded()).to.be.undefined;
+      // URL
+      client.url = 'https://demo-api.getdirectus.com';
+      expect(client.refreshIfNeeded()).to.be.undefined;
+      // URL + ENV
+      client.env = '_';
+      expect(client.refreshIfNeeded()).to.be.undefined;
+      // URL + ENV + TOKEN (no exp in payload)
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true });
+      expect(client.refreshIfNeeded()).to.be.undefined;
+    });
+
+    it('Calls refresh() if expiry date is within 30 seconds of now', function() {
+      sinon.stub(client, 'refresh');
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
+      expect(client.refreshIfNeeded()).to.be.undefined;
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+      client.refreshIfNeeded();
+      expect(client.refresh).to.have.been.calledWith(client.token);
+    });
+  });
+
+  describe('Interval', function() {
+    beforeEach(function() {
+      this.clock = sinon.useFakeTimers();
+      sinon.stub(client, 'refreshIfNeeded');
+    });
+
+    afterEach(function() {
+      this.clock.restore();
+      client.refreshIfNeeded.restore();
+    });
+
+    describe('#startInterval()', function() {
+      it('Starts the interval', function() {
+        client.startInterval();
+        expect(client.refreshInterval).to.be.not.null;
+      });
+    });
+
+    describe('#stopInterval()', function() {
+      it('Stops (deletes) the interval', function() {
+        client.startInterval();
+        client.stopInterval();
+        expect(client.refreshInterval).to.be.null;
+      });
+    });
+
+    describe('#login()', function() {
+      it('Starts the interval if persist key has been passed', function() {
+        client.login({
+          url: 'https://demo-api.getdirectus.com',
+          email: 'testing@example.com',
+          password: 'testPassword',
+          persist: true,
+        });
+
+        expect(client.refreshInterval).to.be.not.null;
+
+        // cleanup
+        client.logout();
+      });
+
+      it('Doesn\'t start the interval without the persist key', function() {
+        client.login({
+          url: 'https://demo-api.getdirectus.com',
+          email: 'testing@example.com',
+          password: 'testPassword'
+        });
+
+        expect(client.refreshInterval).to.be.null;
+      });
+    });
+
+    describe('#logout()', function() {
+      it('Removes any interval on logout', function() {
+        client.login({
+          url: 'https://demo-api.getdirectus.com',
+          email: 'testing@example.com',
+          password: 'testPassword',
+          persist: true,
+        });
+
+        client.logout();
+
+        expect(client.refreshInterval).to.be.null;
+      });
+    });
+
+    it('Fires refreshIfNeeded() every 10 seconds', function() {
+      client.login({
+        url: 'https://demo-api.getdirectus.com',
+        email: 'testing@example.com',
+        password: 'testPassword',
+        persist: true,
+      });
+
+      expect(client.refreshIfNeeded).to.have.not.been.called;
+
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+
+      this.clock.tick(11000);
+
+      expect(client.refreshIfNeeded).to.have.been.calledOnce;
+
+      this.clock.tick(11000);
+
+      expect(client.refreshIfNeeded).to.have.been.calledTwice;
     });
   });
 });
