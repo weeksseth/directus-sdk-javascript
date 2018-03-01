@@ -7,10 +7,24 @@ const SDK = require('../remote');
 
 describe('Authentication', function() {
   describe('#login()', function() {
+    let client;
+
     beforeEach(function() {
       client = new SDK({
         url: 'https://demo-api.getdirectus.com'
       });
+
+      sinon.stub(client.axios, 'request').resolves({
+        data: {
+          data: {
+            token: 'abcdef',
+          },
+        },
+      });
+    });
+
+    afterEach(function() {
+      client.axios.request.restore();
     });
 
     it('Errors on missing parameter credentials', function() {
@@ -35,19 +49,58 @@ describe('Authentication', function() {
       expect(client.url).to.equal('https://testing.getdirectus.com');
     });
 
-    it('Calls Axios with the right parameters', function() {
-      sinon.stub(client.axios, 'request');
-
-      client.login({
+    it('Calls Axios with the right parameters', async function() {
+      await client.login({
         email: 'test@example.com',
         password: 'testPassword'
       });
 
       expect(client.axios.request).to.have.been.calledWith({
+        baseURL: 'https://demo-api.getdirectus.com/_/',
+        data: {
+          email: 'test@example.com',
+          password: 'testPassword',
+        },
+        method: 'post',
+        params: {},
+        url: '/auth/authenticate',
+      });
+    });
 
+    it('Replaces the stored token', async function() {
+      await client.login({
+        email: 'text@example.com',
+        password: 'testPassword',
       });
 
-      client.axios.request.restore();
+      expect(client.token).to.equal('abcdef');
+    });
+
+    it('Replaces env and url if passed', async function() {
+      await client.login({
+        email: 'text@example.com',
+        password: 'testPassword',
+        url: 'https://example.com',
+        env: 'testEnv',
+      });
+
+      expect(client.url).to.equal('https://example.com');
+      expect(client.env).to.equal('testEnv');
+    });
+
+    it('Resolves with the currently logged in token, url, and env', async function() {
+      const result = await client.login({
+        email: 'text@example.com',
+        password: 'testPassword',
+        url: 'https://example.com',
+        env: 'testEnv',
+      });
+
+      expect(result).to.deep.equal({
+        url: 'https://example.com',
+        env: 'testEnv',
+        token: 'abcdef',
+      });
     });
   });
 });

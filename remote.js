@@ -199,6 +199,8 @@ module.exports = function SDK(options = {}) {
         throw new Error('login(): Parameter `credentials.password` is required');
       }
 
+      this.token = null;
+
       if (credentials.url && typeof credentials.url === 'string' && credentials.url.length > 0) {
         this.url = credentials.url;
       }
@@ -208,6 +210,20 @@ module.exports = function SDK(options = {}) {
       }
 
       return new Promise((resolve, reject) => {
+        this.post('/auth/authenticate', {
+          email: credentials.email,
+          password: credentials.password,
+        })
+          .then(res => res.data.token)
+          .then((token) => {
+            this.token = token;
+            resolve({
+              url: this.url,
+              env: this.env,
+              token: this.token,
+            });
+          })
+          .catch(reject);
       });
     },
   };
