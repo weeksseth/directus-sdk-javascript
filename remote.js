@@ -166,5 +166,49 @@ module.exports = function SDK(options = {}) {
 
       return this.request('delete', endpoint);
     },
+
+    /**
+     * Logging in promise
+     * @promise LoginPromise
+     * @fulfill {Object} Object containing URL, ENV, and TOKEN
+     * @reject {Error}   Network error (if no connection to API)
+     * @reject {Error}   Directus error (eg not logged in or 404)
+     */
+
+    /**
+     * Login to the API.
+     *
+     * Gets a new token from the API and stores it in this.token
+     * @param  {Object} credentials
+     * @param  {String} credentials.email    The user's email address
+     * @param  {String} credentials.password The user's password
+     * @param  {String} [credentials.url]    The API to login to (overwrites this.url)
+     * @param  {String} [credentials.env]    The API env to login to (overwrites this.env)
+     * @return {LoginPromise}
+     */
+    login(credentials) {
+      if (!credentials || typeof credentials !== 'object') {
+        throw new Error('login(): Parameter `credentials` is required');
+      }
+
+      if (!credentials.email || typeof credentials.email !== 'string' || credentials.email.length === 0) {
+        throw new Error('login(): Parameter `credentials.email` is required');
+      }
+
+      if (!credentials.password || typeof credentials.password !== 'string' || credentials.password.length === 0) {
+        throw new Error('login(): Parameter `credentials.password` is required');
+      }
+
+      if (credentials.url && typeof credentials.url === 'string' && credentials.url.length > 0) {
+        this.url = credentials.url;
+      }
+
+      if (credentials.env && typeof credentials.env === 'string' && credentials.env.length > 0) {
+        this.env = credentials.env;
+      }
+
+      return new Promise((resolve, reject) => {
+      });
+    },
   };
 };
