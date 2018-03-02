@@ -47,6 +47,9 @@ module.exports = function SDK(options = {}) {
       return payloadObject;
     },
 
+    // REQUEST METHODS
+    // -------------------------------------------------------------------------
+
     /**
      * Directus API request promise
      * @promise RequestPromise
@@ -168,6 +171,9 @@ module.exports = function SDK(options = {}) {
 
       return this.request('delete', endpoint);
     },
+
+    // AUTHENTICATION
+    // -------------------------------------------------------------------------
 
     /**
      * Logging in promise
@@ -318,6 +324,21 @@ module.exports = function SDK(options = {}) {
         email,
         instance: this.url,
       });
+    },
+
+    // ITEMS
+    // -------------------------------------------------------------------------
+
+    createItem(collection, body) {
+      if (!collection || typeof collection !== 'string' || collection.length === 0) {
+        throw new Error('createItem(): Parameter `collection` is required');
+      }
+
+      if (!body || typeof body !== 'object') {
+        throw new Error('createItem(): Parameter `body` is required');
+      }
+
+      return this.post(`/items/${collection}`, body);
     },
   };
 };
