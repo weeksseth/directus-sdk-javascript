@@ -36,11 +36,11 @@ describe('Fields', function() {
 
   describe('#getFields()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.getFields).to.throw(Error, 'getFields(): Parameter `collection` is required');
+      expect(client.getFields).to.throw();
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getFields('projects', 'params')).to.throw(Error, 'getFields(): Parameter `params` has to be of type object. [string] given.');
+      expect(() => client.getFields('projects', 'params')).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {
@@ -51,11 +51,11 @@ describe('Fields', function() {
 
   describe('#getField()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.getField).to.throw(Error, 'getField(): Parameter `collection` is required');
+      expect(client.getField).to.throw();
     });
 
     it('Errors on missing `fieldName` parameter', function() {
-      expect(() => client.getField('projects')).to.throw(Error, 'getField(): Parameter `fieldName` is required');
+      expect(() => client.getField('projects')).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {

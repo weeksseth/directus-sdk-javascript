@@ -1,6 +1,7 @@
 const axios = require('axios');
 const base64 = require('base-64');
 const qs = require('qs');
+const AV = require('argument-validator');
 
 /**
  * Create a new SDK instance
@@ -23,10 +24,7 @@ module.exports = function SDK(options = {}) {
     onAutoRefreshError: null,
 
     get payload() {
-      if (!this.token || typeof this.token !== 'string' || this.token.length === 0) {
-        return null;
-      }
-
+      if (!AV.isString(this.token)) return null;
       return this.getPayload(this.token);
     },
 
@@ -40,7 +38,7 @@ module.exports = function SDK(options = {}) {
       const payloadDecoded = base64.decode(payloadBase64);
       const payloadObject = JSON.parse(payloadDecoded);
 
-      if (payloadObject.exp && typeof payloadObject.exp === 'number') {
+      if (AV.isNumber(payloadObject.exp)) {
         payloadObject.exp = new Date(payloadObject.exp * 1000);
       }
 
@@ -67,21 +65,12 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     request(method, endpoint, params = {}, data = {}) {
-      if (!method || typeof method !== 'string' || method.length === 0) {
-        throw new Error('request(): Parameter `method` is required');
-      }
-      if (!endpoint || typeof endpoint !== 'string' || params.length === 0) {
-        throw new Error('request(): Parameter `endpoint` is required');
-      }
-      if (typeof params !== 'object') {
-        throw new Error(`request(): Parameter \`params\` has to be of type Object. [${typeof params}] given.`);
-      }
-      if (typeof data !== 'object') {
-        throw new Error(`request(): Parameter \`data\` has to be of type Object. [${typeof data}] given.`);
-      }
-      if (!this.url || typeof this.url !== 'string' || this.url.length === 0) {
-        throw new Error('request(): No API URL set');
-      }
+      AV.string(method, 'method');
+      AV.string(endpoint, 'endpoint');
+      AV.objectOrEmpty(params, 'params');
+      AV.objectOrEmpty(data, 'data');
+
+      AV.string(this.url, 'this.url');
 
       const requestOptions = {
         url: endpoint,
@@ -117,9 +106,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     get(endpoint, params = {}) {
-      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
-        throw new Error('get(): Parameter `endpoint` is required');
-      }
+      AV.string(endpoint, 'endpoint');
+      AV.objectOrEmpty(params, 'params');
 
       return this.request('get', endpoint, params);
     },
@@ -131,9 +119,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     post(endpoint, body = {}) {
-      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
-        throw new Error('post(): Parameter `endpoint` is required');
-      }
+      AV.string(endpoint, 'endpoint');
+      AV.objectOrEmpty(body, 'body');
 
       return this.request('post', endpoint, {}, body);
     },
@@ -145,9 +132,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     patch(endpoint, body = {}) {
-      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
-        throw new Error('patch(): Parameter `endpoint` is required');
-      }
+      AV.string(endpoint, 'endpoint');
+      AV.objectOrEmpty(body, 'body');
 
       return this.request('patch', endpoint, {}, body);
     },
@@ -159,9 +145,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     put(endpoint, body = {}) {
-      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
-        throw new Error('put(): Parameter `endpoint` is required');
-      }
+      AV.string(endpoint, 'endpoint');
+      AV.objectOrEmpty(body, 'body');
 
       return this.request('put', endpoint, {}, body);
     },
@@ -172,9 +157,7 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     delete(endpoint) {
-      if (!endpoint || typeof endpoint !== 'string' || endpoint.length === 0) {
-        throw new Error('delete(): Parameter `endpoint` is required');
-      }
+      AV.string(endpoint, 'endpoint');
 
       return this.request('delete', endpoint);
     },
@@ -202,25 +185,16 @@ module.exports = function SDK(options = {}) {
      * @return {LoginPromise}
      */
     login(credentials) {
-      if (!credentials || typeof credentials !== 'object') {
-        throw new Error('login(): Parameter `credentials` is required');
-      }
-
-      if (!credentials.email || typeof credentials.email !== 'string' || credentials.email.length === 0) {
-        throw new Error('login(): Parameter `credentials.email` is required');
-      }
-
-      if (!credentials.password || typeof credentials.password !== 'string' || credentials.password.length === 0) {
-        throw new Error('login(): Parameter `credentials.password` is required');
-      }
+      AV.object(credentials, 'credentials');
+      AV.keysWithString(credentials, ['email', 'password'], 'credentials');
 
       this.token = null;
 
-      if (credentials.url && typeof credentials.url === 'string' && credentials.url.length > 0) {
+      if (AV.hasKeysWithString(credentials, ['url'])) {
         this.url = credentials.url;
       }
 
-      if (credentials.env && typeof credentials.env === 'string' && credentials.env.length > 0) {
+      if (AV.hasKeysWithString(credentials, ['env'])) {
         this.env = credentials.env;
       }
 
@@ -280,12 +254,8 @@ module.exports = function SDK(options = {}) {
      * Calls onAutoRefreshError if refreshing the token fails for some reason
      */
     refreshIfNeeded() {
-      if (
-        (!this.token || typeof this.token !== 'string' || this.token.length === 0) ||
-        (!this.url || typeof this.url !== 'string' || this.url.length === 0) ||
-        (!this.env || typeof this.env !== 'string' || this.env.length === 0) ||
-        (!this.payload || !this.payload.exp)
-      ) return;
+      if (!AV.hasStringKeys(this, ['token', 'url', 'env'])) return;
+      if (!this.payload || !this.payload.exp) return;
 
       const timeDiff = this.payload.exp.getTime() - Date.now();
 
@@ -308,10 +278,7 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     refresh(token) {
-      if (!token || typeof token !== 'string' || token.length === 0) {
-        throw new Error('refresh(): Parameter `token` is required');
-      }
-
+      AV.string(token, 'token');
       return this.post('/auth/refresh', { token });
     },
 
@@ -323,10 +290,7 @@ module.exports = function SDK(options = {}) {
      * @param {String} email The user's email
      */
     requestPasswordReset(email) {
-      if (!email || typeof email !== 'string' || email.length === 0) {
-        throw new Error('requestPasswordReset(): Parameter `email` is required');
-      }
-
+      AV.string(email, 'email');
       return this.post('/auth/reset-request', {
         email,
         instance: this.url,
@@ -342,10 +306,7 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     getCollections(params = {}) {
-      if (params && typeof params !== 'object') {
-        throw new Error(`getCollections(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.objectOrEmpty(params, 'params');
       return this.get('/collections', params);
     },
 
@@ -356,14 +317,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     getCollection(collection, params = {}) {
-      if (!collection || typeof collection !== 'string' || collection.length === 0) {
-        throw new Error('getCollection(): Parameter `collection` is required');
-      }
-
-      if (params && typeof params !== 'object') {
-        throw new Error(`getCollection(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.string(collection, 'collection');
+      AV.objectOrEmpty(params, 'params');
       return this.get(`/collections/${collection}`, params);
     },
 
@@ -377,14 +332,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     getFields(collection, params = {}) {
-      if (!collection || typeof collection !== 'string' || collection.length === 0) {
-        throw new Error('getFields(): Parameter `collection` is required');
-      }
-
-      if (params && typeof params !== 'object') {
-        throw new Error(`getFields(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.string(collection, 'collection');
+      AV.objectOrEmpty(params, 'params');
       return this.get(`/fields/${collection}`, params);
     },
 
@@ -396,18 +345,9 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     getField(collection, fieldName, params = {}) {
-      if (!collection || typeof collection !== 'string' || collection.length === 0) {
-        throw new Error('getField(): Parameter `collection` is required');
-      }
-
-      if (!fieldName || typeof fieldName !== 'string' || fieldName.length === 0) {
-        throw new Error('getField(): Parameter `fieldName` is required');
-      }
-
-      if (params && typeof params !== 'object') {
-        throw new Error(`getField(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.string(collection, 'collection');
+      AV.string(fieldName, 'fieldName');
+      AV.objectOrEmpty(params, 'params');
       return this.get(`/fields/${collection}/${fieldName}`, params);
     },
 
@@ -421,14 +361,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     createItem(collection, body) {
-      if (!collection || typeof collection !== 'string' || collection.length === 0) {
-        throw new Error('createItem(): Parameter `collection` is required');
-      }
-
-      if (!body || typeof body !== 'object') {
-        throw new Error('createItem(): Parameter `body` is required');
-      }
-
+      AV.string(collection, 'collection');
+      AV.object(body, 'body');
       return this.post(`/items/${collection}`, body);
     },
 
@@ -439,14 +373,8 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     getItems(collection, params = {}) {
-      if (!collection || typeof collection !== 'string' || collection.length === 0) {
-        throw new Error('getItems(): Parameter `collection` is required');
-      }
-
-      if (params && typeof params !== 'object') {
-        throw new Error(`getItems(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.string(collection, 'collection');
+      AV.objectOrEmpty(params, 'params');
       return this.get(`/items/${collection}`, params);
     },
 
@@ -458,48 +386,27 @@ module.exports = function SDK(options = {}) {
      * @return {RequestPromise}
      */
     getItem(collection, primaryKey, params = {}) {
-      if (!collection || typeof collection !== 'string' || collection.length === 0) {
-        throw new Error('getItem(): Parameter `collection` is required');
-      }
-
-      if (!primaryKey || typeof primaryKey === 'object') {
-        throw new Error('getItem(): Parameter `primaryKey` is required');
-      }
-
-      if (params && typeof params !== 'object') {
-        throw new Error(`getItem(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.string(collection, 'collection');
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.objectOrEmpty(params, 'params');
       return this.get(`/items/${collection}/${primaryKey}`, params);
     },
 
     // USERS
     // -------------------------------------------------------------------------
     getUsers(params = {}) {
-      if (params && typeof params !== 'object') {
-        throw new Error(`getUsers(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.objectOrEmpty(params, 'params');
       return this.get('/users', params);
     },
 
     getUser(primaryKey, params = {}) {
-      if (!primaryKey || typeof primaryKey === 'object') {
-        throw new Error('getUser(): Parameter `primaryKey` is required');
-      }
-
-      if (params && typeof params !== 'object') {
-        throw new Error(`getUser(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.objectOrEmpty(params, 'params');
       return this.get(`/users/${primaryKey}`, params);
     },
 
     getMe(params = {}) {
-      if (params && typeof params !== 'object') {
-        throw new Error(`getMe(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
-      }
-
+      AV.objectOrEmpty(params, 'params');
       return this.get('/users/me', params);
     },
   };

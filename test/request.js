@@ -25,24 +25,24 @@ describe('Request', function() {
     });
 
     it('Errors on missing parameter method', function() {
-      expect(client.request).to.throw(Error, 'request(): Parameter `method` is required');
+      expect(client.request).to.throw();
     });
 
     it('Errors on missing parameter endpoint', function() {
-      expect(() => client.request('get')).to.throw(Error, 'request(): Parameter `endpoint` is required');
+      expect(() => client.request('get')).to.throw();
     });
 
     it('Errors if params isn\'t of the right type', function() {
-      expect(() => client.request('get', '/items', 'wrong-params')).to.throw(Error, 'request(): Parameter `params` has to be of type Object. [string] given.');
+      expect(() => client.request('get', '/items', 'wrong-params')).to.throw();
     });
 
     it('Errors if data isn\'t of the right type', function() {
-      expect(() => client.request('get', '/items', {}, 'wrong-data')).to.throw(Error, 'request(): Parameter `data` has to be of type Object. [string] given.');
+      expect(() => client.request('get', '/items', {}, 'wrong-data')).to.throw();
     });
 
     it('Errors when there is no API URL set', function() {
       client.url = null;
-      expect(() => client.request('get', '/items')).to.throw(Error, 'request(): No API URL set');
+      expect(() => client.request('get', '/items')).to.throw();
     });
 
     it('Calls Axios with the right config', function() {
@@ -222,7 +222,7 @@ describe('Request', function() {
     });
 
     it('Errors on missing parameter method', function() {
-      expect(client.get).to.throw(Error, 'get(): Parameter `endpoint` is required');
+      expect(client.get).to.throw();
     });
 
     it('Calls request() with the right parameters', function() {
@@ -244,7 +244,7 @@ describe('Request', function() {
     });
 
     it('Errors on missing parameter method', function() {
-      expect(client.post).to.throw(Error, 'post(): Parameter `endpoint` is required');
+      expect(client.post).to.throw();
     });
 
     it('Calls request() with the right parameters', function() {
@@ -268,7 +268,7 @@ describe('Request', function() {
     });
 
     it('Errors on missing parameter method', function() {
-      expect(client.patch).to.throw(Error, 'patch(): Parameter `endpoint` is required');
+      expect(client.patch).to.throw();
     });
 
     it('Calls request() with the right parameters', function() {
@@ -292,7 +292,7 @@ describe('Request', function() {
     });
 
     it('Errors on missing parameter method', function() {
-      expect(client.put).to.throw(Error, 'put(): Parameter `endpoint` is required');
+      expect(client.put).to.throw();
     });
 
     it('Calls request() with the right parameters', function() {
@@ -316,7 +316,7 @@ describe('Request', function() {
     });
 
     it('Errors on missing parameter method', function() {
-      expect(client.delete).to.throw(Error, 'delete(): Parameter `endpoint` is required');
+      expect(client.delete).to.throw();
     });
 
     it('Calls request() with the right parameters', function() {

@@ -36,11 +36,11 @@ describe('Items', function() {
 
   describe('#createItem()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.createItem).to.throw(Error, 'createItem(): Parameter `collection` is required');
+      expect(client.createItem).to.throw();
     });
 
     it('Errors on missing `body` parameter', function() {
-      expect(() => client.createItem('projects')).to.throw(Error, 'createItem(): Parameter `body` is required');
+      expect(() => client.createItem('projects')).to.throw();
     });
 
     it('Calls post() for the right endpoint', function() {
@@ -51,11 +51,11 @@ describe('Items', function() {
 
   describe('#getItems()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.getItems).to.throw(Error, 'getItems(): Parameter `collection` is required');
+      expect(client.getItems).to.throw();
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getItems('projects', 'params')).to.throw(Error, 'getItems(): Parameter `params` has to be of type object. [string] given.');
+      expect(() => client.getItems('projects', 'params')).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {
@@ -66,15 +66,15 @@ describe('Items', function() {
 
   describe('#getItem()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.getItem).to.throw(Error, 'getItem(): Parameter `collection` is required');
+      expect(client.getItem).to.throw();
     });
 
     it('Errors on missing `primaryKey` parameter', function() {
-      expect(() => client.getItem('projects')).to.throw(Error, 'getItem(): Parameter `primaryKey` is required');
+      expect(() => client.getItem('projects')).to.throw();
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getItem('projects', 15, 140)).to.throw(Error, 'getItem(): Parameter `params` has to be of type object. [number] given.');
+      expect(() => client.getItem('projects', 15, 140)).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {

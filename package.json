@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/directus/directus-sdk-javascript#readme",
   "dependencies": {
+    "argument-validator": "^0.1.0",
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
     "qs": "^6.5.1"

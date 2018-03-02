@@ -41,7 +41,7 @@ describe('Users', function() {
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getUsers('params')).to.throw(Error, 'getUsers(): Parameter `params` has to be of type object. [string] given.');
+      expect(() => client.getUsers('params')).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {
@@ -52,11 +52,11 @@ describe('Users', function() {
 
   describe('#getUser()', function() {
     it('Errors on missing `primaryKey` parameter', function() {
-      expect(client.getUser).to.throw(Error, 'getUser(): Parameter `primaryKey` is required');
+      expect(client.getUser).to.throw();
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getUser('projects', 140)).to.throw(Error, 'getUser(): Parameter `params` has to be of type object. [number] given.');
+      expect(() => client.getUser('projects', 140)).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {
@@ -72,7 +72,7 @@ describe('Users', function() {
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getMe(140)).to.throw(Error, 'getMe(): Parameter `params` has to be of type object. [number] given.');
+      expect(() => client.getMe(140)).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {

@@ -41,7 +41,7 @@ describe('Collections', function() {
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getCollections('params')).to.throw(Error, 'getCollections(): Parameter `params` has to be of type object. [string] given.');
+      expect(() => client.getCollections('params')).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {
@@ -52,11 +52,11 @@ describe('Collections', function() {
 
   describe('#getCollection()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.getCollection).to.throw(Error, 'getCollection(): Parameter `collection` is required');
+      expect(client.getCollection).to.throw();
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getCollection('projects', 'params')).to.throw(Error, 'getCollection(): Parameter `params` has to be of type object. [string] given.');
+      expect(() => client.getCollection('projects', 'params')).to.throw();
     });
 
     it('Calls get() for the right endpoint', function() {
