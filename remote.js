@@ -22,6 +22,7 @@ module.exports = function SDK(options = {}) {
     }),
     refreshInterval: null,
     onAutoRefreshError: null,
+    onAutoRefreshSuccess: null,
 
     get payload() {
       if (!AV.isString(this.token)) return null;
@@ -251,6 +252,7 @@ module.exports = function SDK(options = {}) {
     /**
      * Refresh the token if it is about to expire (within 30 seconds of expiry date)
      *
+     * Calls onAutoRefreshSuccess with the new token if the refreshing is successful
      * Calls onAutoRefreshError if refreshing the token fails for some reason
      */
     refreshIfNeeded() {
@@ -263,9 +265,16 @@ module.exports = function SDK(options = {}) {
         this.refresh(this.token)
           .then((res) => {
             this.token = res.data.token;
+            if (AV.isFunction(this.onAutoRefreshSuccess)) {
+              this.onAutoRefreshSuccess({
+                url: this.url,
+                env: this.env,
+                token: this.token
+              });
+            }
           })
           .catch((error) => {
-            if (typeof this.onAutoRefreshError === 'function') {
+            if (AV.isFunction(this.onAutoRefreshError)) {
               this.onAutoRefreshError(error);
             }
           });

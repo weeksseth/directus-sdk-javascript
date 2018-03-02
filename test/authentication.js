@@ -168,6 +168,29 @@ describe('Authentication', function() {
       client.refresh.restore();
     });
 
+    it('Calls the optional onAutoRefreshSuccess() callback when the request succeeds', function(done) {
+      sinon.stub(client, 'refresh').resolves({
+        data: {
+          token: 'abcdef'
+        }
+      });
+
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+
+      client.onAutoRefreshSuccess = function(info) {
+        expect(info).to.deep.equal({
+          url: 'https://demo-api.getdirectus.com',
+          env: '_',
+          token: 'abcdef'
+        });
+        done();
+      };
+
+      client.refreshIfNeeded();
+
+      client.refresh.restore();
+    });
+
     it('Calls the optional onAutoRefreshError() callback when request fails', function(done) {
       sinon.stub(client, 'refresh').rejects({
         code: -1,
