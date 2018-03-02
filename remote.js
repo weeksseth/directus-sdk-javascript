@@ -246,15 +246,26 @@ module.exports = function SDK(options = {}) {
       }
     },
 
+    /**
+     * Starts an interval of 10 seconds that will check if the token needs refreshing
+     */
     startInterval() {
       this.refreshInterval = setInterval(this.refreshIfNeeded.bind(this), 10000);
     },
 
+    /**
+     * Clears and nullifies the token refreshing interval
+     */
     stopInterval() {
       clearInterval(this.refreshInterval);
       this.refreshInterval = null;
     },
 
+    /**
+     * Refresh the token if it is about to expire (within 30 seconds of expiry date)
+     *
+     * Calls onAutoRefreshError if refreshing the token fails for some reason
+     */
     refreshIfNeeded() {
       if (!this.token || typeof this.token !== 'string' || this.token.length === 0) return;
       if (!this.url || typeof this.url !== 'string' || this.url.length === 0) return;
@@ -276,6 +287,11 @@ module.exports = function SDK(options = {}) {
       }
     },
 
+    /**
+     * Use the passed token to request a new one
+     * @param  {String} token Active & Valid token
+     * @return {RequestPromise}
+     */
     refresh(token) {
       if (!token || typeof token !== 'string' || token.length === 0) {
         throw new Error('refresh(): Parameter `token` is required');
