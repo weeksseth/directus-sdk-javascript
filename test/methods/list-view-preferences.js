@@ -53,7 +53,7 @@ describe('Items', function() {
     it('Returns the user preferences if there saved user preferences', async function() {
       client.token = jwt.sign({ group: 5, id: 1 }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][null]': 1,
@@ -64,7 +64,7 @@ describe('Items', function() {
         }]
       });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][eq]': 5,
@@ -75,7 +75,7 @@ describe('Items', function() {
         }]
       });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][eq]': 5,
@@ -96,7 +96,7 @@ describe('Items', function() {
     it('Returns the group preferences if there are no saved user preferences', async function() {
       client.token = jwt.sign({ group: 5, id: 1 }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][null]': 1,
@@ -107,7 +107,7 @@ describe('Items', function() {
         }]
       });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][eq]': 5,
@@ -118,7 +118,7 @@ describe('Items', function() {
         }]
       });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][eq]': 5,
@@ -137,7 +137,7 @@ describe('Items', function() {
     it('Returns the collection preferences if there are no saved user or preferences', async function() {
       client.token = jwt.sign({ group: 5, id: 1 }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][null]': 1,
@@ -148,7 +148,7 @@ describe('Items', function() {
         }]
       });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][eq]': 5,
@@ -157,7 +157,7 @@ describe('Items', function() {
         "data": []
       });
 
-      client.get.withArgs(`/collection_presets/faq`, {
+      client.get.withArgs(`/collection_presets`, {
         'filter[title][null]': 1,
         'filter[collection][eq]': 'faq',
         'filter[group][eq]': 5,

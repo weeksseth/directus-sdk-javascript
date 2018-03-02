@@ -421,19 +421,19 @@ module.exports = function SDK(options = {}) {
       AV.string(this.token, 'this.token');
       AV.objectOrEmpty(params);
       return Promise.all([
-        this.get(`/collection_presets/${collection}`, {
+        this.get(`/collection_presets`, {
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
           'filter[group][null]': 1,
           'filter[user][null]': 1,
         }),
-        this.get(`/collection_presets/${collection}`, {
+        this.get(`/collection_presets`, {
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
           'filter[group][eq]': this.payload.group,
           'filter[user][null]': 1,
         }),
-        this.get(`/collection_presets/${collection}`, {
+        this.get(`/collection_presets`, {
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
           'filter[group][eq]': this.payload.group,
