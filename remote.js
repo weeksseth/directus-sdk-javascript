@@ -353,5 +353,46 @@ module.exports = function SDK(options = {}) {
 
       return this.post(`/items/${collection}`, body);
     },
+
+    /**
+     * Get items from a given collection
+     * @param  {String} collection The collection to add the item to
+     * @param  {Object} [params={}]   Query parameters
+     * @return {RequestPromise}
+     */
+    getItems(collection, params = {}) {
+      if (!collection || typeof collection !== 'string' || collection.length === 0) {
+        throw new Error('getItems(): Parameter `collection` is required');
+      }
+
+      if (params && typeof params !== 'object') {
+        throw new Error(`getItems(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get(`/items/${collection}`, params);
+    },
+
+    /**
+     * Get a single item by primary key
+     * @param  {String} collection  The collection to add the item to
+     * @param  {[type]} primaryKey  [description]
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getItem(collection, primaryKey, params = {}) {
+      if (!collection || typeof collection !== 'string' || collection.length === 0) {
+        throw new Error('getItem(): Parameter `collection` is required');
+      }
+
+      if (!primaryKey || typeof primaryKey === 'object') {
+        throw new Error('getItem(): Parameter `primaryKey` is required');
+      }
+
+      if (params && typeof params !== 'object') {
+        throw new Error(`getItem(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get(`/items/${collection}/${primaryKey}`, params);
+    },
   };
 };
