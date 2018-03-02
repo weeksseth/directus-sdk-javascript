@@ -240,7 +240,7 @@ module.exports = function SDK(options = {}) {
      */
     logout() {
       this.token = null;
-      this.env = null;
+      this.env = '_';
       this.url = null;
 
       if (this.refreshInterval) {

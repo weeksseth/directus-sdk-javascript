@@ -110,7 +110,7 @@ describe('Authentication', function() {
       client.logout();
       expect(client.token).to.be.null;
       expect(client.url).to.be.null;
-      expect(client.env).to.be.null;
+      expect(client.env).to.equal('_');
     });
   });
 
