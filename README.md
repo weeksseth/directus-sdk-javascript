@@ -21,7 +21,7 @@ const RemoteInstance = require('directus-sdk-javascript/remote');
 
 const client = new RemoteInstance({
   url: 'http://instance.directus.io/api/1.1/',
-  accessToken: [user-token] // optional, can be used without on public routes
+  token: [user-token] // optional, can be used without on public routes
 });
 ```
 

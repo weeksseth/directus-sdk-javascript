@@ -269,7 +269,7 @@ module.exports = function SDK(options = {}) {
               this.onAutoRefreshSuccess({
                 url: this.url,
                 env: this.env,
-                token: this.token
+                token: this.token,
               });
             }
           })
@@ -434,19 +434,49 @@ module.exports = function SDK(options = {}) {
         });
     },
 
+    // LIST VIEW PREFERENCES
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get Directus' global settings
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getSettings(params = {}) {
+      AV.objectOrEmpty(params, 'params');
+      return this.get('/settings', params);
+    },
+
     // USERS
     // -------------------------------------------------------------------------
+
+    /**
+     * Get a list of available users in Directus
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
     getUsers(params = {}) {
       AV.objectOrEmpty(params, 'params');
       return this.get('/users', params);
     },
 
+    /**
+     * Get a single Directus user
+     * @param  {String} primaryKey  The unique identifier of the user
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
     getUser(primaryKey, params = {}) {
       AV.notNull(primaryKey, 'primaryKey');
       AV.objectOrEmpty(params, 'params');
       return this.get(`/users/${primaryKey}`, params);
     },
 
+    /**
+     * Get the user info of the currently logged in user
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
     getMe(params = {}) {
       AV.objectOrEmpty(params, 'params');
       return this.get('/users/me', params);
