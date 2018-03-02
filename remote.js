@@ -367,6 +367,50 @@ module.exports = function SDK(options = {}) {
       return this.get(`/collections/${collection}`, params);
     },
 
+    // FIELDS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get the fields that have been setup for a given collection
+     * @param  {String} collection  Collection name
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getFields(collection, params = {}) {
+      if (!collection || typeof collection !== 'string' || collection.length === 0) {
+        throw new Error('getFields(): Parameter `collection` is required');
+      }
+
+      if (params && typeof params !== 'object') {
+        throw new Error(`getFields(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get(`/fields/${collection}`, params);
+    },
+
+    /**
+     * Get the field information for a single given field
+     * @param  {String} collection  Collection name
+     * @param  {String} fieldName   Field name
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getField(collection, fieldName, params = {}) {
+      if (!collection || typeof collection !== 'string' || collection.length === 0) {
+        throw new Error('getField(): Parameter `collection` is required');
+      }
+
+      if (!fieldName || typeof fieldName !== 'string' || fieldName.length === 0) {
+        throw new Error('getField(): Parameter `fieldName` is required');
+      }
+
+      if (params && typeof params !== 'object') {
+        throw new Error(`getField(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get(`/fields/${collection}/${fieldName}`, params);
+    },
+
     // ITEMS
     // -------------------------------------------------------------------------
 

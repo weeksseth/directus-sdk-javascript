@@ -5,7 +5,7 @@ chai.use(require('sinon-chai'));
 
 const SDK = require('../../remote');
 
-describe('Methods', function() {
+describe('Items', function() {
   let client;
 
   beforeEach(function() {
@@ -69,7 +69,7 @@ describe('Methods', function() {
       expect(client.getItem).to.throw(Error, 'getItem(): Parameter `collection` is required');
     });
 
-    it('Errors on missing `collection` parameter', function() {
+    it('Errors on missing `primaryKey` parameter', function() {
       expect(() => client.getItem('projects')).to.throw(Error, 'getItem(): Parameter `primaryKey` is required');
     });
 
