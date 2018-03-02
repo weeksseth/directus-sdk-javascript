@@ -5,7 +5,7 @@ chai.use(require('sinon-chai'));
 
 const SDK = require('../../remote');
 
-describe('Methods', function() {
+describe('Collections', function() {
   let client;
 
   beforeEach(function() {
@@ -35,6 +35,11 @@ describe('Methods', function() {
   });
 
   describe('#getCollections()', function() {
+    it('Defaults to an empty object if no parameters are passed', function() {
+      client.getCollections();
+      expect(client.get).to.have.been.calledWith('/collections', {});
+    });
+
     it('Errors if parameter `params` is of a wrong type', function() {
       expect(() => client.getCollections('params')).to.throw(Error, 'getCollections(): Parameter `params` has to be of type object. [string] given.');
     });
