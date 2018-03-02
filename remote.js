@@ -392,6 +392,39 @@ module.exports = function SDK(options = {}) {
       return this.get(`/items/${collection}/${primaryKey}`, params);
     },
 
+    // LIST VIEW PREFERENCES
+    // -------------------------------------------------------------------------
+    getMyListViewPreferences(collection, params = {}) {
+      AV.string(this.token, 'this.token');
+      AV.objectOrEmpty(params);
+      return Promise.all([
+        this.get(`/collection_presets/${collection}`, {
+          'filter[title][null]': 1,
+          'filter[collection][eq]': collection,
+          'filter[group][null]': 1,
+          'filter[user][null]': 1,
+        }),
+        this.get(`/collection_presets/${collection}`, {
+          'filter[title][null]': 1,
+          'filter[collection][eq]': collection,
+          'filter[group][eq]': this.payload.group,
+          'filter[user][null]': 1,
+        }),
+        this.get(`/collection_presets/${collection}`, {
+          'filter[title][null]': 1,
+          'filter[collection][eq]': collection,
+          'filter[group][eq]': this.payload.group,
+          'filter[user][eq]': this.payload.id,
+        }),
+      ])
+        .then((values) => {
+          const [collection, group, user] = values; // eslint-disable-line no-shadow
+          if (user.data && user.data.length > 0) return user;
+          if (group.data && group.data.length > 0) return group;
+          return collection;
+        });
+    },
+
     // USERS
     // -------------------------------------------------------------------------
     getUsers(params = {}) {
