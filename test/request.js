@@ -1,5 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
+const jwt = require('jsonwebtoken');
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
@@ -116,6 +117,36 @@ describe('Request', function() {
           queryParam: true
         },
         data: {}
+      });
+    });
+
+    it('Adds Bearer header if access token is set', function() {
+      client.axios.request.returns(Promise.resolve({
+        response: {
+          data: {
+            "error": {
+              "code": 1,
+              "message": "Not Found"
+            }
+          }
+        }
+      }));
+
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
+
+      client.request('get', '/utils/random_string', { queryParam: true });
+
+      expect(client.axios.request).to.have.been.calledWith({
+        url: '/utils/random_string',
+        method: 'get',
+        baseURL: 'https://demo-api.getdirectus.com/_/',
+        params: {
+          queryParam: true
+        },
+        data: {},
+        headers: {
+          Authorization: `Bearer ${client.token}`
+        }
       });
     });
 

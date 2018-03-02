@@ -83,13 +83,20 @@ module.exports = function SDK(options = {}) {
         throw new Error('request(): No API URL set');
       }
 
-      return this.axios.request({
+      const requestOptions = {
         url: endpoint,
         method,
         baseURL: `${this.url}/${this.env}/`,
         params,
         data,
-      })
+      };
+
+      if (this.token && typeof this.token === 'string' && this.token.length > 0) {
+        requestOptions.headers = {};
+        requestOptions.headers.Authorization = `Bearer ${this.token}`;
+      }
+
+      return this.axios.request(requestOptions)
         .then(res => res.data)
         .catch((error) => {
           if (error.response) {
