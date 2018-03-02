@@ -333,6 +333,40 @@ module.exports = function SDK(options = {}) {
       });
     },
 
+    // COLLECTIONS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get all available collections
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getCollections(params = {}) {
+      if (params && typeof params !== 'object') {
+        throw new Error(`getCollections(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get('/collections', params);
+    },
+
+    /**
+     * Get collection info by name
+     * @param  {String} collection  Collection name
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getCollection(collection, params = {}) {
+      if (!collection || typeof collection !== 'string' || collection.length === 0) {
+        throw new Error('getCollection(): Parameter `collection` is required');
+      }
+
+      if (params && typeof params !== 'object') {
+        throw new Error(`getCollection(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get(`/collections/${collection}`, params);
+    },
+
     // ITEMS
     // -------------------------------------------------------------------------
 
