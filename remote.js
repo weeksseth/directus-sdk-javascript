@@ -472,5 +472,35 @@ module.exports = function SDK(options = {}) {
 
       return this.get(`/items/${collection}/${primaryKey}`, params);
     },
+
+    // USERS
+    // -------------------------------------------------------------------------
+    getUsers(params = {}) {
+      if (params && typeof params !== 'object') {
+        throw new Error(`getUsers(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get('/users', params);
+    },
+
+    getUser(primaryKey, params = {}) {
+      if (!primaryKey || typeof primaryKey === 'object') {
+        throw new Error('getUser(): Parameter `primaryKey` is required');
+      }
+
+      if (params && typeof params !== 'object') {
+        throw new Error(`getUser(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get(`/users/${primaryKey}`, params);
+    },
+
+    getMe(params = {}) {
+      if (params && typeof params !== 'object') {
+        throw new Error(`getMe(): Parameter \`params\` has to be of type object. [${typeof params}] given.`);
+      }
+
+      return this.get('/users/me', params);
+    },
   };
 };
