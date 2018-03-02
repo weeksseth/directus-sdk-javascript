@@ -301,5 +301,23 @@ module.exports = function SDK(options = {}) {
 
       return this.post('/auth/refresh', { token });
     },
+
+    /**
+     * Request to reset the password of the user with the given email address
+     *
+     * The API will send an email to the given email address with a link to generate a new
+     * temporary password.
+     * @param {String} email The user's email
+     */
+    requestPasswordReset(email) {
+      if (!email || typeof email !== 'string' || email.length === 0) {
+        throw new Error('requestPasswordReset(): Parameter `email` is required');
+      }
+
+      return this.post('/auth/reset-request', {
+        email,
+        instance: this.url,
+      });
+    },
   };
 };

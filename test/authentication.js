@@ -257,6 +257,28 @@ describe('Authentication', function() {
       });
     });
 
+    describe('#requestPasswordReset()', function() {
+      beforeEach(function() {
+        sinon.stub(client, 'post');
+      });
+
+      afterEach(function() {
+        client.post.restore();
+      });
+
+      it('Errors when email parameter is missing', function() {
+        expect(client.requestPasswordReset).to.throw(Error, 'requestPasswordReset(): Parameter `email` is required');
+      });
+
+      it('Calls post sending the required body', function() {
+        client.requestPasswordReset('test@example.com');
+        expect(client.post).to.have.been.calledWith('/auth/reset-request', {
+          email: 'test@example.com',
+          instance: 'https://demo-api.getdirectus.com'
+        });
+      });
+    });
+
     it('Fires refreshIfNeeded() every 10 seconds', function() {
       client.login({
         url: 'https://demo-api.getdirectus.com',
