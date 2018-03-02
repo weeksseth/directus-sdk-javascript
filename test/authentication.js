@@ -119,11 +119,6 @@ describe('Authentication', function() {
       expect(client.refresh).to.throw(Error, 'refresh(): Parameter `token` is required');
     });
 
-    it('Overwrites the saved token with the new one', async function() {
-      await client.refresh('oldToken');
-      expect(client.token).to.equal('abcdef');
-    });
-
     it('Resolves with the new token', async function() {
       const result = await client.refresh('oldToken');
       expect(result).to.deep.equal({
@@ -151,13 +146,47 @@ describe('Authentication', function() {
       expect(client.refreshIfNeeded()).to.be.undefined;
     });
 
+    it('Overwrites the saved token with the new one', async function() {
+      sinon.stub(client, 'refresh').resolves({
+        data: {
+          token: 'abcdef'
+        }
+      });
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+      await client.refreshIfNeeded();
+      expect(client.token).to.equal('abcdef');
+      client.refresh.restore();
+    });
+
     it('Calls refresh() if expiry date is within 30 seconds of now', function() {
-      sinon.stub(client, 'refresh');
+      sinon.stub(client, 'refresh').resolves();
       client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
       expect(client.refreshIfNeeded()).to.be.undefined;
       client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
       client.refreshIfNeeded();
       expect(client.refresh).to.have.been.calledWith(client.token);
+      client.refresh.restore();
+    });
+
+    it('Calls the optional onAutoRefreshError() callback when request fails', function(done) {
+      sinon.stub(client, 'refresh').rejects({
+        code: -1,
+        message: 'Network Error'
+      });
+
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+
+      client.onAutoRefreshError = function(error) {
+        expect(error).to.deep.equal({
+          code: -1,
+          message: 'Network Error'
+        });
+        done();
+      };
+
+      client.refreshIfNeeded();
+
+      client.refresh.restore();
     });
   });
 

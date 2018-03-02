@@ -20,6 +20,7 @@ module.exports = function SDK(options = {}) {
       timeout: 1500,
     }),
     refreshInterval: null,
+    onAutoRefreshError: null,
 
     get payload() {
       if (!this.token || typeof this.token !== 'string' || this.token.length === 0) {
@@ -263,7 +264,15 @@ module.exports = function SDK(options = {}) {
       const timeDiff = this.payload.exp.getTime() - Date.now();
 
       if (timeDiff < 30000) {
-        this.refresh(this.token);
+        this.refresh(this.token)
+          .then((res) => {
+            this.token = res.data.token;
+          })
+          .catch((error) => {
+            if (typeof this.onAutoRefreshError === 'function') {
+              this.onAutoRefreshError(error);
+            }
+          });
       }
     },
 
@@ -272,11 +281,7 @@ module.exports = function SDK(options = {}) {
         throw new Error('refresh(): Parameter `token` is required');
       }
 
-      return this.post('/auth/refresh', { token })
-        .then((res) => {
-          this.token = res.data.token;
-          return res;
-        });
+      return this.post('/auth/refresh', { token });
     },
   };
 };
