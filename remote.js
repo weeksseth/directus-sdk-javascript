@@ -29,6 +29,20 @@ module.exports = function SDK(options = {}) {
       return this.getPayload(this.token);
     },
 
+    get loggedIn() {
+      if (
+        AV.isString(this.token) &&
+        AV.isString(this.url) &&
+        AV.isString(this.env) &&
+        AV.isObject(this.payload)
+      ) {
+        if (this.payload.exp.getTime() > Date.now()) {
+          return true;
+        }
+      }
+      return false;
+    },
+
     /**
      * Retrieves the payload from a JWT
      * @param  {string} token The JWT to retrieve the payload from

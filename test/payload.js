@@ -30,4 +30,13 @@ describe('JWT Payload', function() {
 
     expect(client.payload.exp).to.equalDate(date);
   });
+
+  it('Reports a loggedIn flag when token, url, env are set and token hasn\'t expired', function() {
+    client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '-1h' });
+    client.url = 'https://demo-api.getdirectus.com';
+    expect(client.loggedIn).to.equal(false);
+
+    client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
+    expect(client.loggedIn).to.equal(true);
+  });
 });
