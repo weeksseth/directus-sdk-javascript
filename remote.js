@@ -329,6 +329,12 @@ module.exports = function SDK(options = {}) {
     // ITEMS
     // -------------------------------------------------------------------------
 
+    /**
+     * Create a new item
+     * @param  {String} collection The collection to add the item to
+     * @param  {Object} body       The item's field values
+     * @return {RequestPromise}
+     */
     createItem(collection, body) {
       if (!collection || typeof collection !== 'string' || collection.length === 0) {
         throw new Error('createItem(): Parameter `collection` is required');
