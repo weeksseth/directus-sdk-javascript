@@ -267,10 +267,12 @@ module.exports = function SDK(options = {}) {
      * Calls onAutoRefreshError if refreshing the token fails for some reason
      */
     refreshIfNeeded() {
-      if (!this.token || typeof this.token !== 'string' || this.token.length === 0) return;
-      if (!this.url || typeof this.url !== 'string' || this.url.length === 0) return;
-      if (!this.env || typeof this.env !== 'string' || this.env.length === 0) return;
-      if (!this.payload || !this.payload.exp) return;
+      if (
+        (!this.token || typeof this.token !== 'string' || this.token.length === 0) ||
+        (!this.url || typeof this.url !== 'string' || this.url.length === 0) ||
+        (!this.env || typeof this.env !== 'string' || this.env.length === 0) ||
+        (!this.payload || !this.payload.exp)
+      ) return;
 
       const timeDiff = this.payload.exp.getTime() - Date.now();
 
