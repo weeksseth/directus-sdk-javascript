@@ -352,6 +352,33 @@ module.exports = function SDK(options = {}) {
       return this.get(`/collections/${collection}`, params);
     },
 
+    // COLLECTIONS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the meta information of all installed interfaces
+     * @return {RequestPromise}
+     */
+    getInterfaces() {
+      return this.request('get', '/interfaces', {}, {}, true);
+    },
+
+    /**
+     * Get the meta information of all installed listings
+     * @return {RequestPromise}
+     */
+    getListings() {
+      return this.request('get', '/listings', {}, {}, true);
+    },
+
+    /**
+     * Get the meta information of all installed pages
+     * @return {RequestPromise}
+     */
+    getPages() {
+      return this.request('get', '/pages', {}, {}, true);
+    },
+
     // FIELDS
     // ------------------------------------------------------------------------
 
