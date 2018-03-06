@@ -77,9 +77,10 @@ module.exports = function SDK(options = {}) {
      * @param  {string} endpoint    The API endpoint to request
      * @param  {Object} [params={}] The HTTP query parameters (GET only)
      * @param  {Object} [data={}]   The HTTP request body (non-GET only)
+     * @param  {Boolean} noEnv      Don't use the env in the path
      * @return {RequestPromise}
      */
-    request(method, endpoint, params = {}, data = {}) {
+    request(method, endpoint, params = {}, data = {}, noEnv = false) {
       AV.string(method, 'method');
       AV.string(endpoint, 'endpoint');
       AV.objectOrEmpty(params, 'params');
@@ -87,10 +88,16 @@ module.exports = function SDK(options = {}) {
 
       AV.string(this.url, 'this.url');
 
+      let baseURL = `${this.url}/`;
+
+      if (noEnv === false) {
+        baseURL += `${this.env}/`;
+      }
+
       const requestOptions = {
         url: endpoint,
         method,
-        baseURL: `${this.url}/${this.env}/`,
+        baseURL,
         params,
         data,
       };

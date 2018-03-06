@@ -210,6 +210,39 @@ describe('Request', function() {
         data: {}
       });
     });
+
+    it('Supports an optional fifth parameter to make the request without the env', async function() {
+      client.axios.request.resolves({
+        response: {
+          data: {
+            "error": {
+              "code": 1,
+              "message": "Not Found"
+            }
+          }
+        }
+      });
+
+      await client.request('get', '/interfaces', {}, {});
+
+      expect(client.axios.request).to.have.been.calledWith({
+        url: '/interfaces',
+        method: 'get',
+        baseURL: 'https://demo-api.getdirectus.com/_/',
+        params: {},
+        data: {},
+      });
+
+      await client.request('get', '/interfaces', {}, {}, true);
+
+      expect(client.axios.request).to.have.been.calledWith({
+        url: '/interfaces',
+        method: 'get',
+        baseURL: 'https://demo-api.getdirectus.com/',
+        params: {},
+        data: {},
+      });
+    });
   });
 
   describe('#get()', function() {
