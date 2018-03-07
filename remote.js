@@ -352,7 +352,32 @@ module.exports = function SDK(options = {}) {
       return this.get(`/collections/${collection}`, params);
     },
 
-    // COLLECTIONS
+    // COLLECTION PRESETS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Create a new collection preset (bookmark / listing preferences)
+     * @param  {Object} data The bookmark info
+     * @return {RequestPromise}
+     */
+    createCollectionPreset(data) {
+      AV.object(data);
+      return this.post('/collection_presets', data);
+    },
+
+    /**
+     * Update collection preset (bookmark / listing preference)
+     * @param {String|Number} primaryKey
+     * @param {RequestPromise} data
+     */
+    updateCollectionPreset(primaryKey, data) {
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.object(data, 'data');
+
+      return this.patch(`/collection_presets/${primaryKey}`, data);
+    },
+
+    // EXTENSIONS
     // -------------------------------------------------------------------------
 
     /**
@@ -449,7 +474,7 @@ module.exports = function SDK(options = {}) {
       return this.get(`/items/${collection}/${primaryKey}`, params);
     },
 
-    // LIST VIEW PREFERENCES
+    // LISTING PREFERENCES
     // -------------------------------------------------------------------------
 
     /**
@@ -494,28 +519,6 @@ module.exports = function SDK(options = {}) {
           }
           return { scope: 'default' };
         });
-    },
-
-    /**
-     * Create a new bookmark (or listing preferenes when title key is empty)
-     * @param  {Object} data The bookmark info
-     * @return {RequestPromise}
-     */
-    createBookmark(data) {
-      AV.object(data);
-      return this.post('/collection_presets', data);
-    },
-
-    /**
-     * Update bookmark (or listing preferences)
-     * @param {String|Number} primaryKey
-     * @param {RequestPromise} data
-     */
-    updateBookmark(primaryKey, data) {
-      AV.notNull(primaryKey, 'primaryKey');
-      AV.object(data, 'data');
-
-      return this.patch(`/collection_presets/${primaryKey}`, data);
     },
 
     // SETTINGS
