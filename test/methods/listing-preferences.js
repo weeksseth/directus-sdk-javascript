@@ -89,7 +89,8 @@ describe('Items', function() {
       const result = await client.getMyListingPreferences('faq');
 
       expect(result).to.deep.equal({
-        data: [{ request: 'user' }]
+        request: 'user',
+        scope: 'user',
       });
     });
 
@@ -130,7 +131,8 @@ describe('Items', function() {
       const result = await client.getMyListingPreferences('faq');
 
       expect(result).to.deep.equal({
-        data: [{ request: 'group' }]
+        request: 'group',
+        scope: 'group',
       });
     });
 
@@ -169,7 +171,8 @@ describe('Items', function() {
       const result = await client.getMyListingPreferences('faq');
 
       expect(result).to.deep.equal({
-        data: [{ request: 'collection' }]
+        request: 'collection',
+        scope: 'collection',
       });
     });
   });
