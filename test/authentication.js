@@ -323,4 +323,20 @@ describe('Authentication', function() {
       expect(client.refreshIfNeeded).to.have.been.calledTwice;
     });
   });
+
+  describe('#loggedIn', function() {
+    it('Returns true if the client has a valid accesstoken, url, env, and isn\'t expired', function() {
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+      expect(client.loggedIn).to.equal(true);
+    });
+
+    it('Returns false if the accesstoken, url, or env is missing', function() {
+      client.url = null;
+      expect(client.loggedIn).to.equal(false);
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '20s' });
+      expect(client.loggedIn).to.equal(false);
+      client.url = 'https://demo-api.getdirectus.com';
+      expect(client.loggedIn).to.equal(true);
+    });
+  });
 });
