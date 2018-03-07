@@ -496,6 +496,18 @@ module.exports = function SDK(options = {}) {
         });
     },
 
+    /**
+     * Update bookmark (or listing preferences)
+     * @param {String|Number} primaryKey
+     * @param {RequestPromise} data
+     */
+    updateBookmark(primaryKey, data) {
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.object(data, 'data');
+
+      return this.patch(`/collection_presets/${primaryKey}`, data);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
