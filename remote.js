@@ -451,7 +451,7 @@ module.exports = function SDK(options = {}) {
 
     // LIST VIEW PREFERENCES
     // -------------------------------------------------------------------------
-    getMyListViewPreferences(collection, params = {}) {
+    getMyListingPreferences(collection, params = {}) {
       AV.string(this.token, 'this.token');
       AV.objectOrEmpty(params);
       return Promise.all([

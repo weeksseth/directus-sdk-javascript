@@ -35,18 +35,18 @@ describe('Items', function() {
     client.delete.restore();
   });
 
-  describe('#getMyListViewPreferences()', function() {
+  describe('#getMyListingPreferences()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.getMyListViewPreferences).to.throw();
+      expect(client.getMyListingPreferences).to.throw();
     });
 
     it('Errors if parameter `params` is of a wrong type', function() {
-      expect(() => client.getMyListViewPreferences('projects', 'params')).to.throw();
+      expect(() => client.getMyListingPreferences('projects', 'params')).to.throw();
     });
 
     it('Calls get() three times', function() {
       client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '1h' });
-      client.getMyListViewPreferences('projects');
+      client.getMyListingPreferences('projects');
       expect(client.get).to.have.been.calledThrice;
     });
 
@@ -86,7 +86,7 @@ describe('Items', function() {
         }]
       });
 
-      const result = await client.getMyListViewPreferences('faq');
+      const result = await client.getMyListingPreferences('faq');
 
       expect(result).to.deep.equal({
         data: [{ request: 'user' }]
@@ -127,7 +127,7 @@ describe('Items', function() {
         "data": []
       });
 
-      const result = await client.getMyListViewPreferences('faq');
+      const result = await client.getMyListingPreferences('faq');
 
       expect(result).to.deep.equal({
         data: [{ request: 'group' }]
@@ -166,7 +166,7 @@ describe('Items', function() {
         "data": []
       });
 
-      const result = await client.getMyListViewPreferences('faq');
+      const result = await client.getMyListingPreferences('faq');
 
       expect(result).to.deep.equal({
         data: [{ request: 'collection' }]
