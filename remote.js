@@ -497,6 +497,16 @@ module.exports = function SDK(options = {}) {
     },
 
     /**
+     * Create a new bookmark (or listing preferenes when title key is empty)
+     * @param  {Object} data The bookmark info
+     * @return {RequestPromise}
+     */
+    createBookmark(data) {
+      AV.object(data);
+      return this.post('/collection_presets', data);
+    },
+
+    /**
      * Update bookmark (or listing preferences)
      * @param {String|Number} primaryKey
      * @param {RequestPromise} data

@@ -177,6 +177,21 @@ describe('Items', function() {
     });
   });
 
+  describe('#createBookmark', function() {
+    it('Errors when the data parameter is missing', function() {
+      expect(client.createBookmark).to.throw();
+    });
+
+    it('Calls post with the right parameters', async function() {
+      await client.createBookmark({
+        view_type: 'tiles',
+      });
+      expect(client.post).to.have.been.calledWith('/collection_presets', {
+        view_type: 'tiles',
+      });
+    });
+  });
+
   describe('#updateBookmark', function() {
     it('Errors when the primaryKey parameter is missing', function() {
       expect(client.updateBookmark).to.throw();
