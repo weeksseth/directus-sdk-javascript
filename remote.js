@@ -509,15 +509,15 @@ module.exports = function SDK(options = {}) {
         .then((values) => {
           const [collection, group, user] = values; // eslint-disable-line no-shadow
           if (user.data && user.data.length > 0) {
-            return Object.assign({}, user.data[0], { scope: 'user' });
+            return user.data[0];
           }
           if (group.data && group.data.length > 0) {
-            return Object.assign({}, group.data[0], { scope: 'group' });
+            return group.data[0];
           }
           if (collection.data && collection.data.length > 0) {
-            return Object.assign({}, collection.data[0], { scope: 'collection' });
+            return collection.data[0];
           }
-          return { scope: 'default' };
+          return {};
         });
     },
 

@@ -90,7 +90,6 @@ describe('Items', function() {
 
       expect(result).to.deep.equal({
         request: 'user',
-        scope: 'user',
       });
     });
 
@@ -132,7 +131,6 @@ describe('Items', function() {
 
       expect(result).to.deep.equal({
         request: 'group',
-        scope: 'group',
       });
     });
 
@@ -172,7 +170,6 @@ describe('Items', function() {
 
       expect(result).to.deep.equal({
         request: 'collection',
-        scope: 'collection',
       });
     });
   });
