@@ -451,6 +451,13 @@ module.exports = function SDK(options = {}) {
 
     // LIST VIEW PREFERENCES
     // -------------------------------------------------------------------------
+
+    /**
+     * Get the collection presets of the current user for a single collection
+     * @param  {String} collection  Collection to fetch the preferences for
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
     getMyListingPreferences(collection, params = {}) {
       AV.string(this.token, 'this.token');
       AV.objectOrEmpty(params);
@@ -482,7 +489,7 @@ module.exports = function SDK(options = {}) {
         });
     },
 
-    // LIST VIEW PREFERENCES
+    // SETTINGS
     // -------------------------------------------------------------------------
 
     /**
