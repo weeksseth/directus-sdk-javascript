@@ -211,6 +211,25 @@ describe('Authentication', function() {
 
       client.refresh.restore();
     });
+
+    it('Does nothing if the token is expired and no onAutoRefreshError() callback has been given', function() {
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '-20s' });
+      expect(client.refreshIfNeeded()).to.be.undefined;
+    });
+
+    it('Calls the optional onAutoRefreshError() callback when trying to refresh an expired token', function(done) {
+      client.token = jwt.sign({ foo: 'bar' }, 'secret-string', { noTimestamp: true, expiresIn: '-20s' });
+
+      client.onAutoRefreshError = function(error) {
+        expect(error).to.deep.equal({
+          code: 102,
+          message: 'auth_expired_token',
+        });
+        done();
+      };
+
+      client.refreshIfNeeded();
+    });
   });
 
   describe('Interval', function() {
@@ -228,6 +247,11 @@ describe('Authentication', function() {
       it('Starts the interval', function() {
         client.startInterval();
         expect(client.refreshInterval).to.be.not.null;
+      });
+
+      it('Fires immediately if true has been passed as parameter', function() {
+        client.startInterval(true);
+        expect(client.refreshIfNeeded).to.have.been.calledOnce;
       });
     });
 

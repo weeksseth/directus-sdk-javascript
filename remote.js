@@ -4,6 +4,23 @@ const qs = require('qs');
 const AV = require('argument-validator');
 
 /**
+ * Retrieves the payload from a JWT
+ * @param  {String} token The JWT to retrieve the payload from
+ * @return {Object}       The JWT payload
+ */
+function getPayload(token) {
+  const payloadBase64 = token.split('.')[1].replace('-', '+').replace('_', '/');
+  const payloadDecoded = base64.decode(payloadBase64);
+  const payloadObject = JSON.parse(payloadDecoded);
+
+  if (AV.isNumber(payloadObject.exp)) {
+    payloadObject.exp = new Date(payloadObject.exp * 1000);
+  }
+
+  return payloadObject;
+}
+
+/**
  * Create a new SDK instance
  * @param       {object} [options]
  * @param       {string} [options.url]   The API url to connect to
@@ -11,7 +28,7 @@ const AV = require('argument-validator');
  * @param       {string} [options.token] The access token to use for requests
  * @constructor
  */
-module.exports = function SDK(options = {}) {
+function SDK(options = {}) {
   return {
     url: options.url,
     token: options.token,
@@ -26,7 +43,7 @@ module.exports = function SDK(options = {}) {
 
     get payload() {
       if (!AV.isString(this.token)) return null;
-      return this.getPayload(this.token);
+      return getPayload(this.token);
     },
 
     get loggedIn() {
@@ -43,22 +60,6 @@ module.exports = function SDK(options = {}) {
       return false;
     },
 
-    /**
-     * Retrieves the payload from a JWT
-     * @param  {string} token The JWT to retrieve the payload from
-     * @return {object}       The JWT payload
-     */
-    getPayload(token) {
-      const payloadBase64 = token.split('.')[1].replace('-', '+').replace('_', '/');
-      const payloadDecoded = base64.decode(payloadBase64);
-      const payloadObject = JSON.parse(payloadDecoded);
-
-      if (AV.isNumber(payloadObject.exp)) {
-        payloadObject.exp = new Date(payloadObject.exp * 1000);
-      }
-
-      return payloadObject;
-    },
 
     // REQUEST METHODS
     // -------------------------------------------------------------------------
@@ -257,8 +258,10 @@ module.exports = function SDK(options = {}) {
 
     /**
      * Starts an interval of 10 seconds that will check if the token needs refreshing
+     * @param {Boolean} fireImmediately Fire the refreshIfNeeded method directly
      */
-    startInterval() {
+    startInterval(fireImmediately) {
+      if (fireImmediately) this.refreshIfNeeded();
       this.refreshInterval = setInterval(this.refreshIfNeeded.bind(this), 10000);
     },
 
@@ -281,6 +284,16 @@ module.exports = function SDK(options = {}) {
       if (!this.payload || !this.payload.exp) return;
 
       const timeDiff = this.payload.exp.getTime() - Date.now();
+
+      if (timeDiff <= 0) {
+        if (AV.isFunction(this.onAutoRefreshError)) {
+          this.onAutoRefreshError({
+            message: 'auth_expired_token',
+            code: 102,
+          });
+        }
+        return;
+      }
 
       if (timeDiff < 30000) {
         this.refresh(this.token)
@@ -569,4 +582,10 @@ module.exports = function SDK(options = {}) {
       return this.get('/users/me', params);
     },
   };
-};
+}
+
+// CONVENIENCE METHODS
+// -------------------------------------------------------------------------------------------------
+
+SDK.getPayload = getPayload;
+module.exports = SDK;
