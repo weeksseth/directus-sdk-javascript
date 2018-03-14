@@ -82,4 +82,19 @@ describe('Items', function() {
       expect(client.get).to.have.been.calledWith('/items/projects/15', { fields: ['title', 'author'] });
     });
   });
+
+  describe('#deleteItem()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.deleteItem).to.throw();
+    });
+
+    it('Errors on missing `primaryKey` parameter', function() {
+      expect(() => client.deleteItem('projects')).to.throw();
+    });
+
+    it('Calls delete() for the right endpoint', function() {
+      client.deleteItem('projects', 15);
+      expect(client.delete).to.have.been.calledWith('/items/projects/15');
+    });
+  });
 });

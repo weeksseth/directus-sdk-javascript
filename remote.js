@@ -476,7 +476,7 @@ function SDK(options = {}) {
     /**
      * Get a single item by primary key
      * @param  {String} collection  The collection to add the item to
-     * @param  {[type]} primaryKey  [description]
+     * @param  {String|Number} primaryKey Primary key of the item
      * @param  {Object} [params={}] Query parameters
      * @return {RequestPromise}
      */
@@ -485,6 +485,18 @@ function SDK(options = {}) {
       AV.notNull(primaryKey, 'primaryKey');
       AV.objectOrEmpty(params, 'params');
       return this.get(`/items/${collection}/${primaryKey}`, params);
+    },
+
+    /**
+     * Delete a single item by primary key
+     * @param  {String} collection  The collection to delete the item from
+     * @param  {String|Number} primaryKey Primary key of the item
+     * @return {RequestPromise}
+     */
+    deleteItem(collection, primaryKey, params = {}) {
+      AV.string(collection, 'collection');
+      AV.notNull(primaryKey, 'primaryKey');
+      return this.delete(`/items/${collection}/${primaryKey}`);
     },
 
     // LISTING PREFERENCES
