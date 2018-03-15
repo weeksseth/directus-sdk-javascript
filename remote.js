@@ -450,7 +450,21 @@ function SDK(options = {}) {
     // -------------------------------------------------------------------------
 
     /**
-     * Create a new item
+     * Update an existing item
+     * @param  {String} collection The collection to add the item to
+     * @param  {String|Number} primaryKey Primary key of the item
+     * @param  {Object} body       The item's field values
+     * @return {RequestPromise}
+     */
+    updateItem(collection, primaryKey, body) {
+      AV.string(collection, 'collection');
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.object(body, 'body');
+      return this.patch(`/items/${collection}/${primaryKey}`, body);
+    },
+
+    /**
+    * Create a new item
      * @param  {String} collection The collection to add the item to
      * @param  {Object} body       The item's field values
      * @return {RequestPromise}

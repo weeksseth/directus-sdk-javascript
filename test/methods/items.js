@@ -49,6 +49,25 @@ describe('Items', function() {
     });
   });
 
+  describe('#updateItem()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.updateItem).to.throw();
+    });
+
+    it('Errors on missing `primaryKey` parameter', function() {
+      expect(() => client.updateItem('projects')).to.throw();
+    });
+
+    it('Errors on missing `body` parameter', function() {
+      expect(() => client.updateItem('projects', '15')).to.throw();
+    });
+
+    it('Calls patch() for the right endpoint', function() {
+      client.updateItem('projects', '15', { title: 'Groetjes uit NYC' });
+      expect(client.patch).to.have.been.calledWith('/items/projects/15', { title: 'Groetjes uit NYC' });
+    });
+  });
+
   describe('#getItems()', function() {
     it('Errors on missing `collection` parameter', function() {
       expect(client.getItems).to.throw();
