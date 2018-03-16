@@ -340,6 +340,19 @@ function SDK(options = {}) {
       });
     },
 
+    // ACTIVITY
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get activity
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getActivity(params = {}) {
+      AV.objectOrEmpty(params, 'params');
+      return this.get('/activity', params);
+    },
+
     // COLLECTIONS
     // -------------------------------------------------------------------------
 
