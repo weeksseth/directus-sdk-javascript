@@ -573,6 +573,25 @@ function SDK(options = {}) {
         });
     },
 
+    // RELATIONS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the relationship information for the given collection
+     * @param  {String} collection The collection name
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getCollectionRelations(collection, params = {}) {
+      AV.string(collection, 'collection');
+      AV.objectOrEmpty(params);
+
+      return Promise.all([
+        this.get('/relations', { 'filter[collection_a][eq]': collection }),
+        this.get('/relations', { 'filter[collection_b][eq]': collection }),
+      ]);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
