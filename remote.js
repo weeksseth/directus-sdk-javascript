@@ -497,6 +497,11 @@ function SDK(options = {}) {
     getItems(collection, params = {}) {
       AV.string(collection, 'collection');
       AV.objectOrEmpty(params, 'params');
+
+      if (collection.startsWith('directus_')) {
+        return this.get(`/${collection.substring(9)}`, params);
+      }
+
       return this.get(`/items/${collection}`, params);
     },
 

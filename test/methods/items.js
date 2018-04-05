@@ -81,6 +81,11 @@ describe('Items', function() {
       client.getItems('projects', { limit: 50 });
       expect(client.get).to.have.been.calledWith('/items/projects', { limit: 50 });
     });
+
+    it('Calls get() for the system endpoint if a directus_* table is requested', function() {
+      client.getItems('directus_users', { limit: 50 });
+      expect(client.get).to.have.been.calledWith('/users', { limit: 50 });
+    });
   });
 
   describe('#getItem()', function() {
