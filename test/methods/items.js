@@ -47,6 +47,11 @@ describe('Items', function() {
       client.createItem('projects', { title: 'Groetjes uit NYC' });
       expect(client.post).to.have.been.calledWith('/items/projects', { title: 'Groetjes uit NYC' });
     });
+
+    it('Calls post() for the system endpoint if a directus_* table is requested', function() {
+      client.createItem('directus_users', { title: 'Groetjes uit NYC' });
+      expect(client.post).to.have.been.calledWith('/users', { title: 'Groetjes uit NYC' });
+    });
   });
 
   describe('#updateItem()', function() {
@@ -65,6 +70,11 @@ describe('Items', function() {
     it('Calls patch() for the right endpoint', function() {
       client.updateItem('projects', '15', { title: 'Groetjes uit NYC' });
       expect(client.patch).to.have.been.calledWith('/items/projects/15', { title: 'Groetjes uit NYC' });
+    });
+
+    it('Calls patch() for the system endpoint if a directus_* table is requested', function() {
+      client.updateItem('directus_users', '15', { title: 'Groetjes uit NYC' });
+      expect(client.patch).to.have.been.calledWith('/users/15', { title: 'Groetjes uit NYC' });
     });
   });
 
@@ -105,6 +115,11 @@ describe('Items', function() {
       client.getItem('projects', 15, { fields: ['title', 'author'] });
       expect(client.get).to.have.been.calledWith('/items/projects/15', { fields: ['title', 'author'] });
     });
+
+    it('Calls get() for the system endpoint if a directus_* table is requested', function() {
+      client.getItem('directus_users', 15, { fields: ['title', 'author'] });
+      expect(client.get).to.have.been.calledWith('/users/15', { fields: ['title', 'author'] });
+    });
   });
 
   describe('#deleteItem()', function() {
@@ -119,6 +134,11 @@ describe('Items', function() {
     it('Calls delete() for the right endpoint', function() {
       client.deleteItem('projects', 15);
       expect(client.delete).to.have.been.calledWith('/items/projects/15');
+    });
+
+    it('Calls delete() for the system endpoint if a directus_* table is requested', function() {
+      client.deleteItem('directus_users', 15);
+      expect(client.delete).to.have.been.calledWith('/users/15');
     });
   });
 });

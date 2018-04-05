@@ -473,6 +473,11 @@ function SDK(options = {}) {
       AV.string(collection, 'collection');
       AV.notNull(primaryKey, 'primaryKey');
       AV.object(body, 'body');
+
+      if (collection.startsWith('directus_')) {
+        return this.patch(`/${collection.substring(9)}/${primaryKey}`, body);
+      }
+
       return this.patch(`/items/${collection}/${primaryKey}`, body);
     },
 
@@ -485,6 +490,11 @@ function SDK(options = {}) {
     createItem(collection, body) {
       AV.string(collection, 'collection');
       AV.object(body, 'body');
+
+      if (collection.startsWith('directus_')) {
+        return this.post(`/${collection.substring(9)}`, body);
+      }
+
       return this.post(`/items/${collection}`, body);
     },
 
@@ -516,6 +526,11 @@ function SDK(options = {}) {
       AV.string(collection, 'collection');
       AV.notNull(primaryKey, 'primaryKey');
       AV.objectOrEmpty(params, 'params');
+
+      if (collection.startsWith('directus_')) {
+        return this.get(`/${collection.substring(9)}/${primaryKey}`, params);
+      }
+
       return this.get(`/items/${collection}/${primaryKey}`, params);
     },
 
@@ -528,6 +543,11 @@ function SDK(options = {}) {
     deleteItem(collection, primaryKey) {
       AV.string(collection, 'collection');
       AV.notNull(primaryKey, 'primaryKey');
+
+      if (collection.startsWith('directus_')) {
+        return this.delete(`/${collection.substring(9)}/${primaryKey}`);
+      }
+
       return this.delete(`/items/${collection}/${primaryKey}`);
     },
 
