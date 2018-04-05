@@ -525,7 +525,7 @@ function SDK(options = {}) {
      * @param  {String|Number} primaryKey Primary key of the item
      * @return {RequestPromise}
      */
-    deleteItem(collection, primaryKey, params = {}) {
+    deleteItem(collection, primaryKey) {
       AV.string(collection, 'collection');
       AV.notNull(primaryKey, 'primaryKey');
       return this.delete(`/items/${collection}/${primaryKey}`);
