@@ -353,6 +353,34 @@ function SDK(options = {}) {
       return this.get('/activity', params);
     },
 
+    // BOOKMARKS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the bookmarks of the current user
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getMyBookmarks(params = {}) {
+      AV.string(this.token, 'this.token');
+      AV.objectOrEmpty(params);
+      return Promise.all([
+        this.get('/collection_presets', {
+          'filter[title][nnull]': 1,
+          'filter[user][eq]': this.payload.id,
+        }),
+        this.get('/collection_presets', {
+          'filter[title][nnull]': 1,
+          'filter[group][eq]': this.payload.group,
+          'filter[user][null]': 1,
+        }),
+      ])
+        .then((values) => {
+          const [user, group] = values; // eslint-disable-line no-shadow
+          return [...user, ...group];
+        });
+    },
+
     // COLLECTIONS
     // -------------------------------------------------------------------------
 
