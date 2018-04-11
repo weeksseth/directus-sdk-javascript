@@ -377,7 +377,7 @@ function SDK(options = {}) {
       ])
         .then((values) => {
           const [user, group] = values; // eslint-disable-line no-shadow
-          return [...user, ...group];
+          return [...user.data, ...group.data];
         });
     },
 
