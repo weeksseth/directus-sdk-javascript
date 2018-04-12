@@ -68,4 +68,15 @@ describe('Items', function() {
       });
     });
   });
+
+  describe('#updateCollectionPreset', function() {
+    it('Errors when the primaryKey parameter is missing', function() {
+      expect(client.updateCollectionPreset).to.throw();
+    });
+
+    it('Calls delete with the right parameters', async function() {
+      await client.deleteCollectionPreset(15);
+      expect(client.delete).to.have.been.calledWith('/collection_presets/15');
+    });
+  });
 });

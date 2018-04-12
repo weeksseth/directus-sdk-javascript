@@ -431,6 +431,15 @@ function SDK(options = {}) {
       return this.patch(`/collection_presets/${primaryKey}`, data);
     },
 
+    /**
+     * Delete collection preset by primarykey
+     * @param {String|Number} primaryKey The primaryKey of the preset to delete
+     */
+    deleteCollectionPreset(primaryKey) {
+      AV.notNull(primaryKey, 'primaryKey');
+      return this.delete(`/collection_presets/${primaryKey}`);
+    },
+
     // EXTENSIONS
     // -------------------------------------------------------------------------
 
