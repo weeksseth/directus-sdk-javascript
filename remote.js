@@ -117,6 +117,7 @@ function SDK(options = {}) {
             throw { // eslint-disable-line
               code: -1,
               message: 'Network Error',
+              error,
             };
           }
         });
