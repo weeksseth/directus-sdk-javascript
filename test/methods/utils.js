@@ -42,4 +42,11 @@ describe('Utils', function() {
       expect(client.request).to.have.been.calledWith('get', '/server/ping', {}, {}, true);
     });
   });
+
+  describe('#getThirdPartyAuthProviders()', function() {
+    it('It calls get for the sso endpoint', function() {
+      client.getThirdPartyAuthProviders();
+      expect(client.get).to.have.been.calledWith('/auth/sso');
+    });
+  });
 });

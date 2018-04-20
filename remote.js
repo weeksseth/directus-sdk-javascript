@@ -713,6 +713,14 @@ function SDK(options = {}) {
     ping() {
       return this.request('get', '/server/ping', {}, {}, true);
     },
+
+    /**
+     * Get all the setup third party auth providers
+     * @return {RequestPromise}
+     */
+    getThirdPartyAuthProviders() {
+      return this.get('/auth/sso');
+    },
   };
 }
 
