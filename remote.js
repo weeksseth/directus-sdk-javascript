@@ -702,6 +702,17 @@ function SDK(options = {}) {
       AV.objectOrEmpty(params, 'params');
       return this.get('/users/me', params);
     },
+
+    // UTILS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Ping the API to check if it exists / is up and running
+     * @return {RequestPromise}
+     */
+    ping() {
+      return this.request('get', '/server/ping', {}, {}, true);
+    },
   };
 }
 

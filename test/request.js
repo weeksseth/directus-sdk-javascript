@@ -163,6 +163,9 @@ describe('Request', function() {
 
       expect(error).to.deep.equal({
         code: -1,
+        error: {
+          request: {}
+        },
         message: 'Network Error'
       });
     });
