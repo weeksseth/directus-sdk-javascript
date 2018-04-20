@@ -589,6 +589,23 @@ function SDK(options = {}) {
       return this.delete(`/items/${collection}/${primaryKey}`);
     },
 
+    /**
+     * Delete multiple items by primary key
+     * @param  {String} collection  The collection to delete the item from
+     * @param  {Array} primaryKey Primary key of the item
+     * @return {RequestPromise}
+     */
+    deleteItems(collection, primaryKeys) {
+      AV.string(collection, 'collection');
+      AV.array(primaryKeys, 'primaryKeys');
+
+      if (collection.startsWith('directus_')) {
+        return this.delete(`/${collection.substring(9)}/${primaryKeys.join()}`);
+      }
+
+      return this.delete(`/items/${collection}/${primaryKeys.join()}`);
+    },
+
     // LISTING PREFERENCES
     // -------------------------------------------------------------------------
 

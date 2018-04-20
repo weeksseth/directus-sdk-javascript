@@ -141,4 +141,24 @@ describe('Items', function() {
       expect(client.delete).to.have.been.calledWith('/users/15');
     });
   });
+
+  describe('#deleteItems()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.deleteItems).to.throw();
+    });
+
+    it('Errors on missing `primaryKeys` parameter', function() {
+      expect(() => client.deleteItems('projects')).to.throw();
+    });
+
+    it('Calls delete() for the right endpoint', function() {
+      client.deleteItems('projects', [15, 21]);
+      expect(client.delete).to.have.been.calledWith('/items/projects/15,21');
+    });
+
+    it('Calls delete() for the system endpoint if a directus_* table is requested', function() {
+      client.deleteItems('directus_users', [15, 21]);
+      expect(client.delete).to.have.been.calledWith('/users/15,21');
+    });
+  });
 });
