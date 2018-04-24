@@ -720,6 +720,18 @@ function SDK(options = {}) {
       return this.get('/users/me', params);
     },
 
+    /**
+     * Update a single user based on primaryKey
+     * @param  {String|Number} primaryKey The primary key of the user
+     * @param  {Object} body              The fields to update
+     * @return {RequestPromise}
+     */
+    updateUser(primaryKey, body) {
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.object(body, 'body');
+      return this.updateItem('directus_users', primaryKey, body);
+    },
+
     // UTILS
     // -------------------------------------------------------------------------
 

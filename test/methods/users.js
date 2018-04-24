@@ -24,6 +24,7 @@ describe('Users', function() {
     sinon.stub(client, 'patch').resolves(responseJSON);
     sinon.stub(client, 'post').resolves(responseJSON);
     sinon.stub(client, 'delete').resolves(responseJSON);
+    sinon.stub(client, 'updateItem').resolves(responseJSON);
   });
 
   afterEach(function() {
@@ -32,6 +33,7 @@ describe('Users', function() {
     client.patch.restore();
     client.post.restore();
     client.delete.restore();
+    client.updateItem.restore();
   });
 
   describe('#getUsers()', function() {
@@ -78,6 +80,21 @@ describe('Users', function() {
     it('Calls get() for the right endpoint', function() {
       client.getMe({ fields: 'first_name' });
       expect(client.get).to.have.been.calledWith('/users/me', { fields: 'first_name' });
+    });
+  });
+
+  describe('#updateUser()', function() {
+    it('Errors on missing `primaryKey` parameter', function() {
+      expect(client.updateUser).to.throw();
+    });
+
+    it('Errors on missing `body` parameter', function() {
+      expect(() => client.updateUser(15)).to.throw();
+    });
+
+    it('Calls #updateItem()', function() {
+      client.updateUser(15, { last_page: '/activity' });
+      expect(client.updateItem).to.have.been.calledWith('directus_users', 15, { last_page: '/activity' });
     });
   });
 });
