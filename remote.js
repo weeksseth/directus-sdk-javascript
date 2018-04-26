@@ -672,6 +672,28 @@ function SDK(options = {}) {
       ]);
     },
 
+    // REVISIONS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get a single item's revisions by primary key
+     * @param  {String} collection  The collection to fetch the revisions from
+     * @param  {String|Number} primaryKey Primary key of the item
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getItemRevisions(collection, primaryKey, params = {}) {
+      AV.string(collection, 'collection');
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.objectOrEmpty(params, 'params');
+
+      if (collection.startsWith('directus_')) {
+        return this.get(`/${collection.substring(9)}/${primaryKey}/revisions`, params);
+      }
+
+      return this.get(`/items/${collection}/${primaryKey}/revisions`, params);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
