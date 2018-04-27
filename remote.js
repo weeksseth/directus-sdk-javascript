@@ -707,10 +707,10 @@ function SDK(options = {}) {
       AV.number(revisionID, 'revisionID');
 
       if (collection.startsWith('directus_')) {
-        return this.post(`/${collection.substring(9)}/${primaryKey}/rollback/${revisionID}`);
+        return this.patch(`/${collection.substring(9)}/${primaryKey}/rollback/${revisionID}`);
       }
 
-      return this.post(`/items/${collection}/${primaryKey}/rollback/${revisionID}`);
+      return this.patch(`/items/${collection}/${primaryKey}/rollback/${revisionID}`);
     },
 
     // SETTINGS

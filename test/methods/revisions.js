@@ -71,14 +71,14 @@ describe('Revisions', function() {
       expect(() => client.rollback('projects', 15)).to.throw();
     });
 
-    it('Calls post() for the right endpoint', function() {
+    it('Calls patch() for the right endpoint', function() {
       client.rollback('projects', 15, 130);
-      expect(client.post).to.have.been.calledWith('/items/projects/15/rollback/130');
+      expect(client.patch).to.have.been.calledWith('/items/projects/15/rollback/130');
     });
 
-    it('Calls post() for the system endpoint if a directus_* table is requested', function() {
+    it('Calls patch() for the system endpoint if a directus_* table is requested', function() {
       client.rollback('directus_users', 15, 130);
-      expect(client.post).to.have.been.calledWith('/users/15/rollback/130');
+      expect(client.patch).to.have.been.calledWith('/users/15/rollback/130');
     });
   });
 });
