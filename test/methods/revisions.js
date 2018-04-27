@@ -57,4 +57,28 @@ describe('Revisions', function() {
       expect(client.get).to.have.been.calledWith('/users/15/revisions', { fields: ['title', 'author'] });
     });
   });
+
+  describe('#rollback()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.rollback).to.throw();
+    });
+
+    it('Errors on missing `primaryKey` parameter', function() {
+      expect(() => client.rollback('projects')).to.throw();
+    });
+
+    it('Errors on missing `revisionID` parameter', function() {
+      expect(() => client.rollback('projects', 15)).to.throw();
+    });
+
+    it('Calls post() for the right endpoint', function() {
+      client.rollback('projects', 15, 130);
+      expect(client.post).to.have.been.calledWith('/items/projects/15/rollback/130');
+    });
+
+    it('Calls post() for the system endpoint if a directus_* table is requested', function() {
+      client.rollback('directus_users', 15, 130);
+      expect(client.post).to.have.been.calledWith('/users/15/rollback/130');
+    });
+  });
 });

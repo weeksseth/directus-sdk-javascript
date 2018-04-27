@@ -694,6 +694,25 @@ function SDK(options = {}) {
       return this.get(`/items/${collection}/${primaryKey}/revisions`, params);
     },
 
+    /**
+     * Rollback an item to a previous state
+     * @param  {String} collection  The collection to fetch the revisions from
+     * @param  {String|Number} primaryKey Primary key of the item
+     * @param  {Number} revisionID The ID of the revision to rollback to
+     * @return {RequestPromise}
+     */
+    rollback(collection, primaryKey, revisionID) {
+      AV.string(collection, 'collection');
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.number(revisionID, 'revisionID');
+
+      if (collection.startsWith('directus_')) {
+        return this.post(`/${collection.substring(9)}/${primaryKey}/rollback/${revisionID}`);
+      }
+
+      return this.post(`/items/${collection}/${primaryKey}/rollback/${revisionID}`);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
