@@ -9,7 +9,10 @@ const AV = require('argument-validator');
  * @return {Object}       The JWT payload
  */
 function getPayload(token) {
-  const payloadBase64 = token.split('.')[1].replace('-', '+').replace('_', '/');
+  const payloadBase64 = token
+    .split('.')[1]
+    .replace('-', '+')
+    .replace('_', '/');
   const payloadDecoded = base64.decode(payloadBase64);
   const payloadObject = JSON.parse(payloadDecoded);
 
@@ -60,7 +63,6 @@ function SDK(options = {}) {
       return false;
     },
 
-
     // REQUEST METHODS
     // -------------------------------------------------------------------------
 
@@ -108,13 +110,15 @@ function SDK(options = {}) {
         requestOptions.headers.Authorization = `Bearer ${this.token}`;
       }
 
-      return this.axios.request(requestOptions)
+      return this.axios
+        .request(requestOptions)
         .then(res => res.data)
         .catch((error) => {
           if (error.response) {
             throw error.response.data.error;
           } else {
-            throw { // eslint-disable-line
+            throw {
+              // eslint-disable-line
               code: -1,
               message: 'Network Error',
               error,
@@ -375,11 +379,10 @@ function SDK(options = {}) {
           'filter[group][eq]': this.payload.group,
           'filter[user][null]': 1,
         }),
-      ])
-        .then((values) => {
-          const [user, group] = values; // eslint-disable-line no-shadow
-          return [...user.data, ...group.data];
-        });
+      ]).then((values) => {
+        const [user, group] = values; // eslint-disable-line no-shadow
+        return [...user.data, ...group.data];
+      });
     },
 
     // COLLECTIONS
@@ -520,7 +523,7 @@ function SDK(options = {}) {
     },
 
     /**
-    * Create a new item
+     * Create a new item
      * @param  {String} collection The collection to add the item to
      * @param  {Object} body       The item's field values
      * @return {RequestPromise}
@@ -637,20 +640,19 @@ function SDK(options = {}) {
           'filter[group][eq]': this.payload.group,
           'filter[user][eq]': this.payload.id,
         }),
-      ])
-        .then((values) => {
-          const [collection, group, user] = values; // eslint-disable-line no-shadow
-          if (user.data && user.data.length > 0) {
-            return user.data[0];
-          }
-          if (group.data && group.data.length > 0) {
-            return group.data[0];
-          }
-          if (collection.data && collection.data.length > 0) {
-            return collection.data[0];
-          }
-          return {};
-        });
+      ]).then((values) => {
+        const [collection, group, user] = values; // eslint-disable-line no-shadow
+        if (user.data && user.data.length > 0) {
+          return user.data[0];
+        }
+        if (group.data && group.data.length > 0) {
+          return group.data[0];
+        }
+        if (collection.data && collection.data.length > 0) {
+          return collection.data[0];
+        }
+        return {};
+      });
     },
 
     // RELATIONS
@@ -695,22 +697,22 @@ function SDK(options = {}) {
     },
 
     /**
-     * Rollback an item to a previous state
+     * revert an item to a previous state
      * @param  {String} collection  The collection to fetch the revisions from
      * @param  {String|Number} primaryKey Primary key of the item
-     * @param  {Number} revisionID The ID of the revision to rollback to
+     * @param  {Number} revisionID The ID of the revision to revert to
      * @return {RequestPromise}
      */
-    rollback(collection, primaryKey, revisionID) {
+    revert(collection, primaryKey, revisionID) {
       AV.string(collection, 'collection');
       AV.notNull(primaryKey, 'primaryKey');
       AV.number(revisionID, 'revisionID');
 
       if (collection.startsWith('directus_')) {
-        return this.patch(`/${collection.substring(9)}/${primaryKey}/rollback/${revisionID}`);
+        return this.patch(`/${collection.substring(9)}/${primaryKey}/revert/${revisionID}`);
       }
 
-      return this.patch(`/items/${collection}/${primaryKey}/rollback/${revisionID}`);
+      return this.patch(`/items/${collection}/${primaryKey}/revert/${revisionID}`);
     },
 
     // SETTINGS

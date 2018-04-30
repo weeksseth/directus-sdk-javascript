@@ -58,27 +58,27 @@ describe('Revisions', function() {
     });
   });
 
-  describe('#rollback()', function() {
+  describe('#revert()', function() {
     it('Errors on missing `collection` parameter', function() {
-      expect(client.rollback).to.throw();
+      expect(client.revert).to.throw();
     });
 
     it('Errors on missing `primaryKey` parameter', function() {
-      expect(() => client.rollback('projects')).to.throw();
+      expect(() => client.revert('projects')).to.throw();
     });
 
     it('Errors on missing `revisionID` parameter', function() {
-      expect(() => client.rollback('projects', 15)).to.throw();
+      expect(() => client.revert('projects', 15)).to.throw();
     });
 
     it('Calls patch() for the right endpoint', function() {
-      client.rollback('projects', 15, 130);
-      expect(client.patch).to.have.been.calledWith('/items/projects/15/rollback/130');
+      client.revert('projects', 15, 130);
+      expect(client.patch).to.have.been.calledWith('/items/projects/15/revert/130');
     });
 
     it('Calls patch() for the system endpoint if a directus_* table is requested', function() {
-      client.rollback('directus_users', 15, 130);
-      expect(client.patch).to.have.been.calledWith('/users/15/rollback/130');
+      client.revert('directus_users', 15, 130);
+      expect(client.patch).to.have.been.calledWith('/users/15/revert/130');
     });
   });
 });
