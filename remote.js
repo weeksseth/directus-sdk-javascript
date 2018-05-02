@@ -3,8 +3,9 @@ const qs = require('qs');
 
 class RemoteInstance {
   constructor(options) {
-    const {accessToken, url, version, headers} = options;
+    const {accessToken, url, headers, accessTokenType, version} = options;
 
+    this.accessTokenType = accessTokenType || 'header';
     this.accessToken = accessToken;
     this.headers = headers || {};
     this.version = version || '1.1';
@@ -24,7 +25,7 @@ class RemoteInstance {
   get _requestHeaders() {
     const headers = this.headers || {};
 
-    if (this.accessToken) {
+    if (this.accessToken && this.accessTokenType === 'header') {
       headers.Authorization = 'Bearer ' + this.accessToken;
     }
 
@@ -43,6 +44,8 @@ class RemoteInstance {
     const headers = this._requestHeaders;
     const url = isAPI ? this.api : this.url;
 
+    this.setAccessTokenParam(params);
+
     return new Promise((resolve, reject) => {
       axios.get(url + endpoint, {
         params,
@@ -54,34 +57,40 @@ class RemoteInstance {
     });
   }
 
-  _post(endpoint, data = {}, isAPI = false) {
+  _post(endpoint, data = {}, isAPI = false, params = {}) {
     const headers = this._requestHeaders;
     const url = isAPI ? this.api : this.url;
 
+    this.setAccessTokenParam(params);
+
     return new Promise((resolve, reject) => {
-      axios.post(url + endpoint, data, {headers})
+      axios.post(url + endpoint, data, {headers, params})
+        .then(res => resolve(res.data))
+        .catch(err => this._onCaughtError(resolve, reject, err));
+    });
+  }
+  
+  _put(endpoint, data = {}, isAPI = false, params = {}) {
+    const headers = this._requestHeaders;
+    const url = isAPI ? this.api : this.url;
+
+    this.setAccessTokenParam(params);
+
+    return new Promise((resolve, reject) => {
+      axios.put(url + endpoint, data, {headers, params})
         .then(res => resolve(res.data))
         .catch(err => this._onCaughtError(resolve, reject, err));
     });
   }
 
-  _put(endpoint, data = {}, isAPI = false) {
+  _delete(endpoint, data = {}, isAPI = false, params = {}) {
     const headers = this._requestHeaders;
     const url = isAPI ? this.api : this.url;
 
-    return new Promise((resolve, reject) => {
-      axios.put(url + endpoint, data, {headers})
-        .then(res => resolve(res.data))
-        .catch(err => this._onCaughtError(resolve, reject, err));
-    });
-  }
-
-  _delete(endpoint, data = {}, isAPI = false) {
-    const headers = this._requestHeaders;
-    const url = isAPI ? this.api : this.url;
+    this.setAccessTokenParam(params);
 
     return new Promise((resolve, reject) => {
-      axios.delete(url + endpoint, {headers, data})
+      axios.delete(url + endpoint, {headers, data, params})
         .then(res => resolve(res.data))
         .catch(err => this._onCaughtError(resolve, reject, err));
     });
@@ -105,8 +114,8 @@ class RemoteInstance {
 
   // Items
   // ----------------------------------------------------------------------------------
-  createItem(table = requiredParam('table'), data = {}) {
-    return this._post(`tables/${table}/rows`, data);
+  createItem(table = requiredParam('table'), data = {}, params = {}) {
+    return this._post(`tables/${table}/rows`, data, params);
   }
 
   getItems(table = requiredParam('table'), params = {}) {
@@ -117,12 +126,12 @@ class RemoteInstance {
     return this._get(`tables/${table}/rows/${id}`, params);
   }
 
-  updateItem(table = requiredParam('table'), id = requiredParam('id'), data = requiredParam('data')) {
-    return this._put(`tables/${table}/rows/${id}`, data);
+  updateItem(table = requiredParam('table'), id = requiredParam('id'), data = requiredParam('data'), params = {}) {
+    return this._put(`tables/${table}/rows/${id}`, data, params);
   }
 
-  deleteItem(table = requiredParam('table'), id = requiredParam('id')) {
-    return this._delete(`tables/${table}/rows/${id}`);
+  deleteItem(table = requiredParam('table'), id = requiredParam('id'), params = {}) {
+    return this._delete(`tables/${table}/rows/${id}`, {}, params);
   }
 
   createBulk(table = requiredParam('table'), data = requiredParam('data')) {
@@ -264,7 +273,7 @@ class RemoteInstance {
   getMessage(id = requiredParam('id')) {
     return this._get(`messages/rows/${id}`);
   }
-  
+
   sendMessage(data = requiredParam('data')) {
     return this._post('messages/rows/', data);
   }
@@ -371,6 +380,12 @@ class RemoteInstance {
   // ----------------------------------------------------------------------------------
   getRandom(params = {}) {
     return this._post('random', params);
+  }
+
+  setAccessTokenParam (params) {
+    if (this.accessToken && this.accessTokenType === 'parameter') {
+      params.access_token = this.accessToken;
+    }
   }
 }
 
