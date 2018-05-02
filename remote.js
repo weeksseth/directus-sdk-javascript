@@ -38,7 +38,7 @@ function SDK(options = {}) {
     env: options.env || '_',
     axios: axios.create({
       paramsSerializer: qs.stringify,
-      timeout: 3000,
+      timeout: 60000,
     }),
     refreshInterval: null,
     onAutoRefreshError: null,
