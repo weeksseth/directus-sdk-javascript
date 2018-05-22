@@ -50,7 +50,7 @@ class RemoteInstance {
       axios.get(url + endpoint, {
         params,
         headers,
-        paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets'})
+        paramsSerializer: params => qs.stringify(params, {arrayFormat: 'brackets', encode: false})
       })
         .then(res => resolve(res.data))
         .catch(err => this._onCaughtError(resolve, reject, err));
@@ -69,7 +69,7 @@ class RemoteInstance {
         .catch(err => this._onCaughtError(resolve, reject, err));
     });
   }
-  
+
   _put(endpoint, data = {}, isAPI = false, params = {}) {
     const headers = this._requestHeaders;
     const url = isAPI ? this.api : this.url;
