@@ -421,6 +421,17 @@ function SDK(options = {}) {
     },
 
     /**
+     * @param  {String} The collection to update
+     * @param  {Object} The fields to update
+     * @return {RequestPromise}
+     */
+    updateCollection(collection, data) {
+      AV.string(collection, 'collection');
+      AV.object(data, 'data');
+      return this.patch(`/collections/${collection}`, data);
+    },
+
+    /**
      * @param  {String} collection The primary key of the collection to remove
      * @return {RequestPromise}
      */

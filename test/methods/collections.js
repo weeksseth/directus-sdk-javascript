@@ -76,6 +76,21 @@ describe('Collections', function() {
     });
   });
 
+  describe('#updateCollection()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.updateCollection).to.throw();
+    });
+
+    it('Errors on missing `data` parameter', function() {
+      expect(() => client.updateCollection('test')).to.throw();
+    });
+
+    it('Calls patch() for the right endpoint', function() {
+      client.updateCollection('test', { note: 'test note' });
+      expect(client.patch).to.have.been.calledWith('/collections/test', { note: 'test note' });
+    });
+  });
+
   describe('#deleteCollection()', function() {
     it('Errors on missing `collection` parameter', function() {
       expect(() => client.deleteCollection()).to.throw();
