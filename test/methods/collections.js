@@ -67,12 +67,23 @@ describe('Collections', function() {
 
   describe('#createCollection()', function() {
     it('Errors on missing `data` parameter', function() {
-      expect(client.getCollection).to.throw();
+      expect(client.createCollection).to.throw();
     });
 
     it('Calls post() for the right endpoint', function() {
       client.createCollection({ collection: 'test' });
       expect(client.post).to.have.been.calledWith('/collections', { collection: 'test' });
+    });
+  });
+
+  describe('#deleteCollection()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(() => client.deleteCollection()).to.throw();
+    });
+
+    it('Calls delete() for the right endpoint', function() {
+      client.deleteCollection('test');
+      expect(client.delete).to.have.been.calledWith('/collections/test');
     });
   });
 });

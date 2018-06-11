@@ -413,10 +413,20 @@ function SDK(options = {}) {
     /**
      * Create a collection
      * @param {Object} data Collection information
+     * @return {RequestPromise}
      */
     createCollection(data) {
       AV.object(data, 'data');
       return this.post('/collections', data);
+    },
+
+    /**
+     * @param  {String} collection The primary key of the collection to remove
+     * @return {RequestPromise}
+     */
+    deleteCollection(collection) {
+      AV.string(collection, 'collection');
+      return this.delete(`/collections/${collection}`);
     },
 
     // COLLECTION PRESETS
