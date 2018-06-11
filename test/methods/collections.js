@@ -64,4 +64,15 @@ describe('Collections', function() {
       expect(client.get).to.have.been.calledWith('/collections/projects', { limit: 50 });
     });
   });
+
+  describe('#createCollection()', function() {
+    it('Errors on missing `data` parameter', function() {
+      expect(client.getCollection).to.throw();
+    });
+
+    it('Calls post() for the right endpoint', function() {
+      client.createCollection({ collection: 'test' });
+      expect(client.post).to.have.been.calledWith('/collections', { collection: 'test' });
+    });
+  });
 });

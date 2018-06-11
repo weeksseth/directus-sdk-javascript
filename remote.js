@@ -410,6 +410,15 @@ function SDK(options = {}) {
       return this.get(`/collections/${collection}`, params);
     },
 
+    /**
+     * Create a collection
+     * @param {Object} data Collection information
+     */
+    createCollection(data) {
+      AV.object(data, 'data');
+      return this.post('/collections', data);
+    },
+
     // COLLECTION PRESETS
     // -------------------------------------------------------------------------
 
