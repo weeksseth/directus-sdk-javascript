@@ -23,7 +23,7 @@ class RemoteInstance {
   }
 
   get _requestHeaders() {
-    const headers = this.headers || {};
+    const headers = Object.assign({}, this.headers);
 
     if (this.accessToken && this.accessTokenType === 'header') {
       headers.Authorization = 'Bearer ' + this.accessToken;
@@ -110,6 +110,10 @@ class RemoteInstance {
         })
         .catch(err => reject(err));
     });
+  }
+
+  deauthenticate() {
+    this.accessToken = null;
   }
 
   // Items
