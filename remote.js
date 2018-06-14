@@ -530,6 +530,32 @@ function SDK(options = {}) {
       return this.get(`/fields/${collection}/${fieldName}`, params);
     },
 
+    /**
+     * Create a field in the given collection
+     * @param  {String} collection Collection to add the field in
+     * @param  {Object} fieldInfo  The fields info to save
+     * @return {RequestPromise}
+     */
+    createField(collection, fieldInfo) {
+      AV.string(collection, 'collection');
+      AV.object(fieldInfo, 'fieldInfo');
+      return this.post(`/fields/${collection}`, fieldInfo);
+    },
+
+    /**
+     * Update a given field in a given collection
+     * @param  {String} collection Field's parent collection
+     * @param  {String} fieldName  Name of the field to update
+     * @param  {Object} fieldInfo  Fields to update
+     * @return {RequestPromise}
+     */
+    updateField(collection, fieldName, fieldInfo) {
+      AV.string(collection, 'collection');
+      AV.string(fieldName, 'fieldName');
+      AV.object(fieldInfo, 'fieldInfo');
+      return this.patch(`/fields/${collection}/${fieldName}`, fieldInfo);
+    },
+
     // ITEMS
     // -------------------------------------------------------------------------
 

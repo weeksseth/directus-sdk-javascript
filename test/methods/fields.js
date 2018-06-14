@@ -63,4 +63,50 @@ describe('Fields', function() {
       expect(client.get).to.have.been.calledWith('/fields/projects/title', { fields: 'interface' });
     });
   });
+
+  describe('#createField()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.createField).to.throw();
+    });
+
+    it('Errors on missing `fieldInfo` parameter', function() {
+      expect(() => client.createField('collection')).to.throw();
+    });
+
+    it('Calls post() for the right endpoint', function() {
+      client.createField('members', {
+        field: 'first_name',
+        interface: 'text-input'
+      });
+      expect(client.post).to.have.been.calledWith('/fields/members', {
+        field: 'first_name',
+        interface: 'text-input'
+      });
+    });
+  });
+
+  describe('#updateField()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.updateField).to.throw();
+    });
+
+    it('Errors on missing `fieldName` parameter', function() {
+      expect(() => client.updateField('collection')).to.throw();
+    });
+
+    it('Errors on missing `fieldInfo` parameter', function() {
+      expect(() => client.updateField('members', 'first_name')).to.throw();
+    });
+
+    it('Calls patch() for the right endpoint', function() {
+      client.updateField('members', 'first_name', {
+        field: 'first_name',
+        interface: 'text-input'
+      });
+      expect(client.patch).to.have.been.calledWith('/fields/members/first_name', {
+        field: 'first_name',
+        interface: 'text-input'
+      });
+    });
+  });
 });
