@@ -110,6 +110,54 @@ describe('Fields', function() {
     });
   });
 
+  describe('#updateFields', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(() => client.updateFields()).to.throw();
+    });
+
+    it('Errors if fieldsInfoOrFieldNames isn\'t an array', function() {
+      expect(() => client.updateFields('projects', 'updates'));
+    });
+
+    it('Errors if fieldInfo has been passed in a wrong format', function() {
+      expect(() => client.updateFields('projects', ['first_name', 'last_name'], 'update')).to.throw();
+    });
+
+    it('Calls patch() multiple fields same value', function() {
+      client.updateFields('members', ['first_name', 'last_name'], {
+        default_value: ""
+      });
+
+      expect(client.patch).to.have.been.calledWith('/fields/members/first_name,last_name', {
+        default_value: ""
+      });
+    });
+
+    it('Calls patch() multiple fields multiple values', function() {
+      client.updateFields('members', [
+        {
+          field: 'id',
+          sort: 1
+        },
+        {
+          field: 'first_name',
+          sort: 2
+        }
+      ]);
+
+      expect(client.patch).to.have.been.calledWith('/fields/members', [
+        {
+          field: 'id',
+          sort: 1
+        },
+        {
+          field: 'first_name',
+          sort: 2
+        }
+      ]);
+    });
+  });
+
   describe('#deleteField()', function() {
     it('Errors on missing `collection` parameter', function() {
       expect(() => client.deleteField()).to.throw();

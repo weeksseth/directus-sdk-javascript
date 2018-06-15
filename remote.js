@@ -557,6 +557,51 @@ function SDK(options = {}) {
     },
 
     /**
+     * Update multiple fields at once
+     * @param  {String} collection             Fields' parent collection
+     * @param  {Array} fieldsInfoOrFieldNames  Array of field objects or array of field names
+     * @param  {Object} [fieldInfo]            In case fieldsInfoOrFieldNames is an array of fieldNames, you need to provide the fields to update
+     * @return {RequestPromise}
+     *
+     * @example
+     *
+     * // Set multiple fields to the same value
+     * updateFields("projects", ["first_name", "last_name", "email"], {
+     *   default_value: ""
+     * })
+     *
+     * // Set multiple fields to different values
+     * updateFields("projects", [
+     *   {
+     *     id: 14,
+     *     sort: 1
+     *   },
+     *   {
+     *     id: 17,
+     *     sort: 2
+     *   },
+     *   {
+     *     id: 912,
+     *     sort: 3
+     *   }
+     * ])
+     */
+    updateFields(collection, fieldsInfoOrFieldNames, fieldInfo = null) {
+      AV.string(collection, 'collection');
+      AV.array(fieldsInfoOrFieldNames, 'fieldsInfoOrFieldNames');
+
+      if (fieldInfo) {
+        AV.object(fieldInfo);
+      }
+
+      if (fieldInfo) {
+        return this.patch(`/fields/${collection}/${fieldsInfoOrFieldNames.join(',')}`, fieldInfo);
+      }
+
+      return this.patch(`/fields/${collection}`, fieldsInfoOrFieldNames);
+    },
+
+    /**
      * Delete a field from a collection
      * @param  {String} collection Name of the collection
      * @param  {String} fieldName  The name of the field to delete
