@@ -283,6 +283,17 @@ describe('Request', function() {
       expect(client.post).to.throw();
     });
 
+    describe('Allows arrays and objects for body', function() {
+      it('Errors on a non-array/non-object type', function() {
+        expect(() => client.post('projects', 'body')).to.throw();
+      });
+
+      it('Doesn\'t error when body is an array or object', function() {
+        expect(() => client.post('projects', [])).to.not.throw();
+        expect(() => client.post('projects', {})).to.not.throw();
+      });
+    });
+
     it('Calls request() with the right parameters', function() {
       client.post('/items/projects', {
         title: 'New Project'
@@ -307,6 +318,17 @@ describe('Request', function() {
       expect(client.patch).to.throw();
     });
 
+    describe('Allows arrays and objects for body', function() {
+      it('Errors on a non-array/non-object type', function() {
+        expect(() => client.patch('projects', 'body')).to.throw();
+      });
+
+      it('Doesn\'t error when body is an array or object', function() {
+        expect(() => client.patch('projects', [])).to.not.throw();
+        expect(() => client.patch('projects', {})).to.not.throw();
+      });
+    });
+
     it('Calls request() with the right parameters', function() {
       client.patch('/items/projects/1', {
         title: 'New Project'
@@ -329,6 +351,17 @@ describe('Request', function() {
 
     it('Errors on missing parameter method', function() {
       expect(client.put).to.throw();
+    });
+
+    describe('Allows arrays and objects for body', function() {
+      it('Errors on a non-array/non-object type', function() {
+        expect(() => client.put('projects', 'body')).to.throw();
+      });
+
+      it('Doesn\'t error when body is an array or object', function() {
+        expect(() => client.put('projects', [])).to.not.throw();
+        expect(() => client.put('projects', {})).to.not.throw();
+      });
     });
 
     it('Calls request() with the right parameters', function() {

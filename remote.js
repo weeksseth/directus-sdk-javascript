@@ -148,7 +148,7 @@ function SDK(options = {}) {
      */
     post(endpoint, body = {}) {
       AV.string(endpoint, 'endpoint');
-      AV.objectOrEmpty(body, 'body');
+      Array.isArray(body) ? AV.arrayOrEmpty(body, 'body') : AV.objectOrEmpty(body, 'body');
 
       return this.request('post', endpoint, {}, body);
     },
@@ -161,7 +161,7 @@ function SDK(options = {}) {
      */
     patch(endpoint, body = {}) {
       AV.string(endpoint, 'endpoint');
-      AV.objectOrEmpty(body, 'body');
+      Array.isArray(body) ? AV.arrayOrEmpty(body, 'body') : AV.objectOrEmpty(body, 'body');
 
       return this.request('patch', endpoint, {}, body);
     },
@@ -174,7 +174,7 @@ function SDK(options = {}) {
      */
     put(endpoint, body = {}) {
       AV.string(endpoint, 'endpoint');
-      AV.objectOrEmpty(body, 'body');
+      Array.isArray(body) ? AV.arrayOrEmpty(body, 'body') : AV.objectOrEmpty(body, 'body');
 
       return this.request('put', endpoint, {}, body);
     },
