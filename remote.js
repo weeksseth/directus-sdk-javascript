@@ -556,6 +556,18 @@ function SDK(options = {}) {
       return this.patch(`/fields/${collection}/${fieldName}`, fieldInfo);
     },
 
+    /**
+     * Delete a field from a collection
+     * @param  {String} collection Name of the collection
+     * @param  {String} fieldName  The name of the field to delete
+     * @return {RequestPromise}
+     */
+    deleteField(collection, fieldName) {
+      AV.string(collection, 'collection');
+      AV.string(fieldName, 'fieldName');
+      return this.delete(`/fields/${collection}/${fieldName}`);
+    },
+
     // ITEMS
     // -------------------------------------------------------------------------
 

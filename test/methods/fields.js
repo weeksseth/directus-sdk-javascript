@@ -109,4 +109,19 @@ describe('Fields', function() {
       });
     });
   });
+
+  describe('#deleteField()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(() => client.deleteField()).to.throw();
+    });
+
+    it('Errors on missing `fieldName` parameter', function() {
+      expect(() => client.deleteField('test')).to.throw();
+    });
+
+    it('Calls delete() for the right endpoint', function() {
+      client.deleteField('test', 'field');
+      expect(client.delete).to.have.been.calledWith('/fields/test/field');
+    });
+  });
 });
