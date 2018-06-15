@@ -17,7 +17,7 @@ describe('Request', function() {
 
   describe('#request()', function() {
     beforeEach(function() {
-      sinon.stub(client.axios, 'request');
+      sinon.stub(client.axios, 'request').resolves();
     });
 
     afterEach(function() {
@@ -36,8 +36,15 @@ describe('Request', function() {
       expect(() => client.request('get', '/items', 'wrong-params')).to.throw();
     });
 
-    it('Errors if data isn\'t of the right type', function() {
-      expect(() => client.request('get', '/items', {}, 'wrong-data')).to.throw();
+    describe('Allows arrays and objects for data', function() {
+      it('Errors on a non-array/non-object type', function() {
+        expect(() => client.request('post', '/items', {}, 'data')).to.throw();
+      });
+
+      it('Doesn\'t error when body is an array or object', function() {
+        expect(() => client.request('post', '/items', {}, [])).to.not.throw();
+        expect(() => client.request('post', '/items', {}, {})).to.not.throw();
+      });
     });
 
     it('Errors when there is no API URL set', function() {

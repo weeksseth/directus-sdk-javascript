@@ -87,7 +87,7 @@ function SDK(options = {}) {
       AV.string(method, 'method');
       AV.string(endpoint, 'endpoint');
       AV.objectOrEmpty(params, 'params');
-      AV.objectOrEmpty(data, 'data');
+      Array.isArray(data) ? AV.arrayOrEmpty(data, 'data') : AV.objectOrEmpty(data, 'data');
 
       AV.string(this.url, 'this.url');
 
