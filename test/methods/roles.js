@@ -68,4 +68,19 @@ describe('Relations', function() {
       expect(client.get).to.have.been.calledWith('/roles/4', { fields: 'name,id' });
     });
   });
+
+  describe('#updateRole()', function() {
+    it('Errors on missing `primaryKey` parameter', function() {
+      expect(client.updateRole).to.throw();
+    });
+
+    it('Errors on missing `body` parameter', function() {
+      expect(() => client.updateRole(15)).to.throw();
+    });
+
+    it('Calls patch() for the right endpoint', function() {
+      client.updateRole(15, { name: 'Intern' });
+      expect(client.patch).to.have.been.calledWith('/roles/15', { name: 'Intern' });
+    });
+  });
 });

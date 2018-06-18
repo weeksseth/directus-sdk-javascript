@@ -853,6 +853,18 @@ function SDK(options = {}) {
       return this.get('/roles', params);
     },
 
+    /**
+     * Update a user role
+     * @param  {Number} primaryKey The ID of the role
+     * @param  {Object} body       The fields to update
+     * @return {RequestPromise}
+     */
+    updateRole(primaryKey, body) {
+      AV.notNull(primaryKey, 'primaryKey');
+      AV.object(body, 'body');
+      return this.updateItem('directus_roles', primaryKey, body);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
