@@ -35,6 +35,11 @@ describe('Relations', function() {
   });
 
   describe('#getRoles()', function() {
+    it('Defaults to an empty object if no parameters are passed', function() {
+      client.getRoles();
+      expect(client.get).to.have.been.calledWith('/roles', {});
+    });
+
     it('Errors if parameter `params` is of a wrong type', function() {
       expect(() => client.getRoles('params')).to.throw();
     });
@@ -42,6 +47,25 @@ describe('Relations', function() {
     it('Calls get() for the right endpoint', async function() {
       client.getRoles({ limit: 50 });
       expect(client.get).to.have.been.calledWith('/roles', { limit: 50 });
+    });
+  });
+
+  describe('#getRole()', function() {
+    it('Errors if parameter `primaryKey` doesn\'t exist', function() {
+      expect(client.getRole).to.throw();
+    });
+
+    it('Errors if parameter `primaryKey` is of a wrong type', function() {
+      expect(() => client.getRole({})).to.throw();
+    });
+
+    it('Errors if parameter `params` is of a wrong type', function() {
+      expect(() => client.getRole(4, 'params')).to.throw();
+    });
+
+    it('Calls get() for the right endpoint', async function() {
+      client.getRole(4, { fields: 'name,id' });
+      expect(client.get).to.have.been.calledWith('/roles/4', { fields: 'name,id' });
     });
   });
 });

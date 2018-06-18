@@ -832,6 +832,18 @@ function SDK(options = {}) {
     // -------------------------------------------------------------------------
 
     /**
+     * Get a single user role
+     * @param  {Number} primaryKey  The id of the user rol to get
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getRole(primaryKey, params = {}) {
+      AV.number(primaryKey, 'primaryKey');
+      AV.objectOrEmpty(params, 'params');
+      return this.get(`/roles/${primaryKey}`, params);
+    },
+
+    /**
      * Get the user roles
      * @param  {Object} [params={}] Query parameters
      * @return {RequestPromise}
