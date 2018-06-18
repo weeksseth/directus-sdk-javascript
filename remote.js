@@ -828,6 +828,19 @@ function SDK(options = {}) {
       return this.patch(`/items/${collection}/${primaryKey}/revert/${revisionID}`);
     },
 
+    // ROLES
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the user roles
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getRoles(params = {}) {
+      AV.objectOrEmpty(params, 'params');
+      return this.get('/roles', params);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
