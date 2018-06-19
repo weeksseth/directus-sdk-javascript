@@ -733,7 +733,7 @@ function SDK(options = {}) {
      */
     getMyListingPreferences(collection, params = {}) {
       AV.string(this.token, 'this.token');
-      AV.objectOrEmpty(params);
+      AV.objectOrEmpty(params, 'params');
       return Promise.all([
         this.get('/collection_presets', {
           'filter[title][null]': 1,
@@ -766,6 +766,19 @@ function SDK(options = {}) {
         }
         return {};
       });
+    },
+
+    // PERMISSIONS
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get permissions
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getPermissions(params = {}) {
+      AV.objectOrEmpty(params, 'params');
+      return this.getItems('directus_permissions', params);
     },
 
     // RELATIONS
