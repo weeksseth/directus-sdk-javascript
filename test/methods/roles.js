@@ -83,4 +83,19 @@ describe('Relations', function() {
       expect(client.patch).to.have.been.calledWith('/roles/15', { name: 'Intern' });
     });
   });
+
+  describe('#createRole()', function() {
+    it('Errors on missing `body` parameter', function() {
+      expect(client.createRole).to.throw();
+    });
+
+    it('Errors on wrong `body` parameter type', function() {
+      expect(() => client.createRole(15)).to.throw();
+    });
+
+    it('Calls post() for the right endpoint', function() {
+      client.createRole({ name: 'Intern' });
+      expect(client.post).to.have.been.calledWith('/roles', { name: 'Intern' });
+    });
+  });
 });

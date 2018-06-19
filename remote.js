@@ -865,6 +865,16 @@ function SDK(options = {}) {
       return this.updateItem('directus_roles', primaryKey, body);
     },
 
+    /**
+     * Create a new user role
+     * @param  {Object} body The role information
+     * @return {RequestPromise}
+     */
+    createRole(body) {
+      AV.object(body, 'body');
+      return this.createItem('directus_roles', body);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 
