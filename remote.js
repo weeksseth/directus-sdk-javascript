@@ -875,6 +875,16 @@ function SDK(options = {}) {
       return this.createItem('directus_roles', body);
     },
 
+    /**
+     * Delete a user rol by primary key
+     * @param  {Number | String} primaryKey Primary key of the user role
+     * @return {RequestPromise}
+     */
+    deleteRole(primaryKey) {
+      AV.notNull(primaryKey, 'primaryKey');
+      return this.deleteItem('directus_roles', primaryKey);
+    },
+
     // SETTINGS
     // -------------------------------------------------------------------------
 

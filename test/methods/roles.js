@@ -98,4 +98,15 @@ describe('Relations', function() {
       expect(client.post).to.have.been.calledWith('/roles', { name: 'Intern' });
     });
   });
+
+  describe('#deleteRole()', function() {
+    it('Errors on missing `primaryKey` parameter', function() {
+      expect(client.deleteRole).to.throw();
+    });
+
+    it('Calls delete() for the right endpoint', function() {
+      client.deleteRole(15);
+      expect(client.delete).to.have.been.calledWith('/roles/15');
+    });
+  });
 });
