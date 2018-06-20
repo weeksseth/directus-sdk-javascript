@@ -34,7 +34,7 @@ describe('Settings', function() {
     client.delete.restore();
   });
 
-  describe('#getCollections()', function() {
+  describe('#getSettings()', function() {
     it('Defaults to an empty object if no parameters are passed', function() {
       client.getSettings();
       expect(client.get).to.have.been.calledWith('/settings', {});

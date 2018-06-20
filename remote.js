@@ -505,6 +505,16 @@ function SDK(options = {}) {
     // ------------------------------------------------------------------------
 
     /**
+     * Get all fields that are in Directus
+     * @param  {Object} [params={}] Query parameters
+     * @return {RequestPromise}
+     */
+    getAllFields(params = {}) {
+      AV.objectOrEmpty(params, 'params');
+      return this.get('/fields', params);
+    },
+
+    /**
      * Get the fields that have been setup for a given collection
      * @param  {String} collection  Collection name
      * @param  {Object} [params={}] Query parameters

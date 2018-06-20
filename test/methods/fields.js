@@ -34,6 +34,22 @@ describe('Fields', function() {
     client.delete.restore();
   });
 
+  describe('#getAllFields()', function() {
+    it('Defaults to an empty object if no parameters are passed', function() {
+      client.getAllFields();
+      expect(client.get).to.have.been.calledWith('/fields', {});
+    });
+
+    it('Errors if parameter `params` is of a wrong type', function() {
+      expect(() => client.getAllFields('params')).to.throw();
+    });
+
+    it('Calls get() for the right endpoint', function() {
+      client.getAllFields({ limit: 50 });
+      expect(client.get).to.have.been.calledWith('/fields', { limit: 50 });
+    });
+  });
+
   describe('#getFields()', function() {
     it('Errors on missing `collection` parameter', function() {
       expect(client.getFields).to.throw();
