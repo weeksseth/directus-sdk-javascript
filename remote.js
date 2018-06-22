@@ -791,6 +791,26 @@ function SDK(options = {}) {
       return this.getItems('directus_permissions', params);
     },
 
+    /**
+     * Create multiple new permissions
+     * @param  {Array} data  Permission records to save
+     * @return {RequestPromise}
+     */
+    createPermissions(data) {
+      AV.array(data);
+      return this.post('/permissions', data);
+    },
+
+    /**
+     * Update multiple permission records
+     * @param  {Array} data  Permission records to update
+     * @return {[type]}      [description]
+     */
+    updatePermissions(data) {
+      AV.array(data);
+      return this.patch('/permissions', data);
+    },
+
     // RELATIONS
     // -------------------------------------------------------------------------
 

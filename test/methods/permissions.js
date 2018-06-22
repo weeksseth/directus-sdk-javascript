@@ -49,4 +49,34 @@ describe('Relations', function() {
       expect(client.get).to.have.been.calledWith('/permissions', { limit: 50 });
     });
   });
+
+  describe('#updatePermissions()', function() {
+    it('Errors on missing `data` parameter', function() {
+      expect(client.updatePermissions).to.throw();
+    });
+
+    it('Errors on wrong `data` parameter', function() {
+      expect(() => client.createPermissions('projects')).to.throw();
+    });
+
+    it('Calls post() for the right endpoint', function() {
+      client.createPermissions([{ read: 'none', collection: 'projects' }]);
+      expect(client.post).to.have.been.calledWith('/permissions', [{ read: 'none', collection: 'projects' }]);
+    });
+  });
+
+  describe('#updatePermissions()', function() {
+    it('Errors on missing `data` parameter', function() {
+      expect(client.updatePermissions).to.throw();
+    });
+
+    it('Errors on wrong `data` parameter', function() {
+      expect(() => client.updatePermissions('projects')).to.throw();
+    });
+
+    it('Calls post() for the right endpoint', function() {
+      client.updatePermissions([{ read: 'none', collection: 'projects' }]);
+      expect(client.patch).to.have.been.calledWith('/permissions', [{ read: 'none', collection: 'projects' }]);
+    });
+  });
 });
