@@ -57,7 +57,7 @@ class RemoteInstance {
     });
   }
 
-  _post(endpoint, data = {}, isAPI = false, params = {}) {
+  _post(endpoint, data = {}, params = {}, isAPI = false) {
     const headers = this._requestHeaders;
     const url = isAPI ? this.api : this.url;
 
@@ -362,8 +362,8 @@ class RemoteInstance {
     return this._get(api_endpoint, params, true);
   }
 
-  postApi(api_endpoint = requiredParam('api_endpoint'), data = requiredParam('data')) {
-    return this._post(api_endpoint, data, true);
+  postApi(api_endpoint = requiredParam('api_endpoint'), data = requiredParam('data'), params = {}) {
+    return this._post(api_endpoint, data, params, true);
   }
 
   putApi(api_endpoint = requiredParam('api_endpoint'), data = requiredParam('data')) {
@@ -383,7 +383,7 @@ class RemoteInstance {
   // Random
   // ----------------------------------------------------------------------------------
   getRandom(params = {}) {
-    return this._post('random', params);
+    return this._post('random', {}, params);
   }
 
   setAccessTokenParam (params) {
