@@ -646,6 +646,23 @@ function SDK(options = {}) {
     },
 
     /**
+     * Update multiple i
+     * @param  {String} collection The collection to add the item to
+     * @param  {Array} body        The item's field values
+     * @return {RequestPromise}
+     */
+    updateItems(collection, body) {
+      AV.string(collection, 'collection');
+      AV.array(body, 'body');
+
+      if (collection.startsWith('directus_')) {
+        return this.patch(`/${collection.substring(9)}`, body);
+      }
+
+      return this.patch(`/items/${collection}`, body);
+    },
+
+    /**
      * Create a new item
      * @param  {String} collection The collection to add the item to
      * @param  {Object} body       The item's field values
@@ -804,7 +821,7 @@ function SDK(options = {}) {
     /**
      * Update multiple permission records
      * @param  {Array} data  Permission records to update
-     * @return {[type]}      [description]
+     * @return {RequestPromise}
      */
     updatePermissions(data) {
       AV.array(data);

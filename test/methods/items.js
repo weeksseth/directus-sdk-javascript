@@ -54,6 +54,26 @@ describe('Items', function() {
     });
   });
 
+  describe('#updateItems()', function() {
+    it('Errors on missing `collection` parameter', function() {
+      expect(client.updateItems).to.throw();
+    });
+
+    it('Errors on missing `body` parameter', function() {
+      expect(() => client.updateItems('projects')).to.throw();
+    });
+
+    it('Calls patch() for the right endpoint', function() {
+      client.updateItems('projects', [{ id: 1, title: 'A' }, { id: 2, title: 'B' }]);
+      expect(client.patch).to.have.been.calledWith('/items/projects', [{ id: 1, title: 'A' }, { id: 2, title: 'B' }]);
+    });
+
+    it('Calls patch() for the system endpoint if a directus_* table is requested', function() {
+      client.updateItems('directus_users', [{ id: 1, title: 'A' }, { id: 2, title: 'B' }]);
+      expect(client.patch).to.have.been.calledWith('/users', [{ id: 1, title: 'A' }, { id: 2, title: 'B' }]);
+    });
+  });
+
   describe('#updateItem()', function() {
     it('Errors on missing `collection` parameter', function() {
       expect(client.updateItem).to.throw();
