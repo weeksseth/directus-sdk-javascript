@@ -633,7 +633,6 @@ function SDK(options = {}) {
      * @return {RequestPromise}
      */
     uploadFiles(data) {
-      AV.object(data, "data");
       return this.request('POST', '/files', {}, data, false, {
         "Content-Type": "multipart/form-data"
       });
