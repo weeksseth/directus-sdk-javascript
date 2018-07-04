@@ -633,9 +633,29 @@ function SDK(options = {}) {
      * @return {RequestPromise}
      */
     uploadFiles(data) {
-      return this.request('POST', '/files', {}, data, false, {
-        "Content-Type": "multipart/form-data"
-      });
+      const headers = {
+        'Content-Type': 'multipart/form-data'
+      };
+
+      if (this.token && typeof this.token === 'string' && this.token.length > 0) {
+        headers.Authorization = `Bearer ${this.token}`;
+      }
+
+      return this.axios
+        .post('/files', data, headers)
+        .then(res => res.data)
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          } else {
+            throw {
+              // eslint-disable-line
+              code: -1,
+              message: 'Network Error',
+              error,
+            };
+          }
+        });
     },
 
     // ITEMS
