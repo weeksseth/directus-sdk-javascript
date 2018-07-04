@@ -83,7 +83,7 @@ function SDK(options = {}) {
      * @param  {Boolean} noEnv      Don't use the env in the path
      * @return {RequestPromise}
      */
-    request(method, endpoint, params = {}, data = {}, noEnv = false) {
+    request(method, endpoint, params = {}, data = {}, noEnv = false, headers = {}) {
       AV.string(method, 'method');
       AV.string(endpoint, 'endpoint');
       AV.objectOrEmpty(params, 'params');
@@ -106,7 +106,7 @@ function SDK(options = {}) {
       };
 
       if (this.token && typeof this.token === 'string' && this.token.length > 0) {
-        requestOptions.headers = {};
+        requestOptions.headers = headers;
         requestOptions.headers.Authorization = `Bearer ${this.token}`;
       }
 
@@ -621,6 +621,22 @@ function SDK(options = {}) {
       AV.string(collection, 'collection');
       AV.string(fieldName, 'fieldName');
       return this.delete(`/fields/${collection}/${fieldName}`);
+    },
+
+
+    // FILES
+    // ------------------------------------------------------------------------
+
+    /**
+     * Upload multipart files in multipart/form-data
+     * @param  {Array} filelist FormData object containing files
+     * @return {RequestPromise}
+     */
+    uploadFiles(filelist) {
+      AV.array(filelist);
+      return this.request('POST', '/files', {}, filelist, false, {
+        "Content-Type": "multipart/form-data"
+      });
     },
 
     // ITEMS
