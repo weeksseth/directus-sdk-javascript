@@ -642,7 +642,7 @@ function SDK(options = {}) {
       }
 
       return this.axios
-        .post('/files', data, headers)
+        .post(`${this.url}/${this.env}/files`, data, headers)
         .then(res => res.data)
         .catch((error) => {
           if (error.response) {
