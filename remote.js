@@ -629,12 +629,12 @@ function SDK(options = {}) {
 
     /**
      * Upload multipart files in multipart/form-data
-     * @param  {Array} filelist FormData object containing files
+     * @param  {Object} data FormData object containing files
      * @return {RequestPromise}
      */
-    uploadFiles(filelist) {
-      AV.array(filelist);
-      return this.request('POST', '/files', {}, filelist, false, {
+    uploadFiles(data) {
+      AV.object(data, "data");
+      return this.request('POST', '/files', {}, data, false, {
         "Content-Type": "multipart/form-data"
       });
     },
