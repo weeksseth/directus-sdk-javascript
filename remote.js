@@ -634,15 +634,12 @@ function SDK(options = {}) {
      */
     uploadFiles(data) {
       const headers = {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${this.token}`
       };
 
-      if (this.token && typeof this.token === 'string' && this.token.length > 0) {
-        headers.Authorization = `Bearer ${this.token}`;
-      }
-
       return this.axios
-        .post(`${this.url}/${this.env}/files`, data, headers)
+        .post(`${this.url}/${this.env}/files`, data, { headers })
         .then(res => res.data)
         .catch((error) => {
           if (error.response) {
