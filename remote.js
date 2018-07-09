@@ -376,12 +376,12 @@ function SDK(options = {}) {
         }),
         this.get('/collection_presets', {
           'filter[title][nnull]': 1,
-          'filter[group][eq]': this.payload.group,
+          'filter[role][eq]': this.payload.role,
           'filter[user][null]': 1,
         }),
       ]).then((values) => {
-        const [user, group] = values; // eslint-disable-line no-shadow
-        return [...user.data, ...group.data];
+        const [user, role] = values; // eslint-disable-line no-shadow
+        return [...user.data, ...role.data];
       });
     },
 
@@ -797,28 +797,28 @@ function SDK(options = {}) {
         this.get('/collection_presets', {
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
-          'filter[group][null]': 1,
+          'filter[role][null]': 1,
           'filter[user][null]': 1,
         }),
         this.get('/collection_presets', {
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
-          'filter[group][eq]': this.payload.group,
+          'filter[role][eq]': this.payload.role,
           'filter[user][null]': 1,
         }),
         this.get('/collection_presets', {
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
-          'filter[group][eq]': this.payload.group,
+          'filter[role][eq]': this.payload.role,
           'filter[user][eq]': this.payload.id,
         }),
       ]).then((values) => {
-        const [collection, group, user] = values; // eslint-disable-line no-shadow
+        const [collection, role, user] = values; // eslint-disable-line no-shadow
         if (user.data && user.data.length > 0) {
           return user.data[0];
         }
-        if (group.data && group.data.length > 0) {
-          return group.data[0];
+        if (role.data && role.data.length > 0) {
+          return role.data[0];
         }
         if (collection.data && collection.data.length > 0) {
           return collection.data[0];
