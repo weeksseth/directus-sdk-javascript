@@ -795,22 +795,28 @@ function SDK(options = {}) {
       AV.objectOrEmpty(params, 'params');
       return Promise.all([
         this.get('/collection_presets', {
+          limit: 1,
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
           'filter[role][null]': 1,
           'filter[user][null]': 1,
+          'sort': '-id'
         }),
         this.get('/collection_presets', {
+          limit: 1,
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
           'filter[role][eq]': this.payload.role,
           'filter[user][null]': 1,
+          'sort': '-id'
         }),
         this.get('/collection_presets', {
+          limit: 1,
           'filter[title][null]': 1,
           'filter[collection][eq]': collection,
           'filter[role][eq]': this.payload.role,
           'filter[user][eq]': this.payload.id,
+          'sort': '-id'
         }),
       ]).then((values) => {
         const [collection, role, user] = values; // eslint-disable-line no-shadow
