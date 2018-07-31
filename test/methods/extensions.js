@@ -33,10 +33,10 @@ describe('Items', function() {
     });
   });
 
-  describe('#getListings()', function() {
+  describe('#getLayouts()', function() {
     it('Calls request() for the right endpoint', function() {
-      client.getListings();
-      expect(client.request).to.have.been.calledWith('get', '/listings', {}, {}, true);
+      client.getLayouts();
+      expect(client.request).to.have.been.calledWith('get', '/layouts', {}, {}, true);
     });
   });
 

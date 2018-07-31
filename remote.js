@@ -486,11 +486,11 @@ function SDK(options = {}) {
     },
 
     /**
-     * Get the meta information of all installed listings
+     * Get the meta information of all installed layouts
      * @return {RequestPromise}
      */
-    getListings() {
-      return this.request('get', '/listings', {}, {}, true);
+    getLayouts() {
+      return this.request('get', '/layouts', {}, {}, true);
     },
 
     /**
