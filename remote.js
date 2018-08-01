@@ -678,7 +678,7 @@ function SDK(options = {}) {
     },
 
     /**
-     * Update multiple i
+     * Update multiple items
      * @param  {String} collection The collection to add the item to
      * @param  {Array} body        The item's field values
      * @return {RequestPromise}
@@ -703,6 +703,23 @@ function SDK(options = {}) {
     createItem(collection, body) {
       AV.string(collection, 'collection');
       AV.object(body, 'body');
+
+      if (collection.startsWith('directus_')) {
+        return this.post(`/${collection.substring(9)}`, body);
+      }
+
+      return this.post(`/items/${collection}`, body);
+    },
+
+    /**
+     * Create multiple items
+     * @param  {String} collection The collection to add the item to
+     * @param  {Array} body        The item's field values
+     * @return {RequestPromise}
+     */
+    createItems(collection, body) {
+      AV.string(collection, 'collection');
+      AV.array(body, 'body');
 
       if (collection.startsWith('directus_')) {
         return this.post(`/${collection.substring(9)}`, body);
