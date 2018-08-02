@@ -1,6 +1,6 @@
 {
   "name": "@directus/sdk-js",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Directus SDK for JavaScript (Node and Browser)",
   "main": "index.js",
   "scripts": {
