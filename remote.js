@@ -632,14 +632,14 @@ function SDK(options = {}) {
      * @param  {Object} data FormData object containing files
      * @return {RequestPromise}
      */
-    uploadFiles(data) {
+    uploadFiles(data, onUploadProgress = () => {}) {
       const headers = {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${this.token}`
       };
 
       return this.axios
-        .post(`${this.url}/${this.env}/files`, data, { headers })
+        .post(`${this.url}/${this.env}/files`, data, { headers, onUploadProgress })
         .then(res => res.data)
         .catch((error) => {
           if (error.response) {
