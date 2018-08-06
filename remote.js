@@ -640,7 +640,7 @@ function SDK(options = {}) {
 
       return this.axios
         .post(`${this.url}/${this.env}/files`, data, { headers, onUploadProgress })
-        .then(res => JSON.parse(res.data))
+        .then(res => res.data)
         .catch((error) => {
           if (error.response) {
             throw error.response.data.error;
