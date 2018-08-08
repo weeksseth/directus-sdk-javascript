@@ -864,6 +864,16 @@ function SDK(options = {}) {
     },
 
     /**
+     * Get the currently logged in user's permissions
+     * @param  {Object} params Query parameters
+     * @return {RequestPromise}
+     */
+    getMyPermissions(params = {}) {
+      AV.objectOrEmpty(params, 'params');
+      return this.get('/permissions/me', params);
+    },
+
+    /**
      * Create multiple new permissions
      * @param  {Array} data  Permission records to save
      * @return {RequestPromise}
