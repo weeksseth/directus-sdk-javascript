@@ -2,7 +2,7 @@
   "name": "directus-sdk-javascript",
   "version": "2.12.1",
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
-  "main": "remote.js",
+  "main": "dist/remote.js",
   "scripts": {
     "build": "webpack"
   },
