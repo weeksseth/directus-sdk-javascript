@@ -2,7 +2,7 @@
   "name": "directus-sdk-javascript",
   "version": "2.12.1",
   "description": "WIP - Directus SDK for JavaScript (Node and Browser)",
-  "main": "index.js",
+  "main": "dist/remote-test.js",
   "scripts": {
     "build": "webpack"
   },
@@ -10,15 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/directus/directus-sdk-javascript.git"
   },
-  "keywords": [
-    "node",
-    "directus",
-    "headless",
-    "cms",
-    "sdk",
-    "client",
-    "api"
-  ],
+  "keywords": ["node", "directus", "headless", "cms", "sdk", "client", "api"],
   "author": "Rijk van Zanten <rijkvanzanten@me.com>",
   "license": "GPL-3.0",
   "bugs": {
